@@ -1,4 +1,4 @@
-package main
+package twelvedata
 
 import (
 	"bytes"

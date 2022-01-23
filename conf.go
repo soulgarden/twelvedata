@@ -1,4 +1,4 @@
-package main
+package twelvedata
 
 // nolint: tagliatelle
 type Conf struct {
