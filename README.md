@@ -60,3 +60,19 @@ Twelve data go api client
 
 # Usage
 
+    import (
+        "github.com/rs/zerolog"
+        "github.com/soulgarden/twelvedata"
+        "github.com/valyala/fasthttp"
+        "os"
+    )
+
+    logger := zerolog.New(os.Stdout)
+    
+    cli := twelvedata.NewCli(
+        &twelvedata.Conf{APIKey: "demo"},
+        &fasthttp.Client{},
+        &logger,
+    )
+    
+    resp, creditsLeft, creditsUsed := cli.GetEtfs("")

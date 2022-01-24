@@ -27,18 +27,19 @@ func NewCli(cfg *Conf, httpCli *fasthttp.Client, logger *zerolog.Logger) *Cli {
 	return &Cli{cfg: cfg, httpCli: httpCli, logger: logger}
 }
 
-func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (*response.Stocks, int, int, error) {
+func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (
+	stocksResp *response.Stocks,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
 
-	var creditsLeft, creditsUsed int
-
-	var err error
-
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.ReferenceData.StocksURL, "{apikey}", c.cfg.APIKey, 1)
+	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
 	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 	uri = strings.Replace(uri, "{type}", instrumentType, 1)
-	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
 
 	if creditsLeft, creditsUsed, resp, err = c.makeRequest(uri); err != nil {
 		return nil, 0, 0, err
@@ -50,8 +51,6 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (*resp
 	if err != nil {
 		return nil, creditsLeft, creditsUsed, err
 	}
-
-	var stocksResp *response.Stocks
 
 	if err := json.Unmarshal(resp.Body(), stocksResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
@@ -67,16 +66,12 @@ func (c *Cli) GetTimeSeries(
 	outputSize int,
 	prePost string,
 ) (
-	*response.TimeSeries,
-	int,
-	int,
-	error,
+	seriesResp *response.TimeSeries,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
 ) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.CoreData.TimeSeriesURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -102,8 +97,6 @@ func (c *Cli) GetTimeSeries(
 		return nil, creditsLeft, creditsUsed, dictionary.ErrInvalidTwelveDataResponse
 	}
 
-	var seriesResp *response.TimeSeries
-
 	if err := json.Unmarshal(resp.Body(), seriesResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -114,12 +107,13 @@ func (c *Cli) GetTimeSeries(
 }
 
 // nolint:dupl
-func (c *Cli) GetProfile(symbol, exchange, country string) (*response.Profile, int, int, error) {
+func (c *Cli) GetProfile(symbol, exchange, country string) (
+	profileResp *response.Profile,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.ProfileURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -141,8 +135,6 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (*response.Profile, i
 		return nil, creditsLeft, creditsUsed, nil
 	}
 
-	var profileResp *response.Profile
-
 	if err := json.Unmarshal(resp.Body(), profileResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -154,16 +146,12 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (*response.Profile, i
 
 // nolint:dupl
 func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
-	*response.InsiderTransactions,
-	int,
-	int,
-	error,
+	insiderTransactionsResp *response.InsiderTransactions,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
 ) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.InsiderTransactionsURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -185,8 +173,6 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 		return nil, creditsLeft, creditsUsed, nil
 	}
 
-	var insiderTransactionsResp *response.InsiderTransactions
-
 	if err := json.Unmarshal(resp.Body(), insiderTransactionsResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -198,16 +184,12 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 
 // nolint: varnamelen,dupl
 func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime string) (
-	*response.Dividends,
-	int,
-	int,
-	error,
+	dividendsResp *response.Dividends,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
 ) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.DividendsURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -232,8 +214,6 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime stri
 		return nil, creditsLeft, creditsUsed, nil
 	}
 
-	var dividendsResp *response.Dividends
-
 	if err := json.Unmarshal(resp.Body(), dividendsResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -244,12 +224,13 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime stri
 }
 
 // nolint:dupl
-func (c *Cli) GetStatistics(symbol, exchange, country string) (*response.Statistics, int, int, error) {
+func (c *Cli) GetStatistics(symbol, exchange, country string) (
+	statisticsResp *response.Statistics,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.StatisticsURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -271,8 +252,6 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (*response.Statist
 		return nil, creditsLeft, creditsUsed, nil
 	}
 
-	var statisticsResp *response.Statistics
-
 	if err := json.Unmarshal(resp.Body(), statisticsResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -282,12 +261,13 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (*response.Statist
 	return statisticsResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) GetExchanges(instrumentType, name, code, country string) (*response.Exchanges, int, int, error) {
+func (c *Cli) GetExchanges(instrumentType, name, code, country string) (
+	exchangesResp *response.Exchanges,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.ReferenceData.ExchangesURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{type}", url.QueryEscape(instrumentType), 1)
@@ -306,8 +286,6 @@ func (c *Cli) GetExchanges(instrumentType, name, code, country string) (*respons
 		return nil, creditsLeft, creditsUsed, err
 	}
 
-	var exchangesResp *response.Exchanges
-
 	if err := json.Unmarshal(resp.Body(), exchangesResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -317,12 +295,13 @@ func (c *Cli) GetExchanges(instrumentType, name, code, country string) (*respons
 	return exchangesResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) GetIndices(symbol, country string) (*response.Indices, int, int, error) {
+func (c *Cli) GetIndices(symbol, country string) (
+	indicesResp *response.Indices,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.ReferenceData.IndicesURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -339,8 +318,6 @@ func (c *Cli) GetIndices(symbol, country string) (*response.Indices, int, int, e
 		return nil, creditsLeft, creditsUsed, err
 	}
 
-	var indicesResp *response.Indices
-
 	if err := json.Unmarshal(resp.Body(), indicesResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -350,12 +327,13 @@ func (c *Cli) GetIndices(symbol, country string) (*response.Indices, int, int, e
 	return indicesResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) GetEtfs(symbol string) (*response.Etfs, int, int, error) {
+func (c *Cli) GetEtfs(symbol string) (
+	etfsResp *response.Etfs,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.ReferenceData.EtfsURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -370,8 +348,6 @@ func (c *Cli) GetEtfs(symbol string) (*response.Etfs, int, int, error) {
 	if err != nil {
 		return nil, creditsLeft, creditsUsed, err
 	}
-
-	var etfsResp *response.Etfs
 
 	if err := json.Unmarshal(resp.Body(), etfsResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
@@ -418,12 +394,13 @@ func (c *Cli) GetQuotes(
 	return quotes, creditsLeft, creditsUsed, err
 }
 
-func (c *Cli) GetUsage() (*response.Usage, int, int, error) {
+func (c *Cli) GetUsage() (
+	usageResp *response.Usage,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Advanced.UsageURL, "{apikey}", c.cfg.APIKey, 1)
 
@@ -442,8 +419,6 @@ func (c *Cli) GetUsage() (*response.Usage, int, int, error) {
 		return nil, creditsLeft, creditsUsed, dictionary.ErrInvalidTwelveDataResponse
 	}
 
-	var usageResp *response.Usage
-
 	if err := json.Unmarshal(resp.Body(), usageResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -453,14 +428,18 @@ func (c *Cli) GetUsage() (*response.Usage, int, int, error) {
 	return usageResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) GetEarningsCalendar() (*response.Earnings, int, int, error) {
+func (c *Cli) GetEarningsCalendar(decimalPlaces int, startDate, endDate string) (
+	earningsResp *response.Earnings,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
 	var resp *fasthttp.Response
 
-	var creditsLeft, creditsUsed int
-
-	var err error
-
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.EarningsCalendarURL, "{apikey}", c.cfg.APIKey, 1)
+	uri = strings.Replace(uri, "{dp}", strconv.Itoa(decimalPlaces), 1)
+	uri = strings.Replace(uri, "{start_date}", startDate, 1)
+	uri = strings.Replace(uri, "{end_date}", endDate, 1)
 
 	if creditsLeft, creditsUsed, resp, err = c.makeRequest(uri); err != nil {
 		return nil, 0, 0, err
@@ -473,8 +452,6 @@ func (c *Cli) GetEarningsCalendar() (*response.Earnings, int, int, error) {
 		return nil, creditsLeft, creditsUsed, err
 	}
 
-	var earningsResp *response.Earnings
-
 	if err := json.Unmarshal(resp.Body(), earningsResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -485,27 +462,17 @@ func (c *Cli) GetEarningsCalendar() (*response.Earnings, int, int, error) {
 }
 
 func (c *Cli) GetExchangeRate(
-	symbol, exchange, country, instrumentType, period, timeZone string,
-	outputSize, precision int,
+	symbol, timeZone string, precision int,
 ) (
-	*response.ExchangeRate,
-	int,
-	int,
-	error,
+	exchangeRate *response.ExchangeRate,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
 ) {
 	var resp *fasthttp.Response
 
-	var creditsLeft, creditsUsed int
-
-	var err error
-
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.CoreData.ExchangeRateURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
-	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
-	uri = strings.Replace(uri, "{country}", country, 1)
-	uri = strings.Replace(uri, "{type}", url.QueryEscape(instrumentType), 1)
-	uri = strings.Replace(uri, "{period}", period, 1)
-	uri = strings.Replace(uri, "{outputsize}", strconv.Itoa(outputSize), 1)
 	uri = strings.Replace(uri, "{precision}", strconv.Itoa(precision), 1)
 	uri = strings.Replace(uri, "{timeZone}", timeZone, 1)
 
@@ -524,29 +491,23 @@ func (c *Cli) GetExchangeRate(
 		return nil, creditsLeft, creditsUsed, dictionary.ErrInvalidTwelveDataResponse
 	}
 
-	var rateResp *response.ExchangeRate
-
-	if err := json.Unmarshal(resp.Body(), rateResp); err != nil {
+	if err := json.Unmarshal(resp.Body(), exchangeRate); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
 		return nil, creditsLeft, creditsUsed, fmt.Errorf("unmarshal json: %w", err)
 	}
 
-	return rateResp, creditsLeft, creditsUsed, nil
+	return exchangeRate, creditsLeft, creditsUsed, nil
 }
 
 // nolint:dupl
 func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, endDate string) (
-	*response.IncomeStatement,
-	int,
-	int,
-	error,
+	incomeStatementResp *response.IncomeStatement,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
 ) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.IncomeStatementURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -571,8 +532,6 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 		return nil, creditsLeft, creditsUsed, nil
 	}
 
-	var incomeStatementResp *response.IncomeStatement
-
 	if err := json.Unmarshal(resp.Body(), incomeStatementResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -584,16 +543,12 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 
 // nolint:dupl
 func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate string, period string) (
-	*response.BalanceSheet,
-	int,
-	int,
-	error,
+	balanceSheetResp *response.BalanceSheet,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
 ) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.BalanceSheetURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -618,8 +573,6 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate stri
 		return nil, creditsLeft, creditsUsed, nil
 	}
 
-	var balanceSheetResp *response.BalanceSheet
-
 	if err := json.Unmarshal(resp.Body(), balanceSheetResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -631,16 +584,12 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate stri
 
 // nolint:dupl
 func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, period string) (
-	*response.CashFlow,
-	int,
-	int,
-	error,
+	cashFlowResp *response.CashFlow,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
 ) {
 	var resp *fasthttp.Response
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.CashFlowURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
@@ -664,8 +613,6 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, 
 	if errResp.Code == http.StatusNotFound {
 		return nil, creditsLeft, creditsUsed, nil
 	}
-
-	var cashFlowResp *response.CashFlow
 
 	if err := json.Unmarshal(resp.Body(), cashFlowResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
