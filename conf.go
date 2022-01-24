@@ -5,11 +5,11 @@ type Conf struct {
 	BaseURL   string `json:"base_url" default:"https://api.twelvedata.com"`
 	BaseWSURL string `json:"base_ws_url" default:"ws.twelvedata.com"`
 
-	ReferenceData *ReferenceData `json:"reference_data"`
-	CoreData      *CoreData      `json:"core_data"`
-	Fundamentals  *Fundamentals  `json:"fundamentals"`
-	WebSocket     *WebSocket     `json:"web_socket"`
-	Advanced      *Advanced      `json:"advanced"`
+	ReferenceData ReferenceData `json:"reference_data"`
+	CoreData      CoreData      `json:"core_data"`
+	Fundamentals  Fundamentals  `json:"fundamentals"`
+	WebSocket     WebSocket     `json:"web_socket"`
+	Advanced      Advanced      `json:"advanced"`
 
 	APIKey  string `json:"api_key" default:"demo"`
 	Timeout int    `json:"timeout" default:"15"`
