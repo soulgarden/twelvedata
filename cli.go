@@ -738,7 +738,7 @@ func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*respons
 
 	for _, item := range data {
 		if bytes.Contains(item, []byte(`{"code":`)) {
-			if err := json.Unmarshal(item, quoteErr); err != nil {
+			if err := json.Unmarshal(item, &quoteErr); err != nil {
 				c.logger.Err(err).Bytes("val", item).Msg("unmarshall")
 
 				return nil, fmt.Errorf("unmarshal json: %w", err)
