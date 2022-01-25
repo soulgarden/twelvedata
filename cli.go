@@ -723,7 +723,7 @@ func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*respons
 	if len(data) > len(symbols) { // one item
 		var quote *response.Quote
 
-		if err := json.Unmarshal(resp.Body(), quote); err != nil {
+		if err := json.Unmarshal(resp.Body(), &quote); err != nil {
 			c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 		}
 
