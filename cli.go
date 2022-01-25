@@ -47,10 +47,9 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (
 		return nil, 0, 0, err
 	}
 
-	_, err = c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
+	if _, err = c.CheckErrorInResponse(resp); err != nil {
+		c.logger.Err(err).Msg("check error in response")
 
-	if err != nil {
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -91,9 +90,9 @@ func (c *Cli) GetTimeSeries(
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -131,9 +130,9 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -171,9 +170,9 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -214,9 +213,9 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime stri
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -254,9 +253,9 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -293,10 +292,9 @@ func (c *Cli) GetExchanges(instrumentType, name, code, country string) (
 		return nil, 0, 0, err
 	}
 
-	_, err = c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
+	if _, err = c.CheckErrorInResponse(resp); err != nil {
+		c.logger.Err(err).Msg("check error in response")
 
-	if err != nil {
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -327,10 +325,9 @@ func (c *Cli) GetIndices(symbol, country string) (
 		return nil, 0, 0, err
 	}
 
-	_, err = c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
+	if _, err = c.CheckErrorInResponse(resp); err != nil {
+		c.logger.Err(err).Msg("check error in response")
 
-	if err != nil {
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -360,10 +357,9 @@ func (c *Cli) GetEtfs(symbol string) (
 		return nil, 0, 0, err
 	}
 
-	_, err = c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
+	if _, err = c.CheckErrorInResponse(resp); err != nil {
+		c.logger.Err(err).Msg("check error in response")
 
-	if err != nil {
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -431,9 +427,9 @@ func (c *Cli) GetUsage() (
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -469,10 +465,9 @@ func (c *Cli) GetEarningsCalendar(decimalPlaces int, startDate, endDate string) 
 		return nil, 0, 0, err
 	}
 
-	_, err = c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
+	if _, err = c.CheckErrorInResponse(resp); err != nil {
+		c.logger.Err(err).Msg("check error in response")
 
-	if err != nil {
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -507,9 +502,9 @@ func (c *Cli) GetExchangeRate(
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -550,9 +545,9 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -593,9 +588,9 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate stri
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -636,9 +631,9 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, 
 	}
 
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
@@ -705,9 +700,9 @@ func (c *Cli) logRequest(
 
 func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*response.Quotes, error) {
 	errResp, err := c.CheckErrorInResponse(resp)
-	c.logger.Err(err).Msg("check error in response")
-
 	if err != nil {
+		c.logger.Err(err).Msg("check error in response")
+
 		return nil, err
 	}
 
