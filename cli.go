@@ -680,7 +680,9 @@ func (c *Cli) makeRequest(uri string, resp *fasthttp.Response) (int, int, error)
 	c.logRequest(req, resp, time.Since(start), nil)
 
 	creditsLeft, creditsUsed, err := c.getCredits(resp)
-	c.logger.Err(err).Msg("get credits")
+	if err != nil {
+		c.logger.Err(err).Msg("get credits")
+	}
 
 	return creditsLeft, creditsUsed, nil
 }
@@ -772,6 +774,10 @@ func (c *Cli) CheckErrorInResponse(resp *fasthttp.Response) (*response.Error, er
 
 	if errResp.Code == http.StatusBadRequest {
 		return nil, dictionary.ErrInvalidTwelveDataResponse
+	}
+
+	if errResp.Code == http.StatusTooManyRequests {
+		return nil, dictionary.ErrTooManyRequests
 	}
 
 	return errResp, nil

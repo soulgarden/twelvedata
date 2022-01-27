@@ -71,27 +71,27 @@ Twelve data go api client
         "os"
     )
 
-    	logger := zerolog.New(os.Stdout)
-
-	cfg := &twelvedata.Conf{
-		APIKey: "4e0133f255164c499a387977ce017ebc",
-	}
-
-	if err := configor.New(&configor.Config{}).Load(cfg); err != nil {
-		logger.Err(err).Msg("init config")
-
-		return
-	}
-
-	cli := twelvedata.NewCli(
-		cfg,
-		&fasthttp.Client{},
-		&logger,
-	)
-
-	resp, creditsLeft, creditsUsed, err := cli.GetEtfs("")
-
-	fmt.Println(resp, creditsLeft, creditsUsed, err)
+    logger := zerolog.New(os.Stdout)
+    
+    cfg := &twelvedata.Conf{
+        APIKey: "4e0133f255164c499a387977ce017ebc",
+    }
+    
+    if err := configor.New(&configor.Config{}).Load(cfg); err != nil {
+        logger.Err(err).Msg("init config")
+        
+        return
+    }
+    
+    cli := twelvedata.NewCli(
+        cfg,
+        &fasthttp.Client{},
+        &logger,
+    )
+    
+    resp, creditsLeft, creditsUsed, err := cli.GetEtfs("")
+    
+    fmt.Println(resp, creditsLeft, creditsUsed, err)
 
 ### WebSocket
 
