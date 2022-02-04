@@ -17,12 +17,13 @@ import (
 type WS struct {
 	url      *url.URL
 	eventsCh chan *response.PriceEvent
+	dialer   *websocket.Dialer
 	logger   *zerolog.Logger
 }
 
 // nolint: exhaustivestruct
-func NewWS(cfg *Conf, logger *zerolog.Logger) *WS {
-	return &WS{
+func NewWS(cfg *Conf, logger *zerolog.Logger, dialer *websocket.Dialer) *WS {
+	ws := &WS{
 		url: &url.URL{
 			Scheme:   "wss",
 			Host:     cfg.BaseWSURL,
@@ -32,10 +33,16 @@ func NewWS(cfg *Conf, logger *zerolog.Logger) *WS {
 		eventsCh: make(chan *response.PriceEvent, dictionary.EventsChSize),
 		logger:   logger,
 	}
+
+	if dialer == nil {
+		ws.dialer = websocket.DefaultDialer
+	}
+
+	return ws
 }
 
 func (w *WS) Subscribe(ctx context.Context, symbols []string) error {
-	conn, _, err := websocket.DefaultDialer.Dial(w.url.String(), nil)
+	conn, _, err := w.dialer.Dial(w.url.String(), nil)
 	if err != nil {
 		w.logger.Err(err).Str("url", w.url.String()).Msg("dial")
 

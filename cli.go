@@ -48,7 +48,9 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -91,7 +93,9 @@ func (c *Cli) GetTimeSeries(
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -131,7 +135,9 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -171,7 +177,9 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -214,7 +222,9 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime stri
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -254,7 +264,9 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -293,7 +305,9 @@ func (c *Cli) GetExchanges(instrumentType, name, code, country string) (
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -326,7 +340,9 @@ func (c *Cli) GetIndices(symbol, country string) (
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -358,7 +374,9 @@ func (c *Cli) GetEtfs(symbol string) (
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -428,7 +446,9 @@ func (c *Cli) GetUsage() (
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -466,7 +486,9 @@ func (c *Cli) GetEarningsCalendar(decimalPlaces int, startDate, endDate string) 
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -503,7 +525,9 @@ func (c *Cli) GetExchangeRate(
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -546,7 +570,9 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -589,7 +615,9 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate stri
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -632,7 +660,9 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, 
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
@@ -693,7 +723,15 @@ func (c *Cli) logRequest(
 	duration time.Duration,
 	err error,
 ) {
-	c.logger.Err(err).
+	var event *zerolog.Event
+
+	if err != nil {
+		event = c.logger.Debug()
+	} else {
+		event = c.logger.Err(err)
+	}
+
+	event.
 		Str("request headers", req.Header.String()).
 		Int("response code", resp.StatusCode()).
 		Dur("duration", duration).
@@ -703,7 +741,9 @@ func (c *Cli) logRequest(
 func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*response.Quotes, error) {
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		c.logger.Err(err).Msg("check error in response")
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
 
 		return nil, err
 	}
@@ -723,17 +763,37 @@ func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*respons
 	quotes := &response.Quotes{Data: []*response.Quote{}, Errors: []*response.QuoteError{}}
 
 	if len(data) > len(symbols) { // one item
-		var quote *response.Quote
+		err = c.parseQuote(resp, quotes)
 
-		if err := json.Unmarshal(resp.Body(), &quote); err != nil {
-			c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
-		}
-
-		quotes.Data = append(quotes.Data, quote)
-
-		return quotes, nil
+		return quotes, err
 	}
 
+	err = c.parseQuotes(data, quotes)
+
+	return quotes, err
+}
+
+func (c *Cli) parseQuote(
+	resp *fasthttp.Response,
+	quotes *response.Quotes,
+) error {
+	var quote *response.Quote
+
+	if err := json.Unmarshal(resp.Body(), &quote); err != nil {
+		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
+
+		return fmt.Errorf("unmarshal json: %w", err)
+	}
+
+	quotes.Data = append(quotes.Data, quote)
+
+	return nil
+}
+
+func (c *Cli) parseQuotes(
+	data map[string]json.RawMessage,
+	quotes *response.Quotes,
+) error {
 	var quoteErr *response.QuoteError
 
 	var quoteResp *response.Quote
@@ -743,7 +803,7 @@ func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*respons
 			if err := json.Unmarshal(item, &quoteErr); err != nil {
 				c.logger.Err(err).Bytes("val", item).Msg("unmarshall")
 
-				return nil, fmt.Errorf("unmarshal json: %w", err)
+				return fmt.Errorf("unmarshal json: %w", err)
 			}
 
 			quotes.Errors = append(quotes.Errors, quoteErr)
@@ -754,13 +814,13 @@ func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*respons
 		if err := json.Unmarshal(item, &quoteResp); err != nil {
 			c.logger.Err(err).Bytes("val", item).Msg("unmarshall")
 
-			return quotes, fmt.Errorf("unmarshal json: %w", err)
+			return fmt.Errorf("unmarshal json: %w", err)
 		}
 
 		quotes.Data = append(quotes.Data, quoteResp)
 	}
 
-	return quotes, nil
+	return nil
 }
 
 func (c *Cli) CheckErrorInResponse(resp *fasthttp.Response) (*response.Error, error) {
@@ -788,9 +848,9 @@ func (c *Cli) getCredits(resp *fasthttp.Response) (creditsLeft int, creditsUsed 
 
 	if creditsLeftStr != "" {
 		creditsLeft, err = strconv.Atoi(creditsLeftStr)
-		c.logger.Err(err).Str("val", creditsLeftStr).Msg("str to int")
-
 		if err != nil {
+			c.logger.Err(err).Str("val", creditsLeftStr).Msg("str to int")
+
 			return 0, 0, fmt.Errorf("str to int: %w", err)
 		}
 	}
@@ -799,9 +859,9 @@ func (c *Cli) getCredits(resp *fasthttp.Response) (creditsLeft int, creditsUsed 
 
 	if creditsUsedStr != "" {
 		creditsUsed, err = strconv.Atoi(creditsUsedStr)
-		c.logger.Err(err).Str("val", creditsUsedStr).Msg("str to int")
-
 		if err != nil {
+			c.logger.Err(err).Str("val", creditsUsedStr).Msg("str to int")
+
 			return creditsLeft, 0, fmt.Errorf("str to int: %w", err)
 		}
 	}

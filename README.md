@@ -121,6 +121,7 @@ Twelve data go api client
     wsCli := twelvedata.NewWS(
         cfg,
         &logger,
+        nil,
     )
     
     go wsCli.Subscribe(ctx, []string{"AAPL", "FB"})
