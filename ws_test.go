@@ -33,10 +33,11 @@ func TestWS_Subscribe(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
+		name          string
+		fields        fields
+		args          args
+		wantErr       bool
+		expectedPrice float64
 	}{
 		{
 			name: "1",
@@ -75,7 +76,8 @@ func TestWS_Subscribe(t *testing.T) {
 									"price":172.8700
 								}`,
 			},
-			wantErr: false,
+			wantErr:       false,
+			expectedPrice: 172.8700,
 		},
 	}
 
@@ -142,7 +144,7 @@ func TestWS_Subscribe(t *testing.T) {
 
 			resp := <-w.Consume()
 
-			if resp.Price != 172.8700 {
+			if resp.Price != tt.expectedPrice {
 				t.Error("not equal")
 			}
 		})

@@ -1,6 +1,7 @@
 Twelve data go api client
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/soulgarden/twelvedata)](https://goreportcard.com/report/github.com/soulgarden/twelvedata)
+![build](https://github.com/soulgarden/twelvedata/actions/workflows/main.yml/badge.svg)
 
 
 # Covered:
