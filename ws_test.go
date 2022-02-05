@@ -1,4 +1,4 @@
-package twelvedata
+package twelvedata // nolint: testpackage
 
 import (
 	"context"
@@ -145,7 +145,7 @@ func TestWS_Subscribe(t *testing.T) {
 			resp := <-w.Consume()
 
 			if resp.Price != tt.expectedPrice {
-				t.Error("not equal")
+				t.Error("price not equal")
 			}
 		})
 	}
