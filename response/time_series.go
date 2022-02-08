@@ -1,16 +1,18 @@
 package response
 
 type TimeSeries struct {
-	Meta struct {
-		Symbol           string `json:"symbol"`
-		Interval         string `json:"interval"`
-		Currency         string `json:"currency"`
-		ExchangeTimezone string `json:"exchange_timezone"` // nolint: tagliatelle
-		Exchange         string `json:"exchange"`
-		Type             string `json:"type"`
-	} `json:"meta"`
+	Meta   *TimeSeriesMeta    `json:"meta"`
 	Values []*TimeSeriesValue `json:"values"`
 	Status string             `json:"status"`
+}
+
+type TimeSeriesMeta struct {
+	Symbol           string `json:"symbol"`
+	Interval         string `json:"interval"`
+	Currency         string `json:"currency"`
+	ExchangeTimezone string `json:"exchange_timezone"` // nolint: tagliatelle
+	Exchange         string `json:"exchange"`
+	Type             string `json:"type"`
 }
 
 type TimeSeriesValue struct {
