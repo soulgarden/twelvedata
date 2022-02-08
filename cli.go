@@ -517,7 +517,7 @@ func (c *Cli) GetExchangeRate(
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.CoreData.ExchangeRateURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
 	uri = strings.Replace(uri, "{precision}", strconv.Itoa(precision), 1)
-	uri = strings.Replace(uri, "{timeZone}", timeZone, 1)
+	uri = strings.Replace(uri, "{timezone}", timeZone, 1)
 
 	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
