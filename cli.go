@@ -143,7 +143,7 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, nil
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &profileResp); err != nil {
@@ -197,7 +197,7 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 	return insiderTransactionsResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint: varnamelen,dupl
+// nolint: varnamelen
 func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime string) (
 	dividendsResp *response.Dividends,
 	creditsLeft int,
@@ -230,7 +230,7 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime stri
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, nil
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &dividendsResp); err != nil {
@@ -496,6 +496,7 @@ func (c *Cli) GetEarningsCalendar(decimalPlaces int, startDate, endDate string) 
 	return earningsResp, creditsLeft, creditsUsed, nil
 }
 
+// nolint: dupl
 func (c *Cli) GetExchangeRate(
 	symbol, timeZone string, precision int,
 ) (

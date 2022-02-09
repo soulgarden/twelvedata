@@ -20,7 +20,58 @@ type fields struct {
 	logger  *zerolog.Logger
 }
 
-// nolint: funlen,dupl
+func startServer(t *testing.T, responseCode, wantCreditsLeft, wantCreditsUsed int, responseBody string) string {
+	t.Helper()
+
+	s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
+		if responseCode == http.StatusInternalServerError {
+			cw.WriteHeader(responseCode)
+		}
+
+		cw.Header().Add("api-credits-left", strconv.Itoa(wantCreditsLeft))
+		cw.Header().Add("api-credits-used", strconv.Itoa(wantCreditsUsed))
+
+		_, err := cw.Write([]byte(responseBody))
+		if err != nil {
+			t.Error(err)
+		}
+	}))
+
+	t.Cleanup(func() {
+		s.Close()
+	})
+
+	return s.URL
+}
+
+func runAssertions(
+	t *testing.T,
+	gotCreditsLeft, gotCreditsUsed, wantCreditsLeft, wantCreditsUsed int,
+	gotErr, wantErr error,
+	gotResp, wantResp interface{},
+) {
+	t.Helper()
+
+	if (gotErr != nil && wantErr == nil) || (!errors.Is(gotErr, wantErr)) {
+		t.Errorf("error = %v, wantErr %v", gotErr, wantErr)
+
+		return
+	}
+
+	if !reflect.DeepEqual(gotResp, wantResp) {
+		t.Errorf("gotResp = %v, want %v", gotResp, wantResp)
+	}
+
+	if gotCreditsLeft != wantCreditsLeft {
+		t.Errorf("gotCreditsLeft = %v, want %v", gotResp, wantCreditsLeft)
+	}
+
+	if gotCreditsUsed != wantCreditsUsed {
+		t.Errorf("gotCreditsUsed = %v, want %v", gotResp, wantCreditsUsed)
+	}
+}
+
+// nolint: funlen
 func TestCli_GetStocks(t *testing.T) {
 	t.Parallel()
 
@@ -37,7 +88,7 @@ func TestCli_GetStocks(t *testing.T) {
 		args            args
 		responseCode    int
 		responseBody    string
-		wantStocksResp  *response.Stocks
+		wantResp        *response.Stocks
 		wantCreditsLeft int
 		wantCreditsUsed int
 		wantErr         error
@@ -65,7 +116,7 @@ func TestCli_GetStocks(t *testing.T) {
 				],
 				"status":"ok"
 			}`,
-			wantStocksResp: &response.Stocks{
+			wantResp: &response.Stocks{
 				Data: []*response.Stock{
 					{
 						Symbol:   "AAPL",
@@ -110,7 +161,7 @@ func TestCli_GetStocks(t *testing.T) {
 				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
-			wantStocksResp:  nil,
+			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
 			wantErr:         dictionary.ErrTooManyRequests,
@@ -135,7 +186,7 @@ func TestCli_GetStocks(t *testing.T) {
 				"data":[],
 				"status":"ok"
 			}`,
-			wantStocksResp: &response.Stocks{
+			wantResp: &response.Stocks{
 				Data: []*response.Stock{},
 			},
 			wantCreditsLeft: 10,
@@ -159,7 +210,7 @@ func TestCli_GetStocks(t *testing.T) {
 			responseCode: http.StatusInternalServerError,
 
 			responseBody:    ``,
-			wantStocksResp:  nil,
+			wantResp:        nil,
 			wantCreditsLeft: 0,
 			wantCreditsUsed: 0,
 			wantErr:         dictionary.ErrBadStatusCode,
@@ -172,54 +223,33 @@ func TestCli_GetStocks(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				if tt.responseCode == http.StatusInternalServerError {
-					cw.WriteHeader(tt.responseCode)
-				}
-
-				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
-				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
-
-				_, err := cw.Write([]byte(tt.responseBody))
-				if err != nil {
-					t.Error(err)
-				}
-			}))
-
-			defer s.Close()
-
-			tt.fields.cfg.BaseURL = s.URL
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
 			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
 
-			gotStocksResp, gotCreditsLeft, gotCreditsUsed, err := c.GetStocks(
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetStocks(
 				tt.args.symbol,
 				tt.args.exchange,
 				tt.args.country,
 				tt.args.instrumentType,
 			)
-			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
-				t.Errorf("GetStocks() error = %v, wantErr %v", err, tt.wantErr)
 
-				return
-			}
-
-			if !reflect.DeepEqual(gotStocksResp, tt.wantStocksResp) {
-				t.Errorf("GetStocks() gotStocksResp = %v, want %v", gotStocksResp, tt.wantStocksResp)
-			}
-
-			if gotCreditsLeft != tt.wantCreditsLeft {
-				t.Errorf("GetStocks() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
-
-			if gotCreditsUsed != tt.wantCreditsUsed {
-				t.Errorf("GetStocks() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
-			}
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
 		})
 	}
 }
 
-// nolint: funlen,dupl
+// nolint: funlen
 func TestCli_GetExchanges(t *testing.T) {
 	t.Parallel()
 
@@ -231,15 +261,15 @@ func TestCli_GetExchanges(t *testing.T) {
 	}
 
 	tests := []struct {
-		name              string
-		fields            fields
-		args              args
-		responseCode      int
-		responseBody      string
-		wantExchangesResp *response.Exchanges
-		wantCreditsLeft   int
-		wantCreditsUsed   int
-		wantErr           error
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.Exchanges
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
 	}{
 		{
 			name: "success",
@@ -264,7 +294,7 @@ func TestCli_GetExchanges(t *testing.T) {
 				],
 				"status":"ok"
 			}`,
-			wantExchangesResp: &response.Exchanges{
+			wantResp: &response.Exchanges{
 				Data: []*response.Exchange{
 					{
 						Name:     "ASX",
@@ -305,10 +335,10 @@ func TestCli_GetExchanges(t *testing.T) {
 				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
-			wantExchangesResp: nil,
-			wantCreditsLeft:   10,
-			wantCreditsUsed:   1,
-			wantErr:           dictionary.ErrTooManyRequests,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrTooManyRequests,
 		},
 		{
 			name: "not found symbol",
@@ -330,7 +360,7 @@ func TestCli_GetExchanges(t *testing.T) {
 				"data":[],
 				"status":"ok"
 			}`,
-			wantExchangesResp: &response.Exchanges{
+			wantResp: &response.Exchanges{
 				Data: []*response.Exchange{},
 			},
 			wantCreditsLeft: 10,
@@ -351,13 +381,12 @@ func TestCli_GetExchanges(t *testing.T) {
 				code:           "",
 				country:        "",
 			},
-			responseCode: http.StatusInternalServerError,
-
-			responseBody:      ``,
-			wantExchangesResp: nil,
-			wantCreditsLeft:   0,
-			wantCreditsUsed:   0,
-			wantErr:           dictionary.ErrBadStatusCode,
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
 		},
 	}
 	for _, tt := range tests {
@@ -366,49 +395,28 @@ func TestCli_GetExchanges(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				if tt.responseCode == http.StatusInternalServerError {
-					cw.WriteHeader(tt.responseCode)
-				}
-
-				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
-				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
-
-				_, err := cw.Write([]byte(tt.responseBody))
-				if err != nil {
-					t.Error(err)
-				}
-			}))
-
-			defer s.Close()
-
-			tt.fields.cfg.BaseURL = s.URL
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
 			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
 
-			gotExchangesResp, gotCreditsLeft, gotCreditsUsed, err := c.GetExchanges(
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetExchanges(
 				tt.args.instrumentType,
 				tt.args.name,
 				tt.args.code,
 				tt.args.country,
 			)
-			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
-				t.Errorf("GetStocks() error = %v, wantErr %v", err, tt.wantErr)
 
-				return
-			}
-
-			if !reflect.DeepEqual(gotExchangesResp, tt.wantExchangesResp) {
-				t.Errorf("GetExchanges() gotExchangesResp = %v, want %v", gotExchangesResp, tt.wantExchangesResp)
-			}
-
-			if gotCreditsLeft != tt.wantCreditsLeft {
-				t.Errorf("GetExchanges() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
-
-			if gotCreditsUsed != tt.wantCreditsUsed {
-				t.Errorf("GetExchanges() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
-			}
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
 		})
 	}
 }
@@ -427,7 +435,7 @@ func TestCli_GetEtfs(t *testing.T) {
 		args            args
 		responseCode    int
 		responseBody    string
-		wantEtfsResp    *response.Etfs
+		wantResp        *response.Etfs
 		wantCreditsLeft int
 		wantCreditsUsed int
 		wantErr         error
@@ -452,7 +460,7 @@ func TestCli_GetEtfs(t *testing.T) {
 				],
 				"status":"ok"
 			}`,
-			wantEtfsResp: &response.Etfs{
+			wantResp: &response.Etfs{
 				Data: []*response.Etf{
 					{
 						Symbol:   "QQQ",
@@ -490,7 +498,7 @@ func TestCli_GetEtfs(t *testing.T) {
 				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
-			wantEtfsResp:    nil,
+			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
 			wantErr:         dictionary.ErrTooManyRequests,
@@ -512,7 +520,7 @@ func TestCli_GetEtfs(t *testing.T) {
 				"data":[],
 				"status":"ok"
 			}`,
-			wantEtfsResp: &response.Etfs{
+			wantResp: &response.Etfs{
 				Data: []*response.Etf{},
 			},
 			wantCreditsLeft: 10,
@@ -533,7 +541,7 @@ func TestCli_GetEtfs(t *testing.T) {
 			responseCode: http.StatusInternalServerError,
 
 			responseBody:    ``,
-			wantEtfsResp:    nil,
+			wantResp:        nil,
 			wantCreditsLeft: 0,
 			wantCreditsUsed: 0,
 			wantErr:         dictionary.ErrBadStatusCode,
@@ -546,44 +554,23 @@ func TestCli_GetEtfs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				if tt.responseCode == http.StatusInternalServerError {
-					cw.WriteHeader(tt.responseCode)
-				}
-
-				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
-				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
-
-				_, err := cw.Write([]byte(tt.responseBody))
-				if err != nil {
-					t.Error(err)
-				}
-			}))
-
-			defer s.Close()
-
-			tt.fields.cfg.BaseURL = s.URL
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
 			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
 
-			gotEtfsResp, gotCreditsLeft, gotCreditsUsed, err := c.GetEtfs(tt.args.symbol)
-			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
-				t.Errorf("GetStocks() error = %v, wantErr %v", err, tt.wantErr)
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEtfs(tt.args.symbol)
 
-				return
-			}
-
-			if !reflect.DeepEqual(gotEtfsResp, tt.wantEtfsResp) {
-				t.Errorf("GetEtfs() gotEtfsResp = %v, want %v", gotEtfsResp, tt.wantEtfsResp)
-			}
-
-			if gotCreditsLeft != tt.wantCreditsLeft {
-				t.Errorf("GetEtfs() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
-
-			if gotCreditsUsed != tt.wantCreditsUsed {
-				t.Errorf("GetEtfs() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
-			}
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
 		})
 	}
 }
@@ -603,7 +590,7 @@ func TestCli_GetIndices(t *testing.T) {
 		args            args
 		responseCode    int
 		responseBody    string
-		wantIndicesResp *response.Indices
+		wantResp        *response.Indices
 		wantCreditsLeft int
 		wantCreditsUsed int
 		wantErr         error
@@ -628,7 +615,7 @@ func TestCli_GetIndices(t *testing.T) {
 				],
 				"status":"ok"
 			}`,
-			wantIndicesResp: &response.Indices{
+			wantResp: &response.Indices{
 				Data: []*response.Index{
 					{
 						Symbol:   "IXIC",
@@ -661,7 +648,7 @@ func TestCli_GetIndices(t *testing.T) {
 				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
-			wantIndicesResp: nil,
+			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
 			wantErr:         dictionary.ErrTooManyRequests,
@@ -684,7 +671,7 @@ func TestCli_GetIndices(t *testing.T) {
 				"data":[],
 				"status":"ok"
 			}`,
-			wantIndicesResp: &response.Indices{
+			wantResp: &response.Indices{
 				Data: []*response.Index{},
 			},
 			wantCreditsLeft: 10,
@@ -705,7 +692,7 @@ func TestCli_GetIndices(t *testing.T) {
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
-			wantIndicesResp: nil,
+			wantResp:        nil,
 			wantCreditsLeft: 0,
 			wantCreditsUsed: 0,
 			wantErr:         dictionary.ErrBadStatusCode,
@@ -718,44 +705,23 @@ func TestCli_GetIndices(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				if tt.responseCode == http.StatusInternalServerError {
-					cw.WriteHeader(tt.responseCode)
-				}
-
-				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
-				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
-
-				_, err := cw.Write([]byte(tt.responseBody))
-				if err != nil {
-					t.Error(err)
-				}
-			}))
-
-			defer s.Close()
-
-			tt.fields.cfg.BaseURL = s.URL
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
 			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
 
-			gotIndicesResp, gotCreditsLeft, gotCreditsUsed, err := c.GetIndices(tt.args.symbol, tt.args.country)
-			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
-				t.Errorf("GetStocks() error = %v, wantErr %v", err, tt.wantErr)
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetIndices(tt.args.symbol, tt.args.country)
 
-				return
-			}
-
-			if !reflect.DeepEqual(gotIndicesResp, tt.wantIndicesResp) {
-				t.Errorf("GetIndices() gotIndicesResp = %v, want %v", gotIndicesResp, tt.wantIndicesResp)
-			}
-
-			if gotCreditsLeft != tt.wantCreditsLeft {
-				t.Errorf("GetIndices() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
-
-			if gotCreditsUsed != tt.wantCreditsUsed {
-				t.Errorf("GetIndices() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
-			}
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
 		})
 	}
 }
@@ -780,7 +746,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		args            args
 		responseCode    int
 		responseBody    string
-		wantSeriesResp  *response.TimeSeries
+		wantResp        *response.TimeSeries
 		wantCreditsLeft int
 		wantCreditsUsed int
 		wantErr         error
@@ -821,7 +787,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 				],
 				"status":"ok"
 			}`,
-			wantSeriesResp: &response.TimeSeries{
+			wantResp: &response.TimeSeries{
 				Meta: &response.TimeSeriesMeta{
 					Symbol:           "AAPL",
 					Interval:         "1min",
@@ -886,7 +852,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
-			wantSeriesResp:  nil,
+			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
 			wantErr:         dictionary.ErrTooManyRequests,
@@ -920,7 +886,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 					"exchange":""
 				}
 			}`,
-			wantSeriesResp:  nil,
+			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
 			wantErr:         dictionary.ErrInvalidTwelveDataResponse,
@@ -944,7 +910,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
-			wantSeriesResp:  nil,
+			wantResp:        nil,
 			wantCreditsLeft: 0,
 			wantCreditsUsed: 0,
 			wantErr:         dictionary.ErrBadStatusCode,
@@ -957,27 +923,11 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				if tt.responseCode == http.StatusInternalServerError {
-					cw.WriteHeader(tt.responseCode)
-				}
-
-				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
-				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
-
-				_, err := cw.Write([]byte(tt.responseBody))
-				if err != nil {
-					t.Error(err)
-				}
-			}))
-
-			defer s.Close()
-
-			tt.fields.cfg.BaseURL = s.URL
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
 			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
 
-			gotSeriesResp, gotCreditsLeft, gotCreditsUsed, err := c.GetTimeSeries(
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetTimeSeries(
 				tt.args.symbol,
 				tt.args.interval,
 				tt.args.exchange,
@@ -986,23 +936,18 @@ func TestCli_GetTimeSeries(t *testing.T) {
 				tt.args.outputSize,
 				tt.args.prePost,
 			)
-			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
-				t.Errorf("GetTimeSeries() error = %v, wantErr %v", err, tt.wantErr)
 
-				return
-			}
-
-			if !reflect.DeepEqual(gotSeriesResp, tt.wantSeriesResp) {
-				t.Errorf("GetTimeSeries() gotSeriesResp = %v, want %v", gotSeriesResp, tt.wantSeriesResp)
-			}
-
-			if gotCreditsLeft != tt.wantCreditsLeft {
-				t.Errorf("GetTimeSeries() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
-
-			if gotCreditsUsed != tt.wantCreditsUsed {
-				t.Errorf("GetTimeSeries() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
-			}
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
 		})
 	}
 }
@@ -1018,15 +963,15 @@ func TestCli_GetExchangeRate(t *testing.T) {
 	}
 
 	tests := []struct {
-		name             string
-		fields           fields
-		args             args
-		responseCode     int
-		responseBody     string
-		wantExchangeRate *response.ExchangeRate
-		wantCreditsLeft  int
-		wantCreditsUsed  int
-		wantErr          error
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.ExchangeRate
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
 	}{
 		{
 			name: "success",
@@ -1043,9 +988,8 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			},
 			responseCode: http.StatusOK,
 
-			responseBody: `
-			{"symbol":"USD/JPY","rate":115.58,"timestamp":1644344940}`,
-			wantExchangeRate: &response.ExchangeRate{
+			responseBody: `{"symbol":"USD/JPY","rate":115.58,"timestamp":1644344940}`,
+			wantResp: &response.ExchangeRate{
 				Symbol:    "USD/JPY",
 				Rate:      115.58,
 				Timestamp: 1644344940,
@@ -1074,10 +1018,10 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
-			wantExchangeRate: nil,
-			wantCreditsLeft:  10,
-			wantCreditsUsed:  1,
-			wantErr:          dictionary.ErrTooManyRequests,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrTooManyRequests,
 		},
 		{
 			name: "not found symbol",
@@ -1100,10 +1044,10 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				"status":"error",
 				"meta":{}
 			}`,
-			wantExchangeRate: nil,
-			wantCreditsLeft:  10,
-			wantCreditsUsed:  1,
-			wantErr:          dictionary.ErrInvalidTwelveDataResponse,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrInvalidTwelveDataResponse,
 		},
 		{
 			name: "500 internal server error",
@@ -1118,12 +1062,12 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				timeZone:  "",
 				precision: 0,
 			},
-			responseCode:     http.StatusInternalServerError,
-			responseBody:     ``,
-			wantExchangeRate: nil,
-			wantCreditsLeft:  0,
-			wantCreditsUsed:  0,
-			wantErr:          dictionary.ErrBadStatusCode,
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
 		},
 	}
 
@@ -1133,48 +1077,27 @@ func TestCli_GetExchangeRate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				if tt.responseCode == http.StatusInternalServerError {
-					cw.WriteHeader(tt.responseCode)
-				}
-
-				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
-				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
-
-				_, err := cw.Write([]byte(tt.responseBody))
-				if err != nil {
-					t.Error(err)
-				}
-			}))
-
-			defer s.Close()
-
-			tt.fields.cfg.BaseURL = s.URL
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
 			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
 
-			gotExchangeRate, gotCreditsLeft, gotCreditsUsed, err := c.GetExchangeRate(
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetExchangeRate(
 				tt.args.symbol,
 				tt.args.timeZone,
 				tt.args.precision,
 			)
-			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
-				t.Errorf("GetExchangeRate() error = %v, wantErr %v", err, tt.wantErr)
 
-				return
-			}
-
-			if !reflect.DeepEqual(gotExchangeRate, tt.wantExchangeRate) {
-				t.Errorf("GetExchangeRate() gotExchangeRate = %v, want %v", gotExchangeRate, tt.wantExchangeRate)
-			}
-
-			if gotCreditsLeft != tt.wantCreditsLeft {
-				t.Errorf("GetExchangeRate() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
-
-			if gotCreditsUsed != tt.wantCreditsUsed {
-				t.Errorf("GetExchangeRate() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
-			}
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
 		})
 	}
 }
@@ -1201,7 +1124,7 @@ func TestCli_GetQuotes(t *testing.T) {
 		args            args
 		responseCode    int
 		responseBody    string
-		want            *response.Quotes
+		wantResp        *response.Quotes
 		wantCreditsLeft int
 		wantCreditsUsed int
 		wantErr         error
@@ -1253,7 +1176,7 @@ func TestCli_GetQuotes(t *testing.T) {
 					"range":"116.209999 - 182.940002"
 				}
 			}`,
-			want: &response.Quotes{
+			wantResp: &response.Quotes{
 				Data: []*response.Quote{{
 					Symbol:        "AAPL",
 					Name:          "Apple Inc",
@@ -1311,7 +1234,7 @@ func TestCli_GetQuotes(t *testing.T) {
 				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
-			want:            nil,
+			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
 			wantErr:         dictionary.ErrTooManyRequests,
@@ -1359,7 +1282,7 @@ func TestCli_GetQuotes(t *testing.T) {
 					}
 				}
 			}`,
-			want: &response.Quotes{
+			wantResp: &response.Quotes{
 				Data: []*response.Quote{},
 				Errors: []*response.QuoteError{
 					{
@@ -1409,7 +1332,7 @@ func TestCli_GetQuotes(t *testing.T) {
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
-			want:            nil,
+			wantResp:        nil,
 			wantCreditsLeft: 0,
 			wantCreditsUsed: 0,
 			wantErr:         dictionary.ErrBadStatusCode,
@@ -1422,27 +1345,11 @@ func TestCli_GetQuotes(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				if tt.responseCode == http.StatusInternalServerError {
-					cw.WriteHeader(tt.responseCode)
-				}
-
-				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
-				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
-
-				_, err := cw.Write([]byte(tt.responseBody))
-				if err != nil {
-					t.Error(err)
-				}
-			}))
-
-			defer s.Close()
-
-			tt.fields.cfg.BaseURL = s.URL
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
 			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
 
-			got, gotCreditsLeft, gotCreditsUsed, err := c.GetQuotes(
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetQuotes(
 				tt.args.interval,
 				tt.args.exchange,
 				tt.args.country,
@@ -1453,23 +1360,378 @@ func TestCli_GetQuotes(t *testing.T) {
 				tt.args.decimalPlaces,
 				tt.args.symbols,
 			)
-			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
-				t.Errorf("GetQuotes() error = %v, wantErr %v", err, tt.wantErr)
 
-				return
-			}
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
 
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetQuotes() got = %v, want %v", got, tt.want)
-			}
+// nolint: funlen
+func TestCli_GetProfile(t *testing.T) {
+	t.Parallel()
 
-			if gotCreditsLeft != tt.wantCreditsLeft {
-				t.Errorf("GetQuotes() got1 = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
+	type args struct {
+		symbol   string
+		exchange string
+		country  string
+	}
 
-			if gotCreditsUsed != tt.wantCreditsUsed {
-				t.Errorf("GetQuotes() got2 = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
-			}
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.Profile
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode: http.StatusOK,
+			// nolint: lll
+			responseBody: `
+			{
+				"symbol":"AAPL",
+				"name":"Apple Inc",
+				"exchange":"NASDAQ",
+				"sector":"Technology",
+				"industry":"Consumer Electronics",
+				"employees":154000,
+				"website":"https://www.apple.com",
+				"description":"Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. It also sells various related services. In addition, the company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of multi-purpose tablets; AirPods Max, an over-ear wireless headphone; and wearables, home, and accessories comprising AirPods, Apple TV, Apple Watch, Beats products, HomePod, and iPod touch. Further, it provides AppleCare support services; cloud services store services; and operates various platforms, including the App Store that allow customers to discover and download applications and digital content, such as books, music, video, games, and podcasts. Additionally, the company offers various services, such as Apple Arcade, a game subscription service; Apple Music, which offers users a curated listening experience with on-demand radio stations; Apple News+, a subscription news and magazine service; Apple TV+, which offers exclusive original content; Apple Card, a co-branded credit card; and Apple Pay, a cashless payment service, as well as licenses its intellectual property. The company serves consumers, and small and mid-sized businesses; and the education, enterprise, and government markets. It distributes third-party applications for its products through the App Store. The company also sells its products through its retail and online stores, and direct sales force; and third-party cellular network carriers, wholesalers, retailers, and resellers. Apple Inc. was incorporated in 1977 and is headquartered in Cupertino, California.",
+				"type":"Common Stock",
+				"CEO":"Mr. Timothy D. Cook",
+				"address":"One Apple Park Way",
+				"city":"Cupertino",
+				"zip":"95014",
+				"state":"CA",
+				"country":"US",
+				"phone":"408 996 1010"
+			}`,
+			wantResp: &response.Profile{
+				Symbol:    "AAPL",
+				Name:      "Apple Inc",
+				Exchange:  "NASDAQ",
+				Sector:    "Technology",
+				Industry:  "Consumer Electronics",
+				Employees: 154000,
+				Website:   "https://www.apple.com",
+				// nolint: lll
+				Description: "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. It also sells various related services. In addition, the company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of multi-purpose tablets; AirPods Max, an over-ear wireless headphone; and wearables, home, and accessories comprising AirPods, Apple TV, Apple Watch, Beats products, HomePod, and iPod touch. Further, it provides AppleCare support services; cloud services store services; and operates various platforms, including the App Store that allow customers to discover and download applications and digital content, such as books, music, video, games, and podcasts. Additionally, the company offers various services, such as Apple Arcade, a game subscription service; Apple Music, which offers users a curated listening experience with on-demand radio stations; Apple News+, a subscription news and magazine service; Apple TV+, which offers exclusive original content; Apple Card, a co-branded credit card; and Apple Pay, a cashless payment service, as well as licenses its intellectual property. The company serves consumers, and small and mid-sized businesses; and the education, enterprise, and government markets. It distributes third-party applications for its products through the App Store. The company also sells its products through its retail and online stores, and direct sales force; and third-party cellular network carriers, wholesalers, retailers, and resellers. Apple Inc. was incorporated in 1977 and is headquartered in Cupertino, California.",
+				Type:        "Common Stock",
+				CEO:         "Mr. Timothy D. Cook",
+				Address:     "One Apple Park Way",
+				City:        "Cupertino",
+				Zip:         "95014",
+				State:       "CA",
+				Country:     "US",
+				Phone:       "408 996 1010",
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 10,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 10,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbols",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "NOTFOUND",
+				exchange: "",
+				country:  "",
+			},
+			responseCode:    http.StatusOK,
+			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 10,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetProfile(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+// nolint: funlen
+func TestCli_GetDividends(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		symbol    string
+		exchange  string
+		country   string
+		r         string
+		startTime string
+		endTime   string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.Dividends
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				r:         "last",
+				startTime: "",
+				endTime:   "",
+			},
+			responseCode: http.StatusOK,
+
+			responseBody: `
+			{
+				"meta":{
+					"symbol":"AAPL",
+					"name":"Apple Inc",
+					"currency":"USD",
+					"exchange":"NASDAQ",
+					"exchange_timezone":"America/New_York"
+				},
+				"dividends":[
+					{"payment_date":"2022-02-04","amount":0.22}
+				]
+			}`,
+			wantResp: &response.Dividends{
+				Meta: &response.DividendsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					ExchangeTimezone: "America/New_York",
+				},
+				Dividends: []*response.Dividend{
+					{
+						PaymentDate: "2022-02-04",
+						Amount:      0.22,
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 20,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				r:         "last",
+				startTime: "",
+				endTime:   "",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 20,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbols",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "NOTFOUND",
+				exchange:  "",
+				country:   "",
+				r:         "last",
+				startTime: "",
+				endTime:   "",
+			},
+			responseCode:    http.StatusOK,
+			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 20,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				r:         "last",
+				startTime: "",
+				endTime:   "",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetDividends(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+				tt.args.r,
+				tt.args.startTime,
+				tt.args.endTime,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
 		})
 	}
 }
