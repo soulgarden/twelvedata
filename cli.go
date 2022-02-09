@@ -358,8 +358,7 @@ func (c *Cli) GetIndices(symbol, country string) (
 
 func (c *Cli) GetEtfs(symbol string) (
 	etfsResp *response.Etfs,
-	creditsLeft int,
-	creditsUsed int,
+	creditsLeft, creditsUsed int,
 	err error,
 ) {
 	resp := fasthttp.AcquireResponse()
@@ -395,18 +394,13 @@ func (c *Cli) GetQuotes(
 	decimalPlaces int,
 	symbols []string,
 ) (
-	*response.Quotes,
-	int,
-	int,
-	error,
+	quotes *response.Quotes,
+	creditsLeft, creditsUsed int,
+	err error,
 ) {
 	resp := fasthttp.AcquireResponse()
 
 	defer fasthttp.ReleaseResponse(resp)
-
-	var creditsLeft, creditsUsed int
-
-	var err error
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.CoreData.QuotesURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(strings.Join(symbols, ",")), 1)
@@ -423,7 +417,7 @@ func (c *Cli) GetQuotes(
 		return nil, 0, 0, err
 	}
 
-	quotes, err := c.processQuotes(resp, symbols)
+	quotes, err = c.processQuotes(resp, symbols)
 
 	return quotes, creditsLeft, creditsUsed, err
 }
@@ -794,12 +788,12 @@ func (c *Cli) parseQuotes(
 	data map[string]json.RawMessage,
 	quotes *response.Quotes,
 ) error {
-	var quoteErr *response.QuoteError
-
 	var quoteResp *response.Quote
 
 	for _, item := range data {
-		if bytes.Contains(item, []byte(`{"code":`)) {
+		var quoteErr *response.QuoteError
+
+		if bytes.Contains(item, []byte(`"code":`)) {
 			if err := json.Unmarshal(item, &quoteErr); err != nil {
 				c.logger.Err(err).Bytes("val", item).Msg("unmarshall")
 

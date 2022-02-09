@@ -14,15 +14,15 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+type fields struct {
+	cfg     *Conf
+	httpCli *fasthttp.Client
+	logger  *zerolog.Logger
+}
+
 // nolint: funlen,dupl
 func TestCli_GetStocks(t *testing.T) {
 	t.Parallel()
-
-	type fields struct {
-		cfg     *Conf
-		httpCli *fasthttp.Client
-		logger  *zerolog.Logger
-	}
 
 	type args struct {
 		symbol         string
@@ -223,12 +223,6 @@ func TestCli_GetStocks(t *testing.T) {
 func TestCli_GetExchanges(t *testing.T) {
 	t.Parallel()
 
-	type fields struct {
-		cfg     *Conf
-		httpCli *fasthttp.Client
-		logger  *zerolog.Logger
-	}
-
 	type args struct {
 		instrumentType string
 		name           string
@@ -423,12 +417,6 @@ func TestCli_GetExchanges(t *testing.T) {
 func TestCli_GetEtfs(t *testing.T) {
 	t.Parallel()
 
-	type fields struct {
-		cfg     *Conf
-		httpCli *fasthttp.Client
-		logger  *zerolog.Logger
-	}
-
 	type args struct {
 		symbol string
 	}
@@ -604,12 +592,6 @@ func TestCli_GetEtfs(t *testing.T) {
 func TestCli_GetIndices(t *testing.T) {
 	t.Parallel()
 
-	type fields struct {
-		cfg     *Conf
-		httpCli *fasthttp.Client
-		logger  *zerolog.Logger
-	}
-
 	type args struct {
 		symbol  string
 		country string
@@ -781,12 +763,6 @@ func TestCli_GetIndices(t *testing.T) {
 // nolint: funlen
 func TestCli_GetTimeSeries(t *testing.T) {
 	t.Parallel()
-
-	type fields struct {
-		cfg     *Conf
-		httpCli *fasthttp.Client
-		logger  *zerolog.Logger
-	}
 
 	type args struct {
 		symbol         string
@@ -1026,6 +1002,473 @@ func TestCli_GetTimeSeries(t *testing.T) {
 
 			if gotCreditsUsed != tt.wantCreditsUsed {
 				t.Errorf("GetTimeSeries() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
+			}
+		})
+	}
+}
+
+// nolint: funlen
+func TestCli_GetExchangeRate(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		symbol    string
+		timeZone  string
+		precision int
+	}
+
+	tests := []struct {
+		name             string
+		fields           fields
+		args             args
+		responseCode     int
+		responseBody     string
+		wantExchangeRate *response.ExchangeRate
+		wantCreditsLeft  int
+		wantCreditsUsed  int
+		wantErr          error
+	}{
+		{
+			name: "success",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "USD/JPY",
+				timeZone:  "",
+				precision: 0,
+			},
+			responseCode: http.StatusOK,
+
+			responseBody: `
+			{"symbol":"USD/JPY","rate":115.58,"timestamp":1644344940}`,
+			wantExchangeRate: &response.ExchangeRate{
+				Symbol:    "USD/JPY",
+				Rate:      115.58,
+				Timestamp: 1644344940,
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "USD/JPY",
+				timeZone:  "",
+				precision: 0,
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantExchangeRate: nil,
+			wantCreditsLeft:  10,
+			wantCreditsUsed:  1,
+			wantErr:          dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbol",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "NOT/FOUND",
+				timeZone:  "",
+				precision: 0,
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"code":400,
+				"message":"**symbol** not found: NOT/FOUND. Please specify it correctly according to API Documentation.",
+				"status":"error",
+				"meta":{}
+			}`,
+			wantExchangeRate: nil,
+			wantCreditsLeft:  10,
+			wantCreditsUsed:  1,
+			wantErr:          dictionary.ErrInvalidTwelveDataResponse,
+		},
+		{
+			name: "500 internal server error",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "USD/JPY",
+				timeZone:  "",
+				precision: 0,
+			},
+			responseCode:     http.StatusInternalServerError,
+			responseBody:     ``,
+			wantExchangeRate: nil,
+			wantCreditsLeft:  0,
+			wantCreditsUsed:  0,
+			wantErr:          dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
+				if tt.responseCode == http.StatusInternalServerError {
+					cw.WriteHeader(tt.responseCode)
+				}
+
+				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
+				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
+
+				_, err := cw.Write([]byte(tt.responseBody))
+				if err != nil {
+					t.Error(err)
+				}
+			}))
+
+			defer s.Close()
+
+			tt.fields.cfg.BaseURL = s.URL
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotExchangeRate, gotCreditsLeft, gotCreditsUsed, err := c.GetExchangeRate(
+				tt.args.symbol,
+				tt.args.timeZone,
+				tt.args.precision,
+			)
+			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
+				t.Errorf("GetExchangeRate() error = %v, wantErr %v", err, tt.wantErr)
+
+				return
+			}
+
+			if !reflect.DeepEqual(gotExchangeRate, tt.wantExchangeRate) {
+				t.Errorf("GetExchangeRate() gotExchangeRate = %v, want %v", gotExchangeRate, tt.wantExchangeRate)
+			}
+
+			if gotCreditsLeft != tt.wantCreditsLeft {
+				t.Errorf("GetExchangeRate() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
+			}
+
+			if gotCreditsUsed != tt.wantCreditsUsed {
+				t.Errorf("GetExchangeRate() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
+			}
+		})
+	}
+}
+
+// nolint:funlen
+func TestCli_GetQuotes(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		interval         string
+		exchange         string
+		country          string
+		volumeTimePeriod string
+		instrumentType   string
+		prePost          string
+		timezone         string
+		decimalPlaces    int
+		symbols          []string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		want            *response.Quotes
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				interval:         "1day",
+				exchange:         "",
+				country:          "",
+				volumeTimePeriod: "",
+				instrumentType:   "",
+				prePost:          "",
+				timezone:         "",
+				decimalPlaces:    5,
+				symbols:          []string{"AAPL"},
+			},
+			responseCode: http.StatusOK,
+
+			responseBody: `
+			{
+				"symbol":"AAPL",
+				"name":"Apple Inc",
+				"exchange":"NASDAQ",
+				"currency":"USD",
+				"datetime":"2022-02-08",
+				"open":"171.73000",
+				"high":"175.35001",
+				"low":"171.42999",
+				"close":"174.83000",
+				"volume":"74706900",
+				"previous_close":"171.66000",
+				"change":"3.17000",
+				"percent_change":"1.84667",
+				"average_volume":"102060300",
+				"fifty_two_week":{
+					"low":"116.21000",
+					"high":"182.94000",
+					"low_change":"58.62000",
+					"high_change":"-8.11000",
+					"low_change_percent":"50.44317",
+					"high_change_percent":"-4.43315",
+					"range":"116.209999 - 182.940002"
+				}
+			}`,
+			want: &response.Quotes{
+				Data: []*response.Quote{{
+					Symbol:        "AAPL",
+					Name:          "Apple Inc",
+					Exchange:      "NASDAQ",
+					Currency:      "USD",
+					Datetime:      "2022-02-08",
+					Open:          "171.73000",
+					High:          "175.35001",
+					Low:           "171.42999",
+					Close:         "174.83000",
+					Volume:        "74706900",
+					PreviousClose: "171.66000",
+					Change:        "3.17000",
+					PercentChange: "1.84667",
+					AverageVolume: "102060300",
+					FiftyTwoWeek: &response.FiftyTwoWeek{
+						Low:               "116.21000",
+						High:              "182.94000",
+						LowChange:         "58.62000",
+						HighChange:        "-8.11000",
+						LowChangePercent:  "50.44317",
+						HighChangePercent: "-4.43315",
+						Range:             "116.209999 - 182.940002",
+					},
+				}},
+				Errors: []*response.QuoteError{},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				interval:         "1day",
+				exchange:         "",
+				country:          "",
+				volumeTimePeriod: "",
+				instrumentType:   "",
+				prePost:          "",
+				timezone:         "",
+				decimalPlaces:    5,
+				symbols:          []string{"AAPL"},
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			want:            nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbols",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				interval:         "1day",
+				exchange:         "",
+				country:          "",
+				volumeTimePeriod: "",
+				instrumentType:   "",
+				prePost:          "",
+				timezone:         "",
+				decimalPlaces:    5,
+				symbols:          []string{"NOTFOUND1", "NOTFOUND2"},
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"NOTFOUND1": {
+					"code": 400,
+					"message": "**symbol** not found: NOTFOUND1. Please specify it correctly according to API Documentation.",
+					"status": "error",
+					"meta": {
+						"symbol": "NOTFOUND1,NOTFOUND2",
+						"interval": "1day",
+						"exchange": ""
+					}
+				},
+				"NOTFOUND2": {
+					"code": 400,
+					"message": "**symbol** not found: NOTFOUND2. Please specify it correctly according to API Documentation.",
+					"status": "error",
+					"meta": {
+						"symbol": "NOTFOUND1,NOTFOUND2",
+						"interval": "1day",
+						"exchange": ""
+					}
+				}
+			}`,
+			want: &response.Quotes{
+				Data: []*response.Quote{},
+				Errors: []*response.QuoteError{
+					{
+						Code:    400,
+						Message: "**symbol** not found: NOTFOUND1. Please specify it correctly according to API Documentation.",
+						Status:  "error",
+						Meta: &response.QuoteErrorMeta{
+							Symbol:   "NOTFOUND1,NOTFOUND2",
+							Interval: "1day",
+							Exchange: "",
+						},
+					},
+					{
+						Code:    400,
+						Message: "**symbol** not found: NOTFOUND2. Please specify it correctly according to API Documentation.",
+						Status:  "error",
+						Meta: &response.QuoteErrorMeta{
+							Symbol:   "NOTFOUND1,NOTFOUND2",
+							Interval: "1day",
+							Exchange: "",
+						},
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         nil,
+		},
+		{
+			name: "500 internal server error",
+			// nolint: exhaustivestruct
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				interval:         "1day",
+				exchange:         "",
+				country:          "",
+				volumeTimePeriod: "",
+				instrumentType:   "",
+				prePost:          "",
+				timezone:         "",
+				decimalPlaces:    5,
+				symbols:          []string{"AAPL"},
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			want:            nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
+				if tt.responseCode == http.StatusInternalServerError {
+					cw.WriteHeader(tt.responseCode)
+				}
+
+				cw.Header().Add("api-credits-left", strconv.Itoa(tt.wantCreditsLeft))
+				cw.Header().Add("api-credits-used", strconv.Itoa(tt.wantCreditsUsed))
+
+				_, err := cw.Write([]byte(tt.responseBody))
+				if err != nil {
+					t.Error(err)
+				}
+			}))
+
+			defer s.Close()
+
+			tt.fields.cfg.BaseURL = s.URL
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			got, gotCreditsLeft, gotCreditsUsed, err := c.GetQuotes(
+				tt.args.interval,
+				tt.args.exchange,
+				tt.args.country,
+				tt.args.volumeTimePeriod,
+				tt.args.instrumentType,
+				tt.args.prePost,
+				tt.args.timezone,
+				tt.args.decimalPlaces,
+				tt.args.symbols,
+			)
+			if (err != nil && tt.wantErr == nil) || (!errors.Is(err, tt.wantErr)) {
+				t.Errorf("GetQuotes() error = %v, wantErr %v", err, tt.wantErr)
+
+				return
+			}
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetQuotes() got = %v, want %v", got, tt.want)
+			}
+
+			if gotCreditsLeft != tt.wantCreditsLeft {
+				t.Errorf("GetQuotes() got1 = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
+			}
+
+			if gotCreditsUsed != tt.wantCreditsUsed {
+				t.Errorf("GetQuotes() got2 = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
 			}
 		})
 	}
