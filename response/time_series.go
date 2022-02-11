@@ -10,7 +10,7 @@ type TimeSeriesMeta struct {
 	Symbol           string `json:"symbol"`
 	Interval         string `json:"interval"`
 	Currency         string `json:"currency"`
-	ExchangeTimezone string `json:"exchange_timezone"` // nolint: tagliatelle
+	ExchangeTimezone string `json:"exchange_timezone"`
 	Exchange         string `json:"exchange"`
 	Type             string `json:"type"`
 }

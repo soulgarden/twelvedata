@@ -5,7 +5,6 @@ type Quotes struct {
 	Errors []*QuoteError
 }
 
-// nolint: tagliatelle
 type Quote struct {
 	Symbol        string `json:"symbol"`
 	Name          string `json:"name"`
@@ -25,7 +24,6 @@ type Quote struct {
 	FiftyTwoWeek *FiftyTwoWeek `json:"fifty_two_week"`
 }
 
-// nolint: tagliatelle
 type FiftyTwoWeek struct {
 	Low               string `json:"low"`
 	High              string `json:"high"`

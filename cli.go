@@ -113,7 +113,6 @@ func (c *Cli) GetTimeSeries(
 	return seriesResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint:dupl
 func (c *Cli) GetProfile(symbol, exchange, country string) (
 	profileResp *response.Profile,
 	creditsLeft int,
@@ -155,7 +154,6 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (
 	return profileResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint:dupl
 func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 	insiderTransactionsResp *response.InsiderTransactions,
 	creditsLeft int,
@@ -185,7 +183,7 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, nil
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &insiderTransactionsResp); err != nil {
@@ -242,7 +240,6 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime stri
 	return dividendsResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint:dupl
 func (c *Cli) GetStatistics(symbol, exchange, country string) (
 	statisticsResp *response.Statistics,
 	creditsLeft int,
@@ -272,7 +269,7 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, nil
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &statisticsResp); err != nil {
@@ -496,7 +493,6 @@ func (c *Cli) GetEarningsCalendar(decimalPlaces int, startDate, endDate string) 
 	return earningsResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint: dupl
 func (c *Cli) GetExchangeRate(
 	symbol, timeZone string, precision int,
 ) (
@@ -540,9 +536,8 @@ func (c *Cli) GetExchangeRate(
 	return exchangeRate, creditsLeft, creditsUsed, nil
 }
 
-// nolint:dupl
 func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, endDate string) (
-	incomeStatementResp *response.IncomeStatement,
+	incomeStatementResp *response.IncomeStatements,
 	creditsLeft int,
 	creditsUsed int,
 	err error,
@@ -573,7 +568,7 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, nil
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &incomeStatementResp); err != nil {
@@ -585,9 +580,8 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 	return incomeStatementResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint:dupl
 func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate string, period string) (
-	balanceSheetResp *response.BalanceSheet,
+	balanceSheetResp *response.BalanceSheets,
 	creditsLeft int,
 	creditsUsed int,
 	err error,
@@ -618,7 +612,7 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate stri
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, nil
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &balanceSheetResp); err != nil {
@@ -630,9 +624,8 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate stri
 	return balanceSheetResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint:dupl
 func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, period string) (
-	cashFlowResp *response.CashFlow,
+	cashFlowResp *response.CashFlows,
 	creditsLeft int,
 	creditsUsed int,
 	err error,
@@ -663,7 +656,7 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, 
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, nil
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &cashFlowResp); err != nil {

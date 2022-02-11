@@ -1,6 +1,5 @@
 package response
 
-// nolint: tagliatelle
 type ForexTimeSeries struct {
 	Meta struct {
 		Symbol        string `json:"symbol"`

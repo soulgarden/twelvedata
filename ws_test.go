@@ -14,7 +14,7 @@ import (
 	"github.com/soulgarden/twelvedata/response"
 )
 
-// nolint: funlen, gocognit
+// nolint: gocognit
 func TestWS_Subscribe(t *testing.T) {
 	t.Parallel()
 
@@ -42,7 +42,7 @@ func TestWS_Subscribe(t *testing.T) {
 		{
 			name: "1",
 			fields: fields{
-				// nolint: exhaustivestruct
+
 				url: &url.URL{
 					Scheme: "ws",
 					Host:   "127.0.0.1",
@@ -88,7 +88,6 @@ func TestWS_Subscribe(t *testing.T) {
 			t.Parallel()
 
 			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
-				// nolint: exhaustivestruct
 				upgrader := websocket.Upgrader{
 					Error: func(w http.ResponseWriter, r *http.Request, status int, reason error) {
 						http.Error(w, reason.Error(), status)
@@ -124,7 +123,6 @@ func TestWS_Subscribe(t *testing.T) {
 			}))
 			defer s.Close()
 
-			// nolint: exhaustivestruct
 			w := &WS{
 				url: &url.URL{
 					Scheme: "ws",

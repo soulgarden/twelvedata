@@ -1,6 +1,7 @@
 package twelvedata // nolint: testpackage
 
 import (
+	"database/sql"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +13,7 @@ import (
 	"github.com/soulgarden/twelvedata/dictionary"
 	"github.com/soulgarden/twelvedata/response"
 	"github.com/valyala/fasthttp"
+	"gopkg.in/guregu/null.v4"
 )
 
 type fields struct {
@@ -71,7 +73,6 @@ func runAssertions(
 	}
 }
 
-// nolint: funlen
 func TestCli_GetStocks(t *testing.T) {
 	t.Parallel()
 
@@ -95,7 +96,7 @@ func TestCli_GetStocks(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -142,7 +143,7 @@ func TestCli_GetStocks(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -168,7 +169,7 @@ func TestCli_GetStocks(t *testing.T) {
 		},
 		{
 			name: "not found symbol",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -195,7 +196,7 @@ func TestCli_GetStocks(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -249,7 +250,6 @@ func TestCli_GetStocks(t *testing.T) {
 	}
 }
 
-// nolint: funlen
 func TestCli_GetExchanges(t *testing.T) {
 	t.Parallel()
 
@@ -273,7 +273,7 @@ func TestCli_GetExchanges(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -316,7 +316,7 @@ func TestCli_GetExchanges(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -342,7 +342,7 @@ func TestCli_GetExchanges(t *testing.T) {
 		},
 		{
 			name: "not found symbol",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -369,7 +369,7 @@ func TestCli_GetExchanges(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -421,7 +421,6 @@ func TestCli_GetExchanges(t *testing.T) {
 	}
 }
 
-// nolint:funlen
 func TestCli_GetEtfs(t *testing.T) {
 	t.Parallel()
 
@@ -442,7 +441,7 @@ func TestCli_GetEtfs(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -482,7 +481,7 @@ func TestCli_GetEtfs(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -505,7 +504,7 @@ func TestCli_GetEtfs(t *testing.T) {
 		},
 		{
 			name: "not found symbol",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -529,7 +528,7 @@ func TestCli_GetEtfs(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -575,7 +574,6 @@ func TestCli_GetEtfs(t *testing.T) {
 	}
 }
 
-// nolint:funlen
 func TestCli_GetIndices(t *testing.T) {
 	t.Parallel()
 
@@ -597,7 +595,7 @@ func TestCli_GetIndices(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -631,7 +629,7 @@ func TestCli_GetIndices(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -655,7 +653,7 @@ func TestCli_GetIndices(t *testing.T) {
 		},
 		{
 			name: "not found symbol",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -680,7 +678,7 @@ func TestCli_GetIndices(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -726,7 +724,6 @@ func TestCli_GetIndices(t *testing.T) {
 	}
 }
 
-// nolint: funlen
 func TestCli_GetTimeSeries(t *testing.T) {
 	t.Parallel()
 
@@ -753,7 +750,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -830,7 +827,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -859,7 +856,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		},
 		{
 			name: "not found symbol",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -893,7 +890,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -952,7 +949,6 @@ func TestCli_GetTimeSeries(t *testing.T) {
 	}
 }
 
-// nolint: funlen
 func TestCli_GetExchangeRate(t *testing.T) {
 	t.Parallel()
 
@@ -975,7 +971,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1000,7 +996,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1025,7 +1021,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 		},
 		{
 			name: "not found symbol",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1051,7 +1047,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1102,7 +1098,6 @@ func TestCli_GetExchangeRate(t *testing.T) {
 	}
 }
 
-// nolint:funlen
 func TestCli_GetQuotes(t *testing.T) {
 	t.Parallel()
 
@@ -1131,7 +1126,7 @@ func TestCli_GetQuotes(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1210,7 +1205,7 @@ func TestCli_GetQuotes(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1241,7 +1236,7 @@ func TestCli_GetQuotes(t *testing.T) {
 		},
 		{
 			name: "not found symbols",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1313,7 +1308,7 @@ func TestCli_GetQuotes(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1376,7 +1371,6 @@ func TestCli_GetQuotes(t *testing.T) {
 	}
 }
 
-// nolint: funlen
 func TestCli_GetProfile(t *testing.T) {
 	t.Parallel()
 
@@ -1399,7 +1393,7 @@ func TestCli_GetProfile(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1456,7 +1450,7 @@ func TestCli_GetProfile(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1481,7 +1475,7 @@ func TestCli_GetProfile(t *testing.T) {
 		},
 		{
 			name: "not found symbols",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1501,7 +1495,7 @@ func TestCli_GetProfile(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1552,7 +1546,6 @@ func TestCli_GetProfile(t *testing.T) {
 	}
 }
 
-// nolint: funlen
 func TestCli_GetDividends(t *testing.T) {
 	t.Parallel()
 
@@ -1578,7 +1571,7 @@ func TestCli_GetDividends(t *testing.T) {
 	}{
 		{
 			name: "success",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1628,7 +1621,7 @@ func TestCli_GetDividends(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1656,7 +1649,7 @@ func TestCli_GetDividends(t *testing.T) {
 		},
 		{
 			name: "not found symbols",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1679,7 +1672,7 @@ func TestCli_GetDividends(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-			// nolint: exhaustivestruct
+
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1720,6 +1713,1579 @@ func TestCli_GetDividends(t *testing.T) {
 				tt.args.startTime,
 				tt.args.endTime,
 			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetEarningsCalendar(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		decimalPlaces int
+		startDate     string
+		endDate       string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.Earnings
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				decimalPlaces: 2,
+				startDate:     "",
+				endDate:       "",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+				{
+					"earnings": {
+						"2022-02-10": [
+							{
+								"symbol": "02B",
+								"name": "BlackLine, Inc.",
+								"currency": "EUR",
+								"exchange": "FSX",
+								"time": "After Hours",
+								"eps_estimate": null,
+								"eps_actual": null,
+								"difference": null,
+								"surprise_prc": null
+							},
+							{
+								"symbol": "096",
+								"name": "HubSpot Inc",
+								"currency": "EUR",
+								"exchange": "FSX",
+								"time": "After Hours",
+								"eps_estimate": null,
+								"eps_actual": null,
+								"difference": null,
+								"surprise_prc": null
+							}
+						]
+					},
+					"status": "ok"
+			}`,
+			wantResp: &response.Earnings{
+				Earnings: map[string][]*response.Earning{
+					"2022-02-10": {
+						{
+							Symbol:   "02B",
+							Name:     "BlackLine, Inc.",
+							Currency: "EUR",
+							Exchange: "FSX",
+							Time:     "After Hours",
+							EpsEstimate: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+							EpsActual: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+							Difference: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+							SurprisePrc: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+						},
+						{
+							Symbol:   "096",
+							Name:     "HubSpot Inc",
+							Currency: "EUR",
+							Exchange: "FSX",
+							Time:     "After Hours",
+							EpsEstimate: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+							EpsActual: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+							Difference: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+							SurprisePrc: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 0,
+									Valid:   false,
+								},
+							},
+						},
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 40,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				decimalPlaces: 2,
+				startDate:     "",
+				endDate:       "",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 40,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				decimalPlaces: 2,
+				startDate:     "",
+				endDate:       "",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEarningsCalendar(
+				tt.args.decimalPlaces,
+				tt.args.startDate,
+				tt.args.endDate,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetStatistics(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		symbol   string
+		exchange string
+		country  string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.Statistics
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"meta": {
+					"symbol": "AAPL",
+					"name": "Apple Inc",
+					"currency": "USD",
+					"exchange": "NASDAQ",
+					"exchange_timezone": "America/New_York"
+				},
+				"statistics": {
+					"valuations_metrics": {
+						"market_capitalization": 2880798195712,
+						"enterprise_value": 3022112423936,
+						"trailing_pe": 31.299448,
+						"forward_pe": 28.412607,
+						"peg_ratio": 2,
+						"price_to_sales_ttm": 7.874971,
+						"price_to_book_mrq": 45.71463,
+						"enterprise_to_revenue": 8.261,
+						"enterprise_to_ebitda": 25.135
+					},
+					"financials": {
+						"fiscal_year_ends": "2021-09-25",
+						"most_recent_quarter": "2021-09-25",
+						"profit_margin": 0.25882,
+						"operating_margin": 0.29782,
+						"return_on_assets_ttm": 0.20179,
+						"return_on_equity_ttm": 1.47443,
+						"income_statement": {
+							"revenue_ttm": 365817004032,
+							"revenue_per_share_ttm": 21.904,
+							"quarterly_revenue_growth": 0.288,
+							"gross_profit_ttm": 152836000000,
+							"ebitda": 120233000960,
+							"net_income_to_common_ttm": 94679998464,
+							"diluted_eps_ttm": 5.61,
+							"quarterly_earnings_growth_yoy": 0.622
+						},
+						"balance_sheet": {
+							"revenue_ttm": 365817004032,
+							"total_cash_mrq": 62639001600,
+							"total_cash_per_share_mrq": 3.818,
+							"total_debt_mrq": 136521998336,
+							"total_debt_to_equity_mrq": 216.392,
+							"current_ratio_mrq": 1.075,
+							"book_value_per_share_mrq": 3.841
+						},
+						"cash_flow": {
+							"operating_cash_flow_ttm": 104037998592,
+							"levered_free_cash_flow_ttm": 73295003648
+						}
+					},
+					"stock_statistics": {
+						"shares_outstanding": 16406400000,
+						"float_shares": 16389662475,
+						"avg_10_volume": 94468150,
+						"avg_30_volume": 94056423,
+						"shares_short": 113277024,
+						"short_ratio": 1,
+						"short_percent_of_shares_outstanding": 0.0069,
+						"percent_held_by_insiders": 0.0007,
+						"percent_held_by_institutions": 0.58707
+					},
+					"stock_price_summary": {
+						"fifty_two_week_low": 116.21,
+						"fifty_two_week_high": 182.94,
+						"fifty_two_week_change": null,
+						"beta": 1.203116,
+						"day_50_ma": 171.6632,
+						"day_200_ma": 149.5189
+					},
+					"dividends_and_splits": {
+						"forward_annual_dividend_rate": 0.88,
+						"forward_annual_dividend_yield": 0.0049,
+						"trailing_annual_dividend_rate": 0.85,
+						"trailing_annual_dividend_yield": 0.004861866,
+						"5_year_average_dividend_yield": 1.17,
+						"payout_ratio": 0.1515,
+						"dividend_date": "2022-02-10",
+						"ex_dividend_date": "2021-11-05",
+						"last_split_factor": "4-for-1 split",
+						"last_split_date": "2020-08-31"
+					}
+				}
+			}`,
+			wantResp: &response.Statistics{
+				Meta: &response.StatisticsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					ExchangeTimezone: "America/New_York",
+				},
+				Statistics: &response.StatisticsValues{
+					ValuationsMetrics: &response.StatisticsValuationsMetrics{
+						MarketCapitalization: 2880798195712,
+						EnterpriseValue:      3022112423936,
+						TrailingPe:           31.299448,
+						ForwardPe:            28.412607,
+						PegRatio:             2,
+						PriceToSalesTtm:      7.874971,
+						PriceToBookMrq:       45.71463,
+						EnterpriseToRevenue:  8.261,
+						EnterpriseToEbitda:   25.135,
+					},
+					Financials: &response.StatisticsFinancials{
+						FiscalYearEnds:    "2021-09-25",
+						MostRecentQuarter: "2021-09-25",
+						ProfitMargin:      0.25882,
+						OperatingMargin:   0.29782,
+						ReturnOnAssetsTtm: 0.20179,
+						ReturnOnEquityTtm: 1.47443,
+						IncomeStatement: &response.StatisticsIncomeStatement{
+							RevenueTtm:                 365817004032,
+							RevenuePerShareTtm:         21.904,
+							QuarterlyRevenueGrowth:     0.288,
+							GrossProfitTtm:             152836000000,
+							Ebitda:                     120233000960,
+							NetIncomeToCommonTtm:       94679998464,
+							DilutedEpsTtm:              5.61,
+							QuarterlyEarningsGrowthYoy: 0.622,
+						},
+						BalanceSheet: &response.StatisticsBalanceSheet{
+							RevenueTtm:           365817004032,
+							TotalCashMrq:         62639001600,
+							TotalCashPerShareMrq: 3.818,
+							TotalDebtMrq:         136521998336,
+							TotalDebtToEquityMrq: 216.392,
+							CurrentRatioMrq:      1.075,
+							BookValuePerShareMrq: 3.841,
+						},
+						CashFlow: &response.StatisticsCashFlow{
+							OperatingCashFlowTtm:   104037998592,
+							LeveredFreeCashFlowTtm: 73295003648,
+						},
+					},
+					StockStatistics: &response.StockStatistics{
+						SharesOutstanding:               16406400000,
+						FloatShares:                     16389662475,
+						Avg10Volume:                     94468150,
+						Avg30Volume:                     94056423,
+						SharesShort:                     113277024,
+						ShortRatio:                      1,
+						ShortPercentOfSharesOutstanding: 0.0069,
+						PercentHeldByInsiders:           0.0007,
+						PercentHeldByInstitutions:       0.58707,
+					},
+					StockPriceSummary: &response.StockPriceSummary{
+						FiftyTwoWeekLow:    116.21,
+						FiftyTwoWeekHigh:   182.94,
+						FiftyTwoWeekChange: 0,
+						Beta:               1.203116,
+						Day50Ma:            171.6632,
+						Day200Ma:           149.5189,
+					},
+					DividendsAndSplits: &response.DividendsAndSplits{
+						ForwardAnnualDividendRate:   0.88,
+						ForwardAnnualDividendYield:  0.0049,
+						TrailingAnnualDividendRate:  0.85,
+						TrailingAnnualDividendYield: 0.004861866,
+						YearAverageDividendYield:    1.17,
+						PayoutRatio:                 0.1515,
+						DividendDate:                "2022-02-10",
+						ExDividendDate:              "2021-11-05",
+						LastSplitFactor:             "4-for-1 split",
+						LastSplitDate:               "2020-08-31",
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 20,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 20,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbols",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "NOTFOUND",
+				exchange: "",
+				country:  "",
+			},
+			responseCode:    http.StatusOK,
+			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 20,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetStatistics(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetBalanceSheet(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		symbol    string
+		exchange  string
+		country   string
+		startDate string
+		endDate   string
+		period    string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.BalanceSheets
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"meta": {
+					"symbol": "AAPL",
+					"name": "Apple Inc",
+					"currency": "USD",
+					"exchange": "NASDAQ",
+					"exchange_timezone": "America/New_York",
+					"period": "Annual"
+				},
+				"balance_sheet": [
+					{
+						"fiscal_date": "2021-09-30",
+						"assets": {
+							"current_assets": {
+								"cash": 17305000000,
+								"cash_equivalents": 17635000000,
+								"cash_and_cash_equivalents": 34940000000,
+								"other_short_term_investments": 27699000000,
+								"accounts_receivable": 26278000000,
+								"other_receivables": 25228000000,
+								"inventory": 6580000000,
+								"prepaid_assets": null,
+								"other_current_assets": 14111000000,
+								"total_current_assets": 134836000000
+							},
+							"non_current_assets": {
+								"properties": 0,
+								"land_and_improvements": 20041000000,
+								"machinery_furniture_equipment": 78659000000,
+								"leases": 11023000000,
+								"accumulated_depreciation": -70283000000,
+								"goodwill": null,
+								"intangible_assets": null,
+								"investments_and_advances": 127877000000,
+								"other_non_current_assets": 48849000000,
+								"total_non_current_assets": 216166000000
+							},
+							"total_assets": 351002000000
+						},
+						"liabilities": {
+							"current_liabilities": {
+								"accounts_payable": 54763000000,
+								"accrued_expenses": null,
+								"short_term_debt": 15613000000,
+								"deferred_revenue": 7612000000,
+								"other_current_liabilities": 47493000000,
+								"total_current_liabilities": 125481000000,
+								"tax_payable": null
+							},
+							"non_current_liabilities": {
+								"long_term_debt": 109106000000,
+								"provision_for_risks_and_charges": 24689000000,
+								"deferred_liabilities": null,
+								"other_non_current_liabilities": 28636000000,
+								"total_non_current_liabilities": 162431000000,
+								"long_term_provisions": null
+							},
+							"total_liabilities": 287912000000
+						},
+						"shareholders_equity": {
+							"common_stock": 57365000000,
+							"retained_earnings": 5562000000,
+							"other_shareholders_equity": 163000000,
+							"total_shareholders_equity": 63090000000,
+							"additional_paid_in_capital": null,
+							"treasury_stock": null,
+							"minority_interest": null
+						}
+					}
+				]
+			}`,
+			wantResp: &response.BalanceSheets{
+				Meta: &response.BalanceSheetsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					ExchangeTimezone: "America/New_York",
+					Period:           "Annual",
+				},
+				BalanceSheet: []*response.BalanceSheet{
+					{
+						FiscalDate: "2021-09-30",
+						Assets: &response.BalanceSheetAssets{
+							CurrentAssets: &response.BalanceSheetCurrentAssets{
+								Cash:                      17305000000,
+								CashEquivalents:           17635000000,
+								CashAndCashEquivalents:    34940000000,
+								OtherShortTermInvestments: 27699000000,
+								AccountsReceivable:        26278000000,
+								OtherReceivables:          25228000000,
+								Inventory:                 6580000000,
+								PrepaidAssets:             0,
+								OtherCurrentAssets:        14111000000,
+								TotalCurrentAssets:        134836000000,
+							},
+							NonCurrentAssets: &response.BalanceSheetNonCurrentAssets{
+								Properties:                  0,
+								LandAndImprovements:         20041000000,
+								MachineryFurnitureEquipment: 78659000000,
+								Leases:                      11023000000,
+								AccumulatedDepreciation:     -70283000000,
+								Goodwill:                    0,
+								IntangibleAssets:            0,
+								InvestmentsAndAdvances:      127877000000,
+								OtherNonCurrentAssets:       48849000000,
+								TotalNonCurrentAssets:       216166000000,
+							},
+							TotalAssets: 351002000000,
+						},
+						Liabilities: &response.BalanceSheetLiabilities{
+							CurrentLiabilities: &response.BalanceSheetCurrentLiabilities{
+								AccountsPayable:         54763000000,
+								AccruedExpenses:         0,
+								ShortTermDebt:           15613000000,
+								DeferredRevenue:         7612000000,
+								OtherCurrentLiabilities: 47493000000,
+								TotalCurrentLiabilities: 125481000000,
+								TaxPayable:              0,
+							},
+							NonCurrentLiabilities: &response.BalanceSheetNonCurrentLiabilities{
+								LongTermDebt:                109106000000,
+								ProvisionForRisksAndCharges: 24689000000,
+								DeferredLiabilities:         0,
+								OtherNonCurrentLiabilities:  28636000000,
+								TotalNonCurrentLiabilities:  162431000000,
+								LongTermProvisions:          0,
+							},
+							TotalLiabilities: 287912000000,
+						},
+						ShareholdersEquity: &response.BalanceSheetShareholdersEquity{
+							CommonStock:             57365000000,
+							RetainedEarnings:        5562000000,
+							OtherShareholdersEquity: 163000000,
+							TotalShareholdersEquity: 63090000000,
+							AdditionalPaidInCapital: 0,
+							TreasuryStock:           0,
+							MinorityInterest:        0,
+						},
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbols",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "NOTFOUND",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode:    http.StatusOK,
+			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetBalanceSheet(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+				tt.args.startDate,
+				tt.args.endDate,
+				tt.args.period,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetCashFlow(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		symbol    string
+		exchange  string
+		country   string
+		startDate string
+		endDate   string
+		period    string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.CashFlows
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"meta": {
+					"symbol": "AAPL",
+					"name": "Apple Inc",
+					"currency": "USD",
+					"exchange": "NASDAQ",
+					"exchange_timezone": "America/New_York",
+					"period": "Annual"
+				},
+				"cash_flow": [
+					{
+						"fiscal_date": "2021-09-30",
+						"operating_activities": {
+							"net_income": 94680000000,
+							"depreciation": 11284000000,
+							"deferred_taxes": -4774000000,
+							"stock_based_compensation": 7906000000,
+							"other_non_cash_items": -147000000,
+							"accounts_receivable": -14028000000,
+							"accounts_payable": 12326000000,
+							"other_assets_liabilities": -3209000000,
+							"operating_cash_flow": 104038000000
+						},
+						"investing_activities": {
+							"capital_expenditures": -11085000000,
+							"net_intangibles": null,
+							"net_acquisitions": -33000000,
+							"purchase_of_investments": -109689000000,
+							"sale_of_investments": 106870000000,
+							"other_investing_activity": -608000000,
+							"investing_cash_flow": -14545000000
+						},
+						"financing_activities": {
+							"long_term_debt_issuance": 20393000000,
+							"long_term_debt_payments": -8750000000,
+							"short_term_debt_issuance": 1022000000,
+							"common_stock_issuance": 1105000000,
+							"common_stock_repurchase": -85971000000,
+							"common_dividends": -14467000000,
+							"other_financing_charges": -6685000000,
+							"financing_cash_flow": -93353000000
+						},
+						"end_cash_position": 35929000000,
+						"income_tax_paid": 25385000000,
+						"interest_paid": 2687000000,
+						"free_cash_flow": 115123000000
+					}
+				]
+			}`,
+			wantResp: &response.CashFlows{
+				Meta: &response.CashFlowsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					ExchangeTimezone: "America/New_York",
+					Period:           "Annual",
+				},
+				CashFlow: []*response.CashFlow{
+					{
+						FiscalDate: "2021-09-30",
+						OperatingActivities: &response.CashFlowOperatingActivities{
+							NetIncome:              94680000000,
+							Depreciation:           11284000000,
+							DeferredTaxes:          -4774000000,
+							StockBasedCompensation: 7906000000,
+							OtherNonCashItems:      -147000000,
+							AccountsReceivable:     -14028000000,
+							AccountsPayable:        12326000000,
+							OtherAssetsLiabilities: -3209000000,
+							OperatingCashFlow:      104038000000,
+						},
+						InvestingActivities: &response.CashFlowInvestingActivities{
+							CapitalExpenditures:    -11085000000,
+							NetIntangibles:         0,
+							NetAcquisitions:        -33000000,
+							PurchaseOfInvestments:  -109689000000,
+							SaleOfInvestments:      106870000000,
+							OtherInvestingActivity: -608000000,
+							InvestingCashFlow:      -14545000000,
+						},
+						FinancingActivities: &response.CashFlowFinancingActivities{
+							LongTermDebtIssuance:  20393000000,
+							LongTermDebtPayments:  -8750000000,
+							ShortTermDebtIssuance: 1022000000,
+							CommonStockIssuance:   1105000000,
+							CommonStockRepurchase: -85971000000,
+							CommonDividends:       -14467000000,
+							OtherFinancingCharges: -6685000000,
+							FinancingCashFlow:     -93353000000,
+						},
+						EndCashPosition: 35929000000,
+						IncomeTaxPaid:   25385000000,
+						InterestPaid:    2687000000,
+						FreeCashFlow:    115123000000,
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbol",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "NOTFOUND",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode:    http.StatusOK,
+			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetCashFlow(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+				tt.args.startDate,
+				tt.args.endDate,
+				tt.args.period,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetIncomeStatement(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		symbol    string
+		exchange  string
+		country   string
+		period    string
+		startDate string
+		endDate   string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.IncomeStatements
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"meta": {
+					"symbol": "AAPL",
+					"name": "Apple Inc",
+					"currency": "USD",
+					"exchange": "NASDAQ",
+					"exchange_timezone": "America/New_York",
+					"period": "Annual"
+				},
+				"income_statement": [
+					{
+						"fiscal_date": "2021-09-30",
+						"sales": 365817000000,
+						"cost_of_goods": 212981000000,
+						"gross_profit": 152836000000,
+						"operating_expense": {
+							"research_and_development": 21914000000,
+							"selling_general_and_administrative": 21973000000,
+							"other_operating_expenses": null
+						},
+						"operating_income": 108949000000,
+						"non_operating_interest": {
+							"income": 2843000000,
+							"expense": 2645000000
+						},
+						"other_income_expense": 60000000,
+						"pretax_income": 109207000000,
+						"income_tax": 14527000000,
+						"net_income": 94680000000,
+						"eps_basic": 5.67,
+						"eps_diluted": 5.61,
+						"basic_shares_outstanding": 16701272000,
+						"diluted_shares_outstanding": 16701272000,
+						"ebitda": 123136000000
+					}
+				]
+			}`,
+			wantResp: &response.IncomeStatements{
+				Meta: &response.IncomeStatementsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					ExchangeTimezone: "America/New_York",
+					Period:           "Annual",
+				},
+				IncomeStatement: []*response.IncomeStatement{{
+					FiscalDate:  "2021-09-30",
+					Sales:       365817000000,
+					CostOfGoods: 212981000000,
+					GrossProfit: 152836000000,
+					OperatingExpense: &response.IncomeStatementOperatingExpense{
+						ResearchAndDevelopment:          21914000000,
+						SellingGeneralAndAdministrative: 21973000000,
+						OtherOperatingExpenses:          0,
+					},
+					OperatingIncome: 108949000000,
+					NonOperatingInterest: &response.IncomeStatementNonOperatingInterest{
+						Income:  2843000000,
+						Expense: 2645000000,
+					},
+					OtherIncomeExpense:       60000000,
+					PretaxIncome:             109207000000,
+					IncomeTax:                14527000000,
+					NetIncome:                94680000000,
+					EpsBasic:                 5.67,
+					EpsDiluted:               5.61,
+					BasicSharesOutstanding:   16701272000,
+					DilutedSharesOutstanding: 16701272000,
+					Ebitda:                   123136000000,
+				}},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbol",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "NOTFOUND",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode:    http.StatusOK,
+			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "annual",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetIncomeStatement(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+				tt.args.period,
+				tt.args.startDate,
+				tt.args.endDate,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetInsiderTransactions(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		symbol   string
+		exchange string
+		country  string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.InsiderTransactions
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"meta": {
+					"symbol": "AAPL",
+					"name": "Apple Inc",
+					"currency": "USD",
+					"exchange": "NASDAQ",
+					"exchange_timezone": "America/New_York"
+				},
+				"insider_transactions": [
+					{
+						"full_name": "COOK TIMOTHY D",
+						"position": "Chief Executive Officer",
+						"date_reported": "2021-08-25",
+						"is_direct": true,
+						"shares": 2386440,
+						"value": 354568479,
+						"description": "Sale at price 148.30 - 149.97 per share."
+					}
+				]
+			}`,
+			wantResp: &response.InsiderTransactions{
+				Meta: &response.InsiderTransactionsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					ExchangeTimezone: "America/New_York",
+				},
+				InsiderTransactions: []*response.InsiderTransaction{
+					{
+						FullName:     "COOK TIMOTHY D",
+						Position:     "Chief Executive Officer",
+						DateReported: "2021-08-25",
+						IsDirect:     true,
+						Shares:       2386440,
+						Value:        354568479,
+						Description:  "Sale at price 148.30 - 149.97 per share.",
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbol",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "NOTFOUND",
+				exchange: "",
+				country:  "",
+			},
+			responseCode:    http.StatusOK,
+			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetInsiderTransactions(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetUsage(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name            string
+		fields          fields
+		responseCode    int
+		responseBody    string
+		wantResp        *response.Usage
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"timestamp":"2022-02-11 13:05:55",
+				"current_usage":312,
+				"plan_limit":610
+			}`,
+			wantResp: &response.Usage{
+				TimeStamp:      "2022-02-11 13:05:55",
+				CurrentUsage:   312,
+				PlanLimit:      610,
+				DailyUsage:     0,
+				PlanDailyLimit: 0,
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetUsage()
 
 			runAssertions(
 				t,

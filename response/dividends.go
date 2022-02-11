@@ -5,7 +5,6 @@ type Dividends struct {
 	Dividends []*Dividend    `json:"dividends"`
 }
 
-// nolint: tagliatelle
 type DividendsMeta struct {
 	Symbol           string `json:"symbol"`
 	Name             string `json:"name"`
@@ -14,7 +13,6 @@ type DividendsMeta struct {
 	ExchangeTimezone string `json:"exchange_timezone"`
 }
 
-// nolint: tagliatelle
 type Dividend struct {
 	PaymentDate string  `json:"payment_date"`
 	Amount      float64 `json:"amount"`

@@ -6,7 +6,6 @@ type Earnings struct {
 	Earnings map[string][]*Earning `json:"earnings"`
 }
 
-// nolint: tagliatelle
 type Earning struct {
 	Symbol      string     `json:"symbol"`
 	Name        string     `json:"name"`

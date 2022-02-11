@@ -21,7 +21,6 @@ type WS struct {
 	logger   *zerolog.Logger
 }
 
-// nolint: exhaustivestruct
 func NewWS(cfg *Conf, logger *zerolog.Logger, dialer *websocket.Dialer) *WS {
 	ws := &WS{
 		url: &url.URL{
@@ -82,7 +81,6 @@ func (w *WS) read(conn *websocket.Conn, done chan<- struct{}) {
 			return
 		}
 
-		// nolint: exhaustivestruct
 		event := &response.PriceEvent{}
 
 		if err := json.Unmarshal(message, event); err != nil {

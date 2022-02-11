@@ -1,6 +1,5 @@
 package response
 
-// nolint: tagliatelle
 type Profile struct {
 	Symbol      string `json:"symbol"`
 	Name        string `json:"name"`

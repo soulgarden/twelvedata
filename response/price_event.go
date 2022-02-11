@@ -8,5 +8,5 @@ type PriceEvent struct {
 	Type      string  `json:"type"`
 	Timestamp int     `json:"timestamp"`
 	Price     float64 `json:"price"`
-	DayVolume int     `json:"day_volume"` // nolint: tagliatelle
+	DayVolume int     `json:"day_volume"`
 }

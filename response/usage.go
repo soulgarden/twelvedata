@@ -1,6 +1,5 @@
 package response
 
-// nolint: tagliatelle
 type Usage struct {
 	TimeStamp      string `json:"timestamp"`
 	CurrentUsage   int    `json:"current_usage"`
