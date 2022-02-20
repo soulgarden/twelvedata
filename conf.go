@@ -27,6 +27,7 @@ type CoreData struct {
 	TimeSeriesURL   string `json:"time_series_url" default:"/time_series?apikey={apikey}&symbol={symbol}&interval={interval}&exchange={exchange}&country={country}&type={type}&outputsize={outputsize}&prepost={prepost}"`
 	QuotesURL       string `json:"quotes_url"      default:"/quote?apikey={apikey}&symbol={symbol}&interval={interval}&exchange={exchange}&country={country}&volume_time_period={volume_time_period}&type={type}&prepost={prepost}"`
 	ExchangeRateURL string `json:"exchange_rate_url" default:"/exchange_rate?apikey={apikey}&symbol={symbol}&precision={precision}&timezone={timezone}"`
+	MarketMoversURL string `json:"market_movers_url" default:"/market_movers/{instrument}?apikey={apikey}&direction={direction}&outputsize={outputsize}&country={country}&dp={dp}"`
 }
 
 // nolint: lll

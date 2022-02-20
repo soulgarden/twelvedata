@@ -28,6 +28,7 @@ Twelve data go api client
 * Quote                ✅
 * Real-time price      ❌
 * Edd of day price     ❌
+* Market movers        ✅
 
 ## Fundamentals
 

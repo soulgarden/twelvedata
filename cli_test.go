@@ -3301,3 +3301,186 @@ func TestCli_GetUsage(t *testing.T) {
 		})
 	}
 }
+
+func TestCli_GetMarketMovers(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		instrument    string
+		direction     string
+		outputSize    int
+		country       string
+		decimalPlaces int
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.MarketMovers
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				instrument:    "stocks",
+				direction:     "gainers",
+				outputSize:    30,
+				country:       "india",
+				decimalPlaces: 5,
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"values": [
+					{
+						"symbol": "FINKURVE",
+						"name": "Finkurve Financial Services Limited",
+						"exchange": "BSE",
+						"datetime": "2022-02-18 14:17:00",
+						"last": 50.3,
+						"high": 50.3,
+						"low": 41.5,
+						"volume": 430798,
+						"change": 8.8,
+						"percent_change": 21.2048
+					}
+				]
+			}
+			`,
+			wantResp: &response.MarketMovers{
+				Values: []*response.MarketMover{{
+					Symbol:        "FINKURVE",
+					Name:          "Finkurve Financial Services Limited",
+					Exchange:      "BSE",
+					Datetime:      "2022-02-18 14:17:00",
+					Last:          50.3,
+					High:          50.3,
+					Low:           41.5,
+					Volume:        430798,
+					Change:        8.8,
+					PercentChange: 21.2048,
+				}},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				instrument:    "stocks",
+				direction:     "gainers",
+				outputSize:    30,
+				country:       "",
+				decimalPlaces: 5,
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbol",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				instrument:    "notfound",
+				direction:     "gainers",
+				outputSize:    30,
+				country:       "",
+				decimalPlaces: 5,
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":404,
+				"message":"There is an error in the query. Please check your query and try again. If you're unable to resolve it contact our support at https://twelvedata.com/contact/customer","status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 100,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				instrument:    "stocks",
+				direction:     "gainers",
+				outputSize:    30,
+				country:       "",
+				decimalPlaces: 5,
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetMarketMovers(
+				tt.args.instrument,
+				tt.args.direction,
+				tt.args.outputSize,
+				tt.args.country,
+				tt.args.decimalPlaces,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}

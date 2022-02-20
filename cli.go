@@ -580,7 +580,7 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 	return incomeStatementResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate string, period string) (
+func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate, period string) (
 	balanceSheetResp *response.BalanceSheets,
 	creditsLeft int,
 	creditsUsed int,
@@ -624,7 +624,7 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate stri
 	return balanceSheetResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, period string) (
+func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate, period string) (
 	cashFlowResp *response.CashFlows,
 	creditsLeft int,
 	creditsUsed int,
@@ -666,6 +666,49 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate string, 
 	}
 
 	return cashFlowResp, creditsLeft, creditsUsed, nil
+}
+
+func (c *Cli) GetMarketMovers(instrument, direction string, outputSize int, country string, decimalPlaces int) (
+	marketMoversResp *response.MarketMovers,
+	creditsLeft int,
+	creditsUsed int,
+	err error,
+) {
+	resp := fasthttp.AcquireResponse()
+
+	defer fasthttp.ReleaseResponse(resp)
+
+	uri := strings.Replace(c.cfg.BaseURL+c.cfg.CoreData.MarketMoversURL, "{apikey}", c.cfg.APIKey, 1)
+	uri = strings.Replace(uri, "{instrument}", instrument, 1)
+	uri = strings.Replace(uri, "{direction}", direction, 1)
+	uri = strings.Replace(uri, "{outputsize}", strconv.Itoa(outputSize), 1)
+	uri = strings.Replace(uri, "{country}", country, 1)
+	uri = strings.Replace(uri, "{dp}", strconv.Itoa(decimalPlaces), 1)
+
+	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+		return nil, 0, 0, err
+	}
+
+	errResp, err := c.CheckErrorInResponse(resp)
+	if err != nil {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
+
+		return nil, creditsLeft, creditsUsed, err
+	}
+
+	if errResp.Code == http.StatusNotFound {
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
+	}
+
+	if err := json.Unmarshal(resp.Body(), &marketMoversResp); err != nil {
+		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
+
+		return nil, creditsLeft, creditsUsed, fmt.Errorf("unmarshal json: %w", err)
+	}
+
+	return marketMoversResp, creditsLeft, creditsUsed, nil
 }
 
 func (c *Cli) makeRequest(uri string, resp *fasthttp.Response) (int, int, error) {
