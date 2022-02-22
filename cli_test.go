@@ -159,7 +159,7 @@ func TestCli_GetStocks(t *testing.T) {
 			// nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -332,7 +332,7 @@ func TestCli_GetExchanges(t *testing.T) {
 			// nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -494,7 +494,7 @@ func TestCli_GetEtfs(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -643,7 +643,7 @@ func TestCli_GetIndices(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -846,7 +846,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -1011,7 +1011,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -1226,7 +1226,7 @@ func TestCli_GetQuotes(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -1465,7 +1465,7 @@ func TestCli_GetProfile(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -1554,8 +1554,8 @@ func TestCli_GetDividends(t *testing.T) {
 		exchange  string
 		country   string
 		r         string
-		startTime string
-		endTime   string
+		startDate string
+		endDate   string
 	}
 
 	tests := []struct {
@@ -1582,8 +1582,8 @@ func TestCli_GetDividends(t *testing.T) {
 				exchange:  "",
 				country:   "",
 				r:         "last",
-				startTime: "",
-				endTime:   "",
+				startDate: "",
+				endDate:   "",
 			},
 			responseCode: http.StatusOK,
 
@@ -1632,14 +1632,14 @@ func TestCli_GetDividends(t *testing.T) {
 				exchange:  "",
 				country:   "",
 				r:         "last",
-				startTime: "",
-				endTime:   "",
+				startDate: "",
+				endDate:   "",
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -1660,8 +1660,8 @@ func TestCli_GetDividends(t *testing.T) {
 				exchange:  "",
 				country:   "",
 				r:         "last",
-				startTime: "",
-				endTime:   "",
+				startDate: "",
+				endDate:   "",
 			},
 			responseCode:    http.StatusOK,
 			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
@@ -1683,8 +1683,8 @@ func TestCli_GetDividends(t *testing.T) {
 				exchange:  "",
 				country:   "",
 				r:         "last",
-				startTime: "",
-				endTime:   "",
+				startDate: "",
+				endDate:   "",
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -1710,8 +1710,8 @@ func TestCli_GetDividends(t *testing.T) {
 				tt.args.exchange,
 				tt.args.country,
 				tt.args.r,
-				tt.args.startTime,
-				tt.args.endTime,
+				tt.args.startDate,
+				tt.args.endDate,
 			)
 
 			runAssertions(
@@ -1882,7 +1882,7 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -2167,7 +2167,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -2455,7 +2455,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -2705,7 +2705,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -2932,7 +2932,7 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -3118,7 +3118,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -3250,7 +3250,7 @@ func TestCli_GetUsage(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,
@@ -3395,7 +3395,7 @@ func TestCli_GetMarketMovers(t *testing.T) {
 			//nolint: lll
 			responseBody: `{
 				"code":429,
-				"message":"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
 				"status":"error"
 			}`,
 			wantResp:        nil,

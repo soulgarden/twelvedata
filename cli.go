@@ -196,7 +196,7 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 }
 
 // nolint: varnamelen
-func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime string) (
+func (c *Cli) GetDividends(symbol, exchange, country, r, startDate, endDate string) (
 	dividendsResp *response.Dividends,
 	creditsLeft int,
 	creditsUsed int,
@@ -211,8 +211,8 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startTime, endTime stri
 	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 	uri = strings.Replace(uri, "{range}", r, 1)
-	uri = strings.Replace(uri, "{start_time}", startTime, 1)
-	uri = strings.Replace(uri, "{end_time}", endTime, 1)
+	uri = strings.Replace(uri, "{start_date}", startDate, 1)
+	uri = strings.Replace(uri, "{end_date}", endDate, 1)
 
 	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
