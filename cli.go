@@ -101,7 +101,7 @@ func (c *Cli) GetTimeSeries(
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrInvalidTwelveDataResponse
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &seriesResp); err != nil {
@@ -445,7 +445,7 @@ func (c *Cli) GetUsage() (
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrInvalidTwelveDataResponse
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &usageResp); err != nil {
@@ -516,15 +516,21 @@ func (c *Cli) GetExchangeRate(
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
+		}
+
+		if errResp != nil &&
+			errResp.Code == http.StatusBadRequest &&
+			strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) {
+			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 		}
 
 		return nil, creditsLeft, creditsUsed, err
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrInvalidTwelveDataResponse
+		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &exchangeRate); err != nil {
@@ -780,7 +786,7 @@ func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*respons
 	}
 
 	if errResp.Code == http.StatusNotFound {
-		return nil, dictionary.ErrInvalidTwelveDataResponse
+		return nil, dictionary.ErrNotFound
 	}
 
 	data := map[string]json.RawMessage{}
@@ -864,7 +870,7 @@ func (c *Cli) CheckErrorInResponse(resp *fasthttp.Response) (*response.Error, er
 	}
 
 	if errResp.Code == http.StatusBadRequest {
-		return nil, dictionary.ErrInvalidTwelveDataResponse
+		return errResp, dictionary.ErrInvalidTwelveDataResponse
 	}
 
 	if errResp.Code == http.StatusTooManyRequests {

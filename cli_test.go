@@ -980,7 +980,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			args: args{
 				symbol:    "USD/JPY",
 				timeZone:  "",
-				precision: 0,
+				precision: 2,
 			},
 			responseCode: http.StatusOK,
 
@@ -1005,7 +1005,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			args: args{
 				symbol:    "USD/JPY",
 				timeZone:  "",
-				precision: 0,
+				precision: 2,
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -1020,8 +1020,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			wantErr:         dictionary.ErrTooManyRequests,
 		},
 		{
-			name: "not found symbol",
-
+			name: "not found symbol 1",
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -1030,7 +1029,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			args: args{
 				symbol:    "NOT/FOUND",
 				timeZone:  "",
-				precision: 0,
+				precision: 2,
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -1043,7 +1042,33 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
-			wantErr:         dictionary.ErrInvalidTwelveDataResponse,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "not found symbol 2",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:    "ZAC/USD",
+				timeZone:  "",
+				precision: 2,
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			{
+				"code":400,
+				"message":"**symbol** not found: NOT/FOUND. Please specify it correctly according to API Documentation.",
+				"status":"error",
+				"meta":{}
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrNotFound,
 		},
 		{
 			name: "500 internal server error",
@@ -1056,7 +1081,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 			args: args{
 				symbol:    "USD/JPY",
 				timeZone:  "",
-				precision: 0,
+				precision: 2,
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
