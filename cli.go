@@ -516,7 +516,7 @@ func (c *Cli) GetExchangeRate(
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		if errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
