@@ -886,7 +886,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 			wantResp:        nil,
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
-			wantErr:         dictionary.ErrInvalidTwelveDataResponse,
+			wantErr:         dictionary.ErrNotFound,
 		},
 		{
 			name: "500 internal server error",

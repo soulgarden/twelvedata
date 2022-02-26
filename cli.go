@@ -97,6 +97,12 @@ func (c *Cli) GetTimeSeries(
 			c.logger.Err(err).Msg("check error in response")
 		}
 
+		if errResp != nil &&
+			errResp.Code == http.StatusBadRequest &&
+			strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) {
+			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
+		}
+
 		return nil, creditsLeft, creditsUsed, err
 	}
 
