@@ -99,7 +99,8 @@ func (c *Cli) GetTimeSeries(
 
 		if errResp != nil &&
 			errResp.Code == http.StatusBadRequest &&
-			strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) {
+			(strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
+				strings.Contains(errResp.Message, dictionary.NewSymbolNotFoundMsg)) {
 			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 		}
 
@@ -528,7 +529,8 @@ func (c *Cli) GetExchangeRate(
 
 		if errResp != nil &&
 			errResp.Code == http.StatusBadRequest &&
-			strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) {
+			(strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
+				strings.Contains(errResp.Message, dictionary.NewSymbolNotFoundMsg)) {
 			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 		}
 

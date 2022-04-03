@@ -8,12 +8,12 @@ issues:
         - gci
         - gofumpt
         - funlen
-    - path: \.go
-      linters:
-        - tagliatelle
-        - dupl
-        - exhaustivestruct
-        - gci
-        - gofumpt
+linters:
   enable-all: true
+  disable:
+    - tagliatelle
+    - dupl
+    - exhaustivestruct
+    - gci
+    - gofumpt
 

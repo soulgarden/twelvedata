@@ -3,6 +3,7 @@ package dictionary
 import "errors"
 
 const SymbolNotFoundMsg = "**symbol** not found:"
+const NewSymbolNotFoundMsg = "**symbol** with specified criteria not found:"
 
 var (
 	ErrBadStatusCode             = errors.New("bas status code")
