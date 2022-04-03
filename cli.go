@@ -93,15 +93,15 @@ func (c *Cli) GetTimeSeries(
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
-			c.logger.Err(err).Msg("check error in response")
-		}
-
 		if errResp != nil &&
 			errResp.Code == http.StatusBadRequest &&
 			(strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
 				strings.Contains(errResp.Message, dictionary.NewSymbolNotFoundMsg)) {
 			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
+		}
+
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
@@ -523,15 +523,15 @@ func (c *Cli) GetExchangeRate(
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
-			c.logger.Err(err).Msg("check error in response")
-		}
-
 		if errResp != nil &&
 			errResp.Code == http.StatusBadRequest &&
 			(strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
 				strings.Contains(errResp.Message, dictionary.NewSymbolNotFoundMsg)) {
 			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
+		}
+
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
