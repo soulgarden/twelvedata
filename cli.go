@@ -26,7 +26,7 @@ func NewCli(cfg *Conf, httpCli *HTTPCli, logger *zerolog.Logger) *Cli {
 	return &Cli{cfg: cfg, httpCli: httpCli, logger: logger}
 }
 
-func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (
+func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string, showPlan bool) (
 	stocksResp *response.Stocks,
 	creditsLeft int,
 	creditsUsed int,
@@ -41,6 +41,7 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (
 	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 	uri = strings.Replace(uri, "{type}", instrumentType, 1)
+	uri = strings.Replace(uri, "{show_plan}", strconv.FormatBool(showPlan), 1)
 
 	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
@@ -359,7 +360,7 @@ func (c *Cli) GetIndices(symbol, country string) (
 	return indicesResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) GetEtfs(symbol string) (
+func (c *Cli) GetEtfs(symbol, exchange, country string, showPlan bool) (
 	etfsResp *response.Etfs,
 	creditsLeft, creditsUsed int,
 	err error,
@@ -370,6 +371,9 @@ func (c *Cli) GetEtfs(symbol string) (
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.ReferenceData.EtfsURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
+	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
+	uri = strings.Replace(uri, "{country}", country, 1)
+	uri = strings.Replace(uri, "{show_plan}", strconv.FormatBool(showPlan), 1)
 
 	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err

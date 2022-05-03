@@ -81,6 +81,7 @@ func TestCli_GetStocks(t *testing.T) {
 		exchange       string
 		country        string
 		instrumentType string
+		showPlan       bool
 	}
 
 	tests := []struct {
@@ -107,13 +108,38 @@ func TestCli_GetStocks(t *testing.T) {
 				exchange:       "",
 				country:        "",
 				instrumentType: "",
+				showPlan:       true,
 			},
 			responseCode: http.StatusOK,
-			// nolint: lll
+
 			responseBody: `{
 				"data":[
-					{"symbol":"AAPL","name":"Apple Inc","currency":"USD","exchange":"NASDAQ","country":"United States","type":"Common Stock"},
-					{"symbol":"AAPL","name":"1X AAPL","currency":"EUR","exchange":"Euronext","country":"Netherlands","type":"Common Stock"}
+					{
+						"symbol":"AAPL",
+						"name":"Apple Inc",
+						"currency":"USD",
+						"exchange":"NASDAQ",
+						"mic_code":"XNGS",
+						"country":"United States",
+						"type":"Common Stock",
+						"access": {
+							"global": "Basic",
+							"plan": "Basic"
+						}
+					},
+					{
+						"symbol":"AAPL",
+						"name":"1X AAPL",
+						"currency":"EUR",
+						"exchange":"Euronext",
+						"mic_code":"XAMS",
+						"country":"Netherlands",
+						"type":"Common Stock",
+						"access": {
+							"global": "Basic",
+							"plan": "Basic"
+						}
+					}
 				],
 				"status":"ok"
 			}`,
@@ -124,16 +150,26 @@ func TestCli_GetStocks(t *testing.T) {
 						Name:     "Apple Inc",
 						Currency: "USD",
 						Exchange: "NASDAQ",
+						MicCode:  "XNGS",
 						Country:  "United States",
 						Type:     "Common Stock",
+						Access: &response.Access{
+							Global: "Basic",
+							Plan:   "Basic",
+						},
 					},
 					{
 						Symbol:   "AAPL",
 						Name:     "1X AAPL",
 						Currency: "EUR",
 						Exchange: "Euronext",
+						MicCode:  "XAMS",
 						Country:  "Netherlands",
 						Type:     "Common Stock",
+						Access: &response.Access{
+							Global: "Basic",
+							Plan:   "Basic",
+						},
 					},
 				},
 			},
@@ -154,6 +190,7 @@ func TestCli_GetStocks(t *testing.T) {
 				exchange:       "",
 				country:        "",
 				instrumentType: "",
+				showPlan:       true,
 			},
 			responseCode: http.StatusOK,
 			// nolint: lll
@@ -180,6 +217,7 @@ func TestCli_GetStocks(t *testing.T) {
 				exchange:       "",
 				country:        "",
 				instrumentType: "",
+				showPlan:       true,
 			},
 			responseCode: http.StatusOK,
 
@@ -207,6 +245,7 @@ func TestCli_GetStocks(t *testing.T) {
 				exchange:       "",
 				country:        "",
 				instrumentType: "",
+				showPlan:       true,
 			},
 			responseCode: http.StatusInternalServerError,
 
@@ -233,6 +272,7 @@ func TestCli_GetStocks(t *testing.T) {
 				tt.args.exchange,
 				tt.args.country,
 				tt.args.instrumentType,
+				tt.args.showPlan,
 			)
 
 			runAssertions(
@@ -425,7 +465,10 @@ func TestCli_GetEtfs(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		symbol string
+		symbol   string
+		exchange string
+		country  string
+		showPlan bool
 	}
 
 	tests := []struct {
@@ -441,21 +484,44 @@ func TestCli_GetEtfs(t *testing.T) {
 	}{
 		{
 			name: "success",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol: "QQQ",
+				symbol:   "QQQ",
+				showPlan: true,
 			},
 			responseCode: http.StatusOK,
+
 			responseBody: `
 			{
 				"data":[
-					{"symbol":"QQQ","name":"Invesco QQQ Trust, Series 1","currency":"MXN","exchange":"BMV"},
-					{"symbol":"QQQ","name":"Invesco QQQ Trust","currency":"USD","exchange":"NASDAQ"}
+					{
+						"symbol":"QQQ",
+						"name":"Invesco QQQ Trust, Series 1",
+						"currency":"MXN",
+						"exchange":"BMV",
+						"mic_code":"XMEX",
+						"country":"Mexico",
+						"access": {
+							"global": "Basic",
+							"plan": "Basic"
+						}
+					},
+					{
+						"symbol":"QQQ",
+						"name":"Invesco QQQ Trust",
+						"currency":"USD",
+						"exchange":"NASDAQ",
+						"mic_code":"XNMS",
+						"country":"United States",
+						"access": {
+							"global": "Basic",
+							"plan": "Basic"
+						}
+					}
 				],
 				"status":"ok"
 			}`,
@@ -466,12 +532,24 @@ func TestCli_GetEtfs(t *testing.T) {
 						Name:     "Invesco QQQ Trust, Series 1",
 						Currency: "MXN",
 						Exchange: "BMV",
+						MicCode:  "XMEX",
+						Country:  "Mexico",
+						Access: &response.Access{
+							Global: "Basic",
+							Plan:   "Basic",
+						},
 					},
 					{
 						Symbol:   "QQQ",
 						Name:     "Invesco QQQ Trust",
 						Currency: "USD",
 						Exchange: "NASDAQ",
+						MicCode:  "XNMS",
+						Country:  "United States",
+						Access: &response.Access{
+							Global: "Basic",
+							Plan:   "Basic",
+						},
 					},
 				},
 			},
@@ -488,7 +566,8 @@ func TestCli_GetEtfs(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol: "QQQ",
+				symbol:   "QQQ",
+				showPlan: true,
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -511,7 +590,8 @@ func TestCli_GetEtfs(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol: "QQQ",
+				symbol:   "QQQ",
+				showPlan: true,
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -557,7 +637,12 @@ func TestCli_GetEtfs(t *testing.T) {
 
 			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
-			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEtfs(tt.args.symbol)
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEtfs(
+				tt.args.symbol,
+				tt.args.exchange,
+				tt.args.country,
+				tt.args.showPlan,
+			)
 
 			runAssertions(
 				t,
