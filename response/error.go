@@ -1,7 +1,7 @@
 package response
 
 type Error struct {
-	Code    int
-	Message string
-	Status  string
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Status  string `json:"status"`
 }

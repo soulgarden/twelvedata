@@ -10,4 +10,5 @@ var (
 	ErrInvalidTwelveDataResponse = errors.New("invalid twelvedata response")
 	ErrTooManyRequests           = errors.New("too many requests")
 	ErrNotFound                  = errors.New("not found")
+	ErrUnmarshalResponse         = errors.New("unmarshal error response")
 )

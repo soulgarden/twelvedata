@@ -16,10 +16,11 @@ type Conf struct {
 
 // nolint: lll
 type ReferenceData struct {
-	StocksURL    string `json:"stocks_url"   default:"/stocks?apikey={apikey}&symbol={symbol}&exchange={exchange}&country={country}&type={type}"`
-	ExchangesURL string `json:"exchange_url" default:"/exchanges?apikey={apikey}&type={type}&name={name}&code={code}&country={country}"`
-	IndicesURL   string `json:"indices_url"  default:"/indices?apikey={apikey}&symbol={symbol}&country={country}"`
-	EtfsURL      string `json:"etfs_url"     default:"/etf?apikey={apikey}&symbol={symbol}"`
+	StocksURL      string `json:"stocks_url"   default:"/stocks?apikey={apikey}&symbol={symbol}&exchange={exchange}&country={country}&type={type}"`
+	ExchangesURL   string `json:"exchange_url" default:"/exchanges?apikey={apikey}&type={type}&name={name}&code={code}&country={country}"`
+	IndicesURL     string `json:"indices_url"  default:"/indices?apikey={apikey}&symbol={symbol}&country={country}"`
+	EtfsURL        string `json:"etfs_url"     default:"/etf?apikey={apikey}&symbol={symbol}"`
+	MarketStateURL string `json:"market_state_url" default:"/market_state?apikey={apikey}&exchange={exchange}&code={code}&country={country}"`
 }
 
 // nolint: lll

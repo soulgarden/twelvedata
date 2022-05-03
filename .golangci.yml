@@ -8,6 +8,9 @@ issues:
         - gci
         - gofumpt
         - funlen
+        - varnamelen
+        - containedctx
+        - maintidx
 linters:
   enable-all: true
   disable:

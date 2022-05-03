@@ -87,7 +87,7 @@ func TestWS_Subscribe(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
+			server := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
 				upgrader := websocket.Upgrader{
 					Error: func(w http.ResponseWriter, r *http.Request, status int, reason error) {
 						http.Error(w, reason.Error(), status)
@@ -121,12 +121,12 @@ func TestWS_Subscribe(t *testing.T) {
 					t.Error(err)
 				}
 			}))
-			defer s.Close()
+			defer server.Close()
 
-			w := &WS{
+			ws := &WS{
 				url: &url.URL{
 					Scheme: "ws",
-					Host:   strings.Replace(s.URL, "http://", "", 1),
+					Host:   strings.Replace(server.URL, "http://", "", 1),
 					Path:   "/quotes/price",
 				},
 				eventsCh: tt.fields.eventsCh,
@@ -135,12 +135,12 @@ func TestWS_Subscribe(t *testing.T) {
 			}
 
 			go func() {
-				if err := w.Subscribe(tt.args.ctx, tt.args.symbols); (err != nil) != tt.wantErr {
+				if err := ws.Subscribe(tt.args.ctx, tt.args.symbols); (err != nil) != tt.wantErr {
 					t.Errorf("Subscribe() error = %v, wantErr %v", err, tt.wantErr)
 				}
 			}()
 
-			resp := <-w.Consume()
+			resp := <-ws.Consume()
 
 			if resp.Price != tt.expectedPrice {
 				t.Error("price not equal")

@@ -40,42 +40,44 @@ func NewWS(cfg *Conf, logger *zerolog.Logger, dialer *websocket.Dialer) *WS {
 	return ws
 }
 
-func (w *WS) Subscribe(ctx context.Context, symbols []string) error {
-	conn, _, err := w.dialer.Dial(w.url.String(), nil)
+func (ws *WS) Subscribe(ctx context.Context, symbols []string) error {
+	conn, resp, err := ws.dialer.DialContext(ctx, ws.url.String(), nil)
 	if err != nil {
-		w.logger.Err(err).Str("url", w.url.String()).Msg("dial")
+		ws.logger.Err(err).Str("url", ws.url.String()).Msg("dial")
 
 		return fmt.Errorf("dial ws: %w", err)
 	}
 
 	defer conn.Close()
 
+	defer resp.Body.Close()
+
 	ticker := time.NewTicker(dictionary.PingPeriod)
 	defer ticker.Stop()
 
 	done := make(chan struct{})
 
-	go w.read(conn, done)
+	go ws.read(conn, done)
 
-	err = w.sendSubscribeMessage(conn, symbols)
+	err = ws.sendSubscribeMessage(conn, symbols)
 	if err != nil {
 		return err
 	}
 
-	return w.ping(ctx, conn, done)
+	return ws.ping(ctx, conn, done)
 }
 
-func (w *WS) Consume() <-chan *response.PriceEvent {
-	return w.eventsCh
+func (ws *WS) Consume() <-chan *response.PriceEvent {
+	return ws.eventsCh
 }
 
-func (w *WS) read(conn *websocket.Conn, done chan<- struct{}) {
+func (ws *WS) read(conn *websocket.Conn, done chan<- struct{}) {
 	defer close(done)
 
 	for {
 		_, message, err := conn.ReadMessage()
 
-		w.logger.Err(err).Bytes("message", message).Msg("read message")
+		ws.logger.Err(err).Bytes("message", message).Msg("read message")
 
 		if err != nil {
 			return
@@ -84,18 +86,18 @@ func (w *WS) read(conn *websocket.Conn, done chan<- struct{}) {
 		event := &response.PriceEvent{}
 
 		if err := json.Unmarshal(message, event); err != nil {
-			w.logger.Err(err).Bytes("val", message).Msg("unmarshall")
+			ws.logger.Err(err).Bytes("val", message).Msg("unmarshall")
 
 			continue
 		}
 
 		if event.Event == dictionary.PriceEventType {
-			w.eventsCh <- event
+			ws.eventsCh <- event
 		}
 	}
 }
 
-func (w *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct{}) error {
+func (ws *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct{}) error {
 	ticker := time.NewTicker(dictionary.PingPeriod)
 	defer ticker.Stop()
 
@@ -107,7 +109,7 @@ func (w *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct{
 				websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""),
 			)
 
-			w.logger.Err(err).Msg("write close connection message")
+			ws.logger.Err(err).Msg("write close connection message")
 
 			if err != nil {
 				return fmt.Errorf("write close message: %w", err)
@@ -120,7 +122,7 @@ func (w *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct{
 		case <-ticker.C:
 			err := conn.SetWriteDeadline(time.Now().Add(dictionary.WriteWait))
 
-			w.logger.Err(err).Msg("set write deadline")
+			ws.logger.Err(err).Msg("set write deadline")
 
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return fmt.Errorf("write message: %w", err)
@@ -129,7 +131,7 @@ func (w *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct{
 	}
 }
 
-func (w *WS) sendSubscribeMessage(conn *websocket.Conn, symbols []string) error {
+func (ws *WS) sendSubscribeMessage(conn *websocket.Conn, symbols []string) error {
 	err := conn.WriteMessage(websocket.TextMessage, []byte(`
 		{
 			"action": "subscribe",
@@ -139,7 +141,7 @@ func (w *WS) sendSubscribeMessage(conn *websocket.Conn, symbols []string) error 
 		}`,
 	))
 	if err != nil {
-		w.logger.Err(err).Msg("write message to ws")
+		ws.logger.Err(err).Msg("write message to ws")
 
 		return fmt.Errorf("write message: %w", err)
 	}

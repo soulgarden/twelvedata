@@ -25,7 +25,7 @@ type fields struct {
 func startServer(t *testing.T, responseCode, wantCreditsLeft, wantCreditsUsed int, responseBody string) string {
 	t.Helper()
 
-	s := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
 		if responseCode == http.StatusInternalServerError {
 			cw.WriteHeader(responseCode)
 		}
@@ -40,10 +40,10 @@ func startServer(t *testing.T, responseCode, wantCreditsLeft, wantCreditsUsed in
 	}))
 
 	t.Cleanup(func() {
-		s.Close()
+		server.Close()
 	})
 
-	return s.URL
+	return server.URL
 }
 
 func runAssertions(
@@ -226,7 +226,7 @@ func TestCli_GetStocks(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetStocks(
 				tt.args.symbol,
@@ -397,7 +397,7 @@ func TestCli_GetExchanges(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetExchanges(
 				tt.args.instrumentType,
@@ -555,7 +555,7 @@ func TestCli_GetEtfs(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEtfs(tt.args.symbol)
 
@@ -705,7 +705,7 @@ func TestCli_GetIndices(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetIndices(tt.args.symbol, tt.args.country)
 
@@ -922,7 +922,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetTimeSeries(
 				tt.args.symbol,
@@ -1100,7 +1100,7 @@ func TestCli_GetExchangeRate(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetExchangeRate(
 				tt.args.symbol,
@@ -1367,7 +1367,7 @@ func TestCli_GetQuotes(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetQuotes(
 				tt.args.interval,
@@ -1548,7 +1548,7 @@ func TestCli_GetProfile(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetProfile(
 				tt.args.symbol,
@@ -1728,7 +1728,7 @@ func TestCli_GetDividends(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetDividends(
 				tt.args.symbol,
@@ -1945,7 +1945,7 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEarningsCalendar(
 				tt.args.decimalPlaces,
@@ -2250,7 +2250,7 @@ func TestCli_GetStatistics(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetStatistics(
 				tt.args.symbol,
@@ -2541,7 +2541,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetBalanceSheet(
 				tt.args.symbol,
@@ -2794,7 +2794,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetCashFlow(
 				tt.args.symbol,
@@ -3021,7 +3021,7 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetIncomeStatement(
 				tt.args.symbol,
@@ -3201,7 +3201,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetInsiderTransactions(
 				tt.args.symbol,
@@ -3308,7 +3308,7 @@ func TestCli_GetUsage(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetUsage()
 
@@ -3486,13 +3486,171 @@ func TestCli_GetMarketMovers(t *testing.T) {
 
 			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
 
-			c := NewCli(tt.fields.cfg, tt.fields.httpCli, tt.fields.logger)
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetMarketMovers(
 				tt.args.instrument,
 				tt.args.direction,
 				tt.args.outputSize,
 				tt.args.country,
 				tt.args.decimalPlaces,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
+func TestCli_GetMarketState(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		exchange string
+		code     string
+		country  string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        []*response.MarketState
+		wantCreditsLeft int
+		wantCreditsUsed int
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				exchange: "NYSE",
+				code:     "XNYS",
+				country:  "United States",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+			[
+				{
+					"name": "NYSE",
+					"code": "XNYS",
+					"country": "United States",
+					"is_market_open": true,
+					"time_to_open": "00:00:00",
+					"time_to_close": "05:20:57"
+				}
+			]
+			`,
+			wantResp: []*response.MarketState{
+				{
+					Name:         "NYSE",
+					Code:         "XNYS",
+					Country:      "United States",
+					IsMarketOpen: true,
+					TimeToOpen:   "00:00:00",
+					TimeToClose:  "05:20:57",
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				exchange: "NYSE",
+				code:     "XNYS",
+				country:  "United States",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "not found symbol",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				exchange: "NYSE",
+				code:     "XNYS",
+				country:  "United States",
+			},
+			responseCode: http.StatusOK,
+
+			responseBody:    `[]`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrNotFound,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				exchange: "NYSE",
+				code:     "XNYS",
+				country:  "United States",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetMarketState(
+				tt.args.exchange,
+				tt.args.code,
+				tt.args.country,
 			)
 
 			runAssertions(

@@ -9,7 +9,6 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/soulgarden/twelvedata/dictionary"
@@ -19,11 +18,11 @@ import (
 
 type Cli struct {
 	cfg     *Conf
-	httpCli *fasthttp.Client
+	httpCli *HTTPCli
 	logger  *zerolog.Logger
 }
 
-func NewCli(cfg *Conf, httpCli *fasthttp.Client, logger *zerolog.Logger) *Cli {
+func NewCli(cfg *Conf, httpCli *HTTPCli, logger *zerolog.Logger) *Cli {
 	return &Cli{cfg: cfg, httpCli: httpCli, logger: logger}
 }
 
@@ -43,7 +42,7 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string) (
 	uri = strings.Replace(uri, "{country}", country, 1)
 	uri = strings.Replace(uri, "{type}", instrumentType, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -87,7 +86,7 @@ func (c *Cli) GetTimeSeries(
 	uri = strings.Replace(uri, "{outputsize}", strconv.Itoa(outputSize), 1)
 	uri = strings.Replace(uri, "{prepost}", prePost, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -135,7 +134,7 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (
 	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -176,7 +175,7 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -221,7 +220,7 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startDate, endDate stri
 	uri = strings.Replace(uri, "{start_date}", startDate, 1)
 	uri = strings.Replace(uri, "{end_date}", endDate, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -262,7 +261,7 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (
 	uri = strings.Replace(uri, "{exchange}", url.QueryEscape(exchange), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -304,7 +303,7 @@ func (c *Cli) GetExchanges(instrumentType, name, code, country string) (
 	uri = strings.Replace(uri, "{code}", url.QueryEscape(code), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -339,7 +338,7 @@ func (c *Cli) GetIndices(symbol, country string) (
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
 	uri = strings.Replace(uri, "{country}", country, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -372,7 +371,7 @@ func (c *Cli) GetEtfs(symbol string) (
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.ReferenceData.EtfsURL, "{apikey}", c.cfg.APIKey, 1)
 	uri = strings.Replace(uri, "{symbol}", url.QueryEscape(symbol), 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -417,7 +416,7 @@ func (c *Cli) GetQuotes(
 	uri = strings.Replace(uri, "{dp}", strconv.Itoa(decimalPlaces), 1)
 	uri = strings.Replace(uri, "{timezone}", timezone, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -438,7 +437,7 @@ func (c *Cli) GetUsage() (
 
 	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Advanced.UsageURL, "{apikey}", c.cfg.APIKey, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -479,7 +478,7 @@ func (c *Cli) GetEarningsCalendar(decimalPlaces int, startDate, endDate string) 
 	uri = strings.Replace(uri, "{start_date}", startDate, 1)
 	uri = strings.Replace(uri, "{end_date}", endDate, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -517,7 +516,7 @@ func (c *Cli) GetExchangeRate(
 	uri = strings.Replace(uri, "{precision}", strconv.Itoa(precision), 1)
 	uri = strings.Replace(uri, "{timezone}", timeZone, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -568,7 +567,7 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 	uri = strings.Replace(uri, "{start_date}", startDate, 1)
 	uri = strings.Replace(uri, "{end_date}", endDate, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -612,7 +611,7 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate, per
 	uri = strings.Replace(uri, "{start_date}", startDate, 1)
 	uri = strings.Replace(uri, "{end_date}", endDate, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -656,7 +655,7 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate, period 
 	uri = strings.Replace(uri, "{start_date}", startDate, 1)
 	uri = strings.Replace(uri, "{end_date}", endDate, 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -699,7 +698,7 @@ func (c *Cli) GetMarketMovers(instrument, direction string, outputSize int, coun
 	uri = strings.Replace(uri, "{country}", country, 1)
 	uri = strings.Replace(uri, "{dp}", strconv.Itoa(decimalPlaces), 1)
 
-	if creditsLeft, creditsUsed, err = c.makeRequest(uri, resp); err != nil {
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -725,62 +724,41 @@ func (c *Cli) GetMarketMovers(instrument, direction string, outputSize int, coun
 	return marketMoversResp, creditsLeft, creditsUsed, nil
 }
 
-func (c *Cli) makeRequest(uri string, resp *fasthttp.Response) (int, int, error) {
-	req := fasthttp.AcquireRequest()
-
-	defer fasthttp.ReleaseRequest(req)
-
-	req.SetRequestURI(uri)
-
-	start := time.Now()
-
-	if err := c.httpCli.DoTimeout(req, resp, time.Duration(c.cfg.Timeout)*time.Second); err != nil {
-		c.logRequest(req, resp, time.Since(start), err)
-
-		if !errors.Is(err, fasthttp.ErrDialTimeout) {
-			return 0, 0, fmt.Errorf("http request: %w", err)
-		}
-
-		if err := c.httpCli.DoTimeout(req, resp, time.Duration(c.cfg.Timeout)*time.Second); err != nil {
-			return 0, 0, fmt.Errorf("http cli request: %w", err)
-		}
-	}
-
-	if resp.StatusCode() != http.StatusOK {
-		c.logRequest(req, resp, time.Since(start), dictionary.ErrBadStatusCode)
-
-		return 0, 0, dictionary.ErrBadStatusCode
-	}
-
-	c.logRequest(req, resp, time.Since(start), nil)
-
-	creditsLeft, creditsUsed, err := c.getCredits(resp)
-	if err != nil {
-		c.logger.Err(err).Msg("get credits")
-	}
-
-	return creditsLeft, creditsUsed, nil
-}
-
-func (c *Cli) logRequest(
-	req *fasthttp.Request,
-	resp *fasthttp.Response,
-	duration time.Duration,
+func (c *Cli) GetMarketState(exchange, code, country string) (
+	marketStateResp []*response.MarketState,
+	creditsLeft int,
+	creditsUsed int,
 	err error,
 ) {
-	var event *zerolog.Event
+	resp := fasthttp.AcquireResponse()
 
-	if err != nil {
-		event = c.logger.Debug()
-	} else {
-		event = c.logger.Err(err)
+	defer fasthttp.ReleaseResponse(resp)
+
+	uri := strings.Replace(c.cfg.BaseURL+c.cfg.ReferenceData.MarketStateURL, "{apikey}", c.cfg.APIKey, 1)
+	uri = strings.Replace(uri, "{exchange}", exchange, 1)
+	uri = strings.Replace(uri, "{code}", code, 1)
+	uri = strings.Replace(uri, "{country}", country, 1)
+
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
+		return nil, 0, 0, err
 	}
 
-	event.
-		Str("request headers", req.Header.String()).
-		Int("response code", resp.StatusCode()).
-		Dur("duration", duration).
-		Msg("request")
+	_, err = c.CheckErrorInResponse(resp)
+	if err != nil && !errors.Is(err, dictionary.ErrUnmarshalResponse) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("check error in response")
+		}
+
+		return nil, creditsLeft, creditsUsed, err
+	}
+
+	if err := json.Unmarshal(resp.Body(), &marketStateResp); err != nil {
+		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
+
+		return nil, creditsLeft, creditsUsed, fmt.Errorf("unmarshal json: %w", err)
+	}
+
+	return marketStateResp, creditsLeft, creditsUsed, nil
 }
 
 func (c *Cli) processQuotes(resp *fasthttp.Response, symbols []string) (*response.Quotes, error) {
@@ -871,10 +849,14 @@ func (c *Cli) parseQuotes(
 func (c *Cli) CheckErrorInResponse(resp *fasthttp.Response) (*response.Error, error) {
 	var errResp *response.Error
 
+	if bytes.Equal(resp.Body(), []byte("[]")) {
+		return nil, dictionary.ErrNotFound
+	}
+
 	if err := json.Unmarshal(resp.Body(), &errResp); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
-		return nil, fmt.Errorf("unmarshal json: %w", err)
+		return nil, dictionary.ErrUnmarshalResponse
 	}
 
 	if errResp.Code == http.StatusBadRequest {
@@ -886,30 +868,4 @@ func (c *Cli) CheckErrorInResponse(resp *fasthttp.Response) (*response.Error, er
 	}
 
 	return errResp, nil
-}
-
-func (c *Cli) getCredits(resp *fasthttp.Response) (creditsLeft int, creditsUsed int, err error) {
-	creditsLeftStr := string(resp.Header.Peek("api-credits-left"))
-
-	if creditsLeftStr != "" {
-		creditsLeft, err = strconv.Atoi(creditsLeftStr)
-		if err != nil {
-			c.logger.Err(err).Str("val", creditsLeftStr).Msg("str to int")
-
-			return 0, 0, fmt.Errorf("str to int: %w", err)
-		}
-	}
-
-	creditsUsedStr := string(resp.Header.Peek("api-credits-used"))
-
-	if creditsUsedStr != "" {
-		creditsUsed, err = strconv.Atoi(creditsUsedStr)
-		if err != nil {
-			c.logger.Err(err).Str("val", creditsUsedStr).Msg("str to int")
-
-			return creditsLeft, 0, fmt.Errorf("str to int: %w", err)
-		}
-	}
-
-	return creditsLeft, creditsUsed, nil
 }

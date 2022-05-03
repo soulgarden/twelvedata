@@ -18,6 +18,7 @@ Twelve data go api client
 * Technical indicators interface ❌
 * Symbol search                  ❌
 * Earliest timestamp             ❌
+* Market state                   ✅
 
 
 ## Core data
