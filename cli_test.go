@@ -2306,6 +2306,30 @@ func TestCli_GetStatistics(t *testing.T) {
 			wantErr:         dictionary.ErrNotFound,
 		},
 		{
+			name: "forbidden",
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:   "AAPL",
+				exchange: "",
+				country:  "",
+			},
+			responseCode: http.StatusOK,
+			// nolint: lll
+			responseBody: `{
+				"code":403,
+				"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.com/pricing. It is absolutely free, and it’s yours for a lifetime. It only takes 10 seconds to obtain your own API key!",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrForbidden,
+		},
+		{
 			name: "500 internal server error",
 
 			fields: fields{

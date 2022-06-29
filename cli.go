@@ -871,5 +871,9 @@ func (c *Cli) CheckErrorInResponse(resp *fasthttp.Response) (*response.Error, er
 		return nil, dictionary.ErrTooManyRequests
 	}
 
+	if errResp.Code == http.StatusForbidden {
+		return errResp, dictionary.ErrForbidden
+	}
+
 	return errResp, nil
 }
