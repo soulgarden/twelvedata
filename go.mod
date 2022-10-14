@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/fasthttp/websocket v1.5.0
-	github.com/rs/zerolog v1.27.0
-	github.com/valyala/fasthttp v1.38.0
+	github.com/rs/zerolog v1.28.0
+	github.com/valyala/fasthttp v1.40.0
 	gopkg.in/guregu/null.v4 v4.0.0
 )
 

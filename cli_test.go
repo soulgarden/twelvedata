@@ -835,7 +835,6 @@ func TestCli_GetTimeSeries(t *testing.T) {
 	}{
 		{
 			name: "success",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -912,7 +911,6 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -940,8 +938,33 @@ func TestCli_GetTimeSeries(t *testing.T) {
 			wantErr:         dictionary.ErrTooManyRequests,
 		},
 		{
+			name: "symbol is not available with your plan",
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				symbol:         "AAPL",
+				interval:       "1min",
+				exchange:       "",
+				country:        "",
+				instrumentType: "",
+				outputSize:     1000,
+				prePost:        "",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code": 400,
+				"message": "**symbol** ALD is not available with your plan. You may select the appropriate plan at https://twelvedata.com/pricing","status":"error","meta":{"symbol":"ALD:TASE","interval":"1day","exchange":""}}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 1,
+			wantErr:         dictionary.ErrIsNotAvailableWithYourPlan,
+		},
+		{
 			name: "not found symbol",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -975,7 +998,6 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		},
 		{
 			name: "500 internal server error",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},

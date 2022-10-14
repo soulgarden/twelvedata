@@ -93,11 +93,15 @@ func (c *Cli) GetTimeSeries(
 
 	errResp, err := c.CheckErrorInResponse(resp)
 	if err != nil {
-		if errResp != nil &&
-			errResp.Code == http.StatusBadRequest &&
-			(strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
-				strings.Contains(errResp.Message, dictionary.NewSymbolNotFoundMsg)) {
-			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
+		if errResp != nil && errResp.Code == http.StatusBadRequest {
+			if strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
+				strings.Contains(errResp.Message, dictionary.NewSymbolNotFoundMsg) {
+				return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
+			}
+
+			if strings.Contains(errResp.Message, dictionary.IsNotAvailableWithYourPlanMsg) {
+				return nil, creditsLeft, creditsUsed, dictionary.ErrIsNotAvailableWithYourPlan
+			}
 		}
 
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
