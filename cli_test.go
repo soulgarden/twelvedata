@@ -859,6 +859,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 					"currency":"USD",
 					"exchange_timezone":"America/New_York",
 					"exchange":"NASDAQ",
+					"mic_code": "XNAS",
 					"type":"Common Stock"
 				},
 				"values":[
@@ -875,6 +876,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 					Currency:         "USD",
 					ExchangeTimezone: "America/New_York",
 					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
 					Type:             "Common Stock",
 				},
 				Values: []*response.TimeSeriesValue{
@@ -1282,6 +1284,7 @@ func TestCli_GetQuotes(t *testing.T) {
 				"symbol":"AAPL",
 				"name":"Apple Inc",
 				"exchange":"NASDAQ",
+				"mic_code": "XNAS",
 				"currency":"USD",
 				"datetime":"2022-02-08",
 				"open":"171.73000",
@@ -1308,6 +1311,7 @@ func TestCli_GetQuotes(t *testing.T) {
 					Symbol:        "AAPL",
 					Name:          "Apple Inc",
 					Exchange:      "NASDAQ",
+					MicCode:       "XNAS",
 					Currency:      "USD",
 					Datetime:      "2022-02-08",
 					Open:          "171.73000",
@@ -1543,6 +1547,7 @@ func TestCli_GetProfile(t *testing.T) {
 				"symbol":"AAPL",
 				"name":"Apple Inc",
 				"exchange":"NASDAQ",
+				"mic_code": "XNAS",
 				"sector":"Technology",
 				"industry":"Consumer Electronics",
 				"employees":154000,
@@ -1561,6 +1566,7 @@ func TestCli_GetProfile(t *testing.T) {
 				Symbol:    "AAPL",
 				Name:      "Apple Inc",
 				Exchange:  "NASDAQ",
+				MicCode:   "XNAS",
 				Sector:    "Technology",
 				Industry:  "Consumer Electronics",
 				Employees: 154000,
@@ -1726,6 +1732,7 @@ func TestCli_GetDividends(t *testing.T) {
 					"name":"Apple Inc",
 					"currency":"USD",
 					"exchange":"NASDAQ",
+					"mic_code": "XNAS",
 					"exchange_timezone":"America/New_York"
 				},
 				"dividends":[
@@ -1738,6 +1745,7 @@ func TestCli_GetDividends(t *testing.T) {
 					Name:             "Apple Inc",
 					Currency:         "USD",
 					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 				},
 				Dividends: []*response.Dividend{
@@ -1897,96 +1905,57 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 			responseCode: http.StatusOK,
 			responseBody: `
 				{
-					"earnings": {
-						"2022-02-10": [
+					"earnings":{
+						"2020-05-08":[
 							{
-								"symbol": "02B",
-								"name": "BlackLine, Inc.",
-								"currency": "EUR",
-								"exchange": "FSX",
-								"time": "After Hours",
-								"eps_estimate": null,
-								"eps_actual": null,
-								"difference": null,
-								"surprise_prc": null
-							},
-							{
-								"symbol": "096",
-								"name": "HubSpot Inc",
-								"currency": "EUR",
-								"exchange": "FSX",
-								"time": "After Hours",
-								"eps_estimate": null,
-								"eps_actual": null,
-								"difference": null,
-								"surprise_prc": null
+								"symbol": "BR",
+								"name": "Broadridge Financial Solutions Inc",
+								"currency": "USD",
+								"exchange": "NYSE",
+								"mic_code": "XNYS",
+								"country": "United States",
+								"time": "Time Not Supplied",
+								"eps_estimate": 1.72,
+								"eps_actual": 1.67,
+								"difference": -0.05,
+								"surprise_prc": -2.9
 							}
 						]
 					},
-					"status": "ok"
-			}`,
+					"status":"ok"
+				}`,
 			wantResp: &response.Earnings{
 				Earnings: map[string][]*response.Earning{
-					"2022-02-10": {
+					"2020-05-08": {
 						{
-							Symbol:   "02B",
-							Name:     "BlackLine, Inc.",
-							Currency: "EUR",
-							Exchange: "FSX",
-							Time:     "After Hours",
+							Symbol:   "BR",
+							Name:     "Broadridge Financial Solutions Inc",
+							Currency: "USD",
+							Exchange: "NYSE",
+							MicCode:  "XNYS",
+							Time:     "Time Not Supplied",
 							EpsEstimate: null.Float{
 								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
+									Float64: 1.72,
+									Valid:   true,
 								},
 							},
 							EpsActual: null.Float{
 								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
+									Float64: 1.67,
+									Valid:   true,
 								},
 							},
 							Difference: null.Float{
 								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
+									Float64: -0.05,
+									Valid:   true,
 								},
 							},
 							SurprisePrc: null.Float{
 								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
-								},
-							},
-						},
-						{
-							Symbol:   "096",
-							Name:     "HubSpot Inc",
-							Currency: "EUR",
-							Exchange: "FSX",
-							Time:     "After Hours",
-							EpsEstimate: null.Float{
-								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
-								},
-							},
-							EpsActual: null.Float{
-								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
-								},
-							},
-							Difference: null.Float{
-								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
-								},
-							},
-							SurprisePrc: null.Float{
-								NullFloat64: sql.NullFloat64{
-									Float64: 0,
-									Valid:   false,
+									Float64: -2.9,
+									Valid:   true,
 								},
 							},
 						},
@@ -2116,6 +2085,7 @@ func TestCli_GetStatistics(t *testing.T) {
 					"name": "Apple Inc",
 					"currency": "USD",
 					"exchange": "NASDAQ",
+					"mic_code": "XNAS",
 					"exchange_timezone": "America/New_York"
 				},
 				"statistics": {
@@ -2200,6 +2170,7 @@ func TestCli_GetStatistics(t *testing.T) {
 					Name:             "Apple Inc",
 					Currency:         "USD",
 					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 				},
 				Statistics: &response.StatisticsValues{
@@ -2451,6 +2422,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 					"name": "Apple Inc",
 					"currency": "USD",
 					"exchange": "NASDAQ",
+					"mic_code": "XNAS",
 					"exchange_timezone": "America/New_York",
 					"period": "Annual"
 				},
@@ -2522,6 +2494,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 					Name:             "Apple Inc",
 					Currency:         "USD",
 					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 					Period:           "Annual",
 				},
@@ -2745,6 +2718,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 					"name": "Apple Inc",
 					"currency": "USD",
 					"exchange": "NASDAQ",
+					"mic_code": "XNAS",
 					"exchange_timezone": "America/New_York",
 					"period": "Annual"
 				},
@@ -2794,6 +2768,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 					Name:             "Apple Inc",
 					Currency:         "USD",
 					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 					Period:           "Annual",
 				},
@@ -2998,6 +2973,7 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 					"name": "Apple Inc",
 					"currency": "USD",
 					"exchange": "NASDAQ",
+					"mic_code": "XNAS",
 					"exchange_timezone": "America/New_York",
 					"period": "Annual"
 				},
@@ -3035,6 +3011,7 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 					Name:             "Apple Inc",
 					Currency:         "USD",
 					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 					Period:           "Annual",
 				},
@@ -3219,6 +3196,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 					"name": "Apple Inc",
 					"currency": "USD",
 					"exchange": "NASDAQ",
+					"mic_code": "XNAS",
 					"exchange_timezone": "America/New_York"
 				},
 				"insider_transactions": [
@@ -3239,6 +3217,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 					Name:             "Apple Inc",
 					Currency:         "USD",
 					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 				},
 				InsiderTransactions: []*response.InsiderTransaction{
@@ -3503,6 +3482,7 @@ func TestCli_GetMarketMovers(t *testing.T) {
 						"symbol": "FINKURVE",
 						"name": "Finkurve Financial Services Limited",
 						"exchange": "BSE",
+						"mic_code": "XNAS",
 						"datetime": "2022-02-18 14:17:00",
 						"last": 50.3,
 						"high": 50.3,
@@ -3519,6 +3499,7 @@ func TestCli_GetMarketMovers(t *testing.T) {
 					Symbol:        "FINKURVE",
 					Name:          "Finkurve Financial Services Limited",
 					Exchange:      "BSE",
+					MicCode:       "XNAS",
 					Datetime:      "2022-02-18 14:17:00",
 					Last:          50.3,
 					High:          50.3,

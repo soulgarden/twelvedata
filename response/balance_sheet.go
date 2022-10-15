@@ -10,6 +10,7 @@ type BalanceSheetsMeta struct {
 	Name             string `json:"name"`
 	Currency         string `json:"currency"`
 	Exchange         string `json:"exchange"`
+	MicCode          string `json:"mic_code"`
 	ExchangeTimezone string `json:"exchange_timezone"`
 	Period           string `json:"period"`
 }

@@ -9,6 +9,7 @@ type Quote struct {
 	Symbol        string `json:"symbol"`
 	Name          string `json:"name"`
 	Exchange      string `json:"exchange"`
+	MicCode       string `json:"mic_code"`
 	Currency      string `json:"currency"`
 	Datetime      string `json:"datetime"`
 	Open          string `json:"open"`

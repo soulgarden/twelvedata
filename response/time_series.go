@@ -12,6 +12,7 @@ type TimeSeriesMeta struct {
 	Currency         string `json:"currency"`
 	ExchangeTimezone string `json:"exchange_timezone"`
 	Exchange         string `json:"exchange"`
+	MicCode          string `json:"mic_code"`
 	Type             string `json:"type"`
 }
 

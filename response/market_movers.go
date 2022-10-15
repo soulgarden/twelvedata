@@ -9,6 +9,7 @@ type MarketMover struct {
 	Symbol        string  `json:"symbol"`
 	Name          string  `json:"name"`
 	Exchange      string  `json:"exchange"`
+	MicCode       string  `json:"mic_code"`
 	Datetime      string  `json:"datetime"`
 	Last          float64 `json:"last"`
 	High          float64 `json:"high"`

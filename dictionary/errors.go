@@ -7,7 +7,7 @@ const NewSymbolNotFoundMsg = "**symbol** with specified criteria not found:"
 const IsNotAvailableWithYourPlanMsg = "is not available with your plan"
 
 var (
-	ErrBadStatusCode              = errors.New("bas status code")
+	ErrBadStatusCode              = errors.New("bad status code")
 	ErrInvalidTwelveDataResponse  = errors.New("invalid twelvedata response")
 	ErrTooManyRequests            = errors.New("too many requests")
 	ErrForbidden                  = errors.New("forbidden")

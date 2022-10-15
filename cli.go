@@ -91,15 +91,13 @@ func (c *Cli) GetTimeSeries(
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
-	if err != nil {
+	// nolint: nestif
+	if errResp, err := c.CheckErrorInResponse(resp); err != nil {
 		if errResp != nil && errResp.Code == http.StatusBadRequest {
 			if strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
 				strings.Contains(errResp.Message, dictionary.NewSymbolNotFoundMsg) {
 				return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
-			}
-
-			if strings.Contains(errResp.Message, dictionary.IsNotAvailableWithYourPlanMsg) {
+			} else if strings.Contains(errResp.Message, dictionary.IsNotAvailableWithYourPlanMsg) {
 				return nil, creditsLeft, creditsUsed, dictionary.ErrIsNotAvailableWithYourPlan
 			}
 		}
@@ -109,10 +107,6 @@ func (c *Cli) GetTimeSeries(
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &seriesResp); err != nil {
@@ -143,17 +137,13 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &profileResp); err != nil {
@@ -184,17 +174,13 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &insiderTransactionsResp); err != nil {
@@ -229,17 +215,13 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startDate, endDate stri
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &dividendsResp); err != nil {
@@ -270,17 +252,13 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &statisticsResp); err != nil {
@@ -449,17 +427,13 @@ func (c *Cli) GetUsage() (
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &usageResp); err != nil {
@@ -544,10 +518,6 @@ func (c *Cli) GetExchangeRate(
 		return nil, creditsLeft, creditsUsed, err
 	}
 
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
-	}
-
 	if err := json.Unmarshal(resp.Body(), &exchangeRate); err != nil {
 		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
 
@@ -579,17 +549,13 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &incomeStatementResp); err != nil {
@@ -623,17 +589,13 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate, per
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &balanceSheetResp); err != nil {
@@ -667,17 +629,13 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate, period 
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &cashFlowResp); err != nil {
@@ -710,17 +668,13 @@ func (c *Cli) GetMarketMovers(instrument, direction string, outputSize int, coun
 		return nil, 0, 0, err
 	}
 
-	errResp, err := c.CheckErrorInResponse(resp)
+	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
 		if !errors.Is(err, dictionary.ErrTooManyRequests) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
 		return nil, creditsLeft, creditsUsed, err
-	}
-
-	if errResp.Code == http.StatusNotFound {
-		return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 	}
 
 	if err := json.Unmarshal(resp.Body(), &marketMoversResp); err != nil {
@@ -867,16 +821,15 @@ func (c *Cli) CheckErrorInResponse(resp *fasthttp.Response) (*response.Error, er
 		return nil, dictionary.ErrUnmarshalResponse
 	}
 
-	if errResp.Code == http.StatusBadRequest {
+	switch {
+	case errResp.Code == http.StatusBadRequest:
 		return errResp, dictionary.ErrInvalidTwelveDataResponse
-	}
-
-	if errResp.Code == http.StatusTooManyRequests {
+	case errResp.Code == http.StatusTooManyRequests:
 		return nil, dictionary.ErrTooManyRequests
-	}
-
-	if errResp.Code == http.StatusForbidden {
+	case errResp.Code == http.StatusForbidden:
 		return errResp, dictionary.ErrForbidden
+	case errResp.Code == http.StatusNotFound:
+		return errResp, dictionary.ErrNotFound
 	}
 
 	return errResp, nil

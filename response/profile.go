@@ -4,6 +4,7 @@ type Profile struct {
 	Symbol      string `json:"symbol"`
 	Name        string `json:"name"`
 	Exchange    string `json:"exchange"`
+	MicCode     string `json:"mic_code"`
 	Sector      string `json:"sector"`
 	Industry    string `json:"industry"`
 	Employees   int    `json:"employees"`
