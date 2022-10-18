@@ -14,7 +14,7 @@ import (
 	"github.com/soulgarden/twelvedata/response"
 )
 
-//nolint: gocognit
+// nolint: gocognit
 func TestWS_Subscribe(t *testing.T) {
 	t.Parallel()
 

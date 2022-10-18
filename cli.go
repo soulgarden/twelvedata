@@ -64,7 +64,7 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string, showPl
 	return stocksResp, creditsLeft, creditsUsed, nil
 }
 
-//nolint: cyclop
+// nolint: cyclop
 func (c *Cli) GetTimeSeries(
 	symbol, interval, exchange, country, instrumentType string,
 	outputSize int,
@@ -193,7 +193,7 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 	return insiderTransactionsResp, creditsLeft, creditsUsed, nil
 }
 
-//nolint: varnamelen
+// nolint: varnamelen
 func (c *Cli) GetDividends(symbol, exchange, country, r, startDate, endDate string) (
 	dividendsResp *response.Dividends,
 	creditsLeft int,
