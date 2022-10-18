@@ -48,7 +48,7 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string, showPl
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -64,6 +64,7 @@ func (c *Cli) GetStocks(symbol, exchange, country, instrumentType string, showPl
 	return stocksResp, creditsLeft, creditsUsed, nil
 }
 
+//nolint: cyclop
 func (c *Cli) GetTimeSeries(
 	symbol, interval, exchange, country, instrumentType string,
 	outputSize int,
@@ -91,7 +92,7 @@ func (c *Cli) GetTimeSeries(
 		return nil, 0, 0, err
 	}
 
-	// nolint: nestif
+	//nolint: nestif
 	if errResp, err := c.CheckErrorInResponse(resp); err != nil {
 		if errResp != nil && errResp.Code == http.StatusBadRequest {
 			if strings.Contains(errResp.Message, dictionary.SymbolNotFoundMsg) ||
@@ -102,7 +103,7 @@ func (c *Cli) GetTimeSeries(
 			}
 		}
 
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -139,7 +140,7 @@ func (c *Cli) GetProfile(symbol, exchange, country string) (
 
 	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -176,7 +177,7 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 
 	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -192,7 +193,7 @@ func (c *Cli) GetInsiderTransactions(symbol, exchange, country string) (
 	return insiderTransactionsResp, creditsLeft, creditsUsed, nil
 }
 
-// nolint: varnamelen
+//nolint: varnamelen
 func (c *Cli) GetDividends(symbol, exchange, country, r, startDate, endDate string) (
 	dividendsResp *response.Dividends,
 	creditsLeft int,
@@ -217,7 +218,7 @@ func (c *Cli) GetDividends(symbol, exchange, country, r, startDate, endDate stri
 
 	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -254,7 +255,7 @@ func (c *Cli) GetStatistics(symbol, exchange, country string) (
 
 	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -291,7 +292,7 @@ func (c *Cli) GetExchanges(instrumentType, name, code, country string) (
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -326,7 +327,7 @@ func (c *Cli) GetIndices(symbol, country string) (
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -362,7 +363,7 @@ func (c *Cli) GetEtfs(symbol, exchange, country string, showPlan bool) (
 	}
 
 	if _, err = c.CheckErrorInResponse(resp); err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -511,7 +512,7 @@ func (c *Cli) GetExchangeRate(
 			return nil, creditsLeft, creditsUsed, dictionary.ErrNotFound
 		}
 
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -551,7 +552,7 @@ func (c *Cli) GetIncomeStatement(symbol, exchange, country, period, startDate, e
 
 	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -591,7 +592,7 @@ func (c *Cli) GetBalanceSheet(symbol, exchange, country, startDate, endDate, per
 
 	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 
@@ -631,7 +632,7 @@ func (c *Cli) GetCashFlow(symbol, exchange, country, startDate, endDate, period 
 
 	_, err = c.CheckErrorInResponse(resp)
 	if err != nil {
-		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) && !errors.Is(err, dictionary.ErrNotFound) {
 			c.logger.Err(err).Msg("check error in response")
 		}
 

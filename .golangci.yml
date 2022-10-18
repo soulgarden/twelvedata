@@ -19,4 +19,5 @@ linters:
     - exhaustivestruct
     - gci
     - gofumpt
-
+    - nonamedreturns
+    - exhaustruct

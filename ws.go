@@ -22,7 +22,7 @@ type WS struct {
 }
 
 func NewWS(cfg *Conf, logger *zerolog.Logger, dialer *websocket.Dialer) *WS {
-	// nolint: varnamelen
+	//nolint: varnamelen
 	ws := &WS{
 		url: &url.URL{
 			Scheme:   "wss",
