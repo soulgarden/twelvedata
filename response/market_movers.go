@@ -1,8 +1,8 @@
 package response
 
 type MarketMovers struct {
-	Values []*MarketMover `json:"values"`
-	Status string         `json:"status"`
+	Values []MarketMover `json:"values"`
+	Status string        `json:"status"`
 }
 
 type MarketMover struct {
@@ -14,7 +14,7 @@ type MarketMover struct {
 	Last          float64 `json:"last"`
 	High          float64 `json:"high"`
 	Low           float64 `json:"low"`
-	Volume        int     `json:"volume"`
+	Volume        int64   `json:"volume"`
 	Change        float64 `json:"change"`
 	PercentChange float64 `json:"percent_change"`
 }

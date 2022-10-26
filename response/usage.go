@@ -1,9 +1,11 @@
 package response
 
+import "gopkg.in/guregu/null.v4"
+
 type Usage struct {
-	TimeStamp      string `json:"timestamp"`
-	CurrentUsage   int    `json:"current_usage"`
-	PlanLimit      int    `json:"plan_limit"`
-	DailyUsage     int    `json:"daily_usage"`
-	PlanDailyLimit int    `json:"plan_daily_limit"`
+	TimeStamp      string   `json:"timestamp"`
+	CurrentUsage   null.Int `json:"current_usage"`
+	PlanLimit      null.Int `json:"plan_limit"`
+	DailyUsage     null.Int `json:"daily_usage"`
+	PlanDailyLimit null.Int `json:"plan_daily_limit"`
 }

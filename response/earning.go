@@ -12,6 +12,7 @@ type Earning struct {
 	Currency    string     `json:"currency"`
 	Exchange    string     `json:"exchange"`
 	MicCode     string     `json:"mic_code"`
+	Country     string     `json:"country"`
 	Time        string     `json:"time"`
 	EpsEstimate null.Float `json:"eps_estimate"`
 	EpsActual   null.Float `json:"eps_actual"`

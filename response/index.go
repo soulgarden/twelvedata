@@ -1,7 +1,7 @@
 package response
 
 type Indices struct {
-	Data []*Index `json:"data"`
+	Data []Index `json:"data"`
 }
 
 type Index struct {

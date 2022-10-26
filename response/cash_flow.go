@@ -1,8 +1,10 @@
 package response
 
+import "gopkg.in/guregu/null.v4"
+
 type CashFlows struct {
-	Meta     *CashFlowsMeta `json:"meta"`
-	CashFlow []*CashFlow    `json:"cash_flow"`
+	Meta     CashFlowsMeta `json:"meta"`
+	CashFlow []CashFlow    `json:"cash_flow"`
 }
 
 type CashFlowsMeta struct {
@@ -16,45 +18,46 @@ type CashFlowsMeta struct {
 }
 
 type CashFlow struct {
-	FiscalDate          string                       `json:"fiscal_date"`
-	OperatingActivities *CashFlowOperatingActivities `json:"operating_activities"`
-	InvestingActivities *CashFlowInvestingActivities `json:"investing_activities"`
-	FinancingActivities *CashFlowFinancingActivities `json:"financing_activities"`
-	EndCashPosition     int64                        `json:"end_cash_position"`
-	IncomeTaxPaid       int64                        `json:"income_tax_paid"`
-	InterestPaid        int64                        `json:"interest_paid"`
-	FreeCashFlow        int64                        `json:"free_cash_flow"`
+	FiscalDate          string                      `json:"fiscal_date"`
+	Quarter             null.Int                    `json:"quarter"`
+	OperatingActivities CashFlowOperatingActivities `json:"operating_activities"`
+	InvestingActivities CashFlowInvestingActivities `json:"investing_activities"`
+	FinancingActivities CashFlowFinancingActivities `json:"financing_activities"`
+	EndCashPosition     null.Int                    `json:"end_cash_position"`
+	IncomeTaxPaid       null.Int                    `json:"income_tax_paid"`
+	InterestPaid        null.Int                    `json:"interest_paid"`
+	FreeCashFlow        null.Int                    `json:"free_cash_flow"`
 }
 
 type CashFlowOperatingActivities struct {
-	NetIncome              int64 `json:"net_income"`
-	Depreciation           int64 `json:"depreciation"`
-	DeferredTaxes          int64 `json:"deferred_taxes"`
-	StockBasedCompensation int64 `json:"stock_based_compensation"`
-	OtherNonCashItems      int64 `json:"other_non_cash_items"`
-	AccountsReceivable     int64 `json:"accounts_receivable"`
-	AccountsPayable        int64 `json:"accounts_payable"`
-	OtherAssetsLiabilities int64 `json:"other_assets_liabilities"`
-	OperatingCashFlow      int64 `json:"operating_cash_flow"`
+	NetIncome              null.Int `json:"net_income"`
+	Depreciation           null.Int `json:"depreciation"`
+	DeferredTaxes          null.Int `json:"deferred_taxes"`
+	StockBasedCompensation null.Int `json:"stock_based_compensation"`
+	OtherNonCashItems      null.Int `json:"other_non_cash_items"`
+	AccountsReceivable     null.Int `json:"accounts_receivable"`
+	AccountsPayable        null.Int `json:"accounts_payable"`
+	OtherAssetsLiabilities null.Int `json:"other_assets_liabilities"`
+	OperatingCashFlow      null.Int `json:"operating_cash_flow"`
 }
 
 type CashFlowInvestingActivities struct {
-	CapitalExpenditures    int64 `json:"capital_expenditures"`
-	NetIntangibles         int64 `json:"net_intangibles"`
-	NetAcquisitions        int64 `json:"net_acquisitions"`
-	PurchaseOfInvestments  int64 `json:"purchase_of_investments"`
-	SaleOfInvestments      int64 `json:"sale_of_investments"`
-	OtherInvestingActivity int64 `json:"other_investing_activity"`
-	InvestingCashFlow      int64 `json:"investing_cash_flow"`
+	CapitalExpenditures    null.Int `json:"capital_expenditures"`
+	NetIntangibles         null.Int `json:"net_intangibles"`
+	NetAcquisitions        null.Int `json:"net_acquisitions"`
+	PurchaseOfInvestments  null.Int `json:"purchase_of_investments"`
+	SaleOfInvestments      null.Int `json:"sale_of_investments"`
+	OtherInvestingActivity null.Int `json:"other_investing_activity"`
+	InvestingCashFlow      null.Int `json:"investing_cash_flow"`
 }
 
 type CashFlowFinancingActivities struct {
-	LongTermDebtIssuance  int64 `json:"long_term_debt_issuance"`
-	LongTermDebtPayments  int64 `json:"long_term_debt_payments"`
-	ShortTermDebtIssuance int64 `json:"short_term_debt_issuance"`
-	CommonStockIssuance   int64 `json:"common_stock_issuance"`
-	CommonStockRepurchase int64 `json:"common_stock_repurchase"`
-	CommonDividends       int64 `json:"common_dividends"`
-	OtherFinancingCharges int64 `json:"other_financing_charges"`
-	FinancingCashFlow     int64 `json:"financing_cash_flow"`
+	LongTermDebtIssuance  null.Int `json:"long_term_debt_issuance"`
+	LongTermDebtPayments  null.Int `json:"long_term_debt_payments"`
+	ShortTermDebtIssuance null.Int `json:"short_term_debt_issuance"`
+	CommonStockIssuance   null.Int `json:"common_stock_issuance"`
+	CommonStockRepurchase null.Int `json:"common_stock_repurchase"`
+	CommonDividends       null.Int `json:"common_dividends"`
+	OtherFinancingCharges null.Int `json:"other_financing_charges"`
+	FinancingCashFlow     null.Int `json:"financing_cash_flow"`
 }

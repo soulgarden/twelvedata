@@ -22,7 +22,7 @@ func NewHTTPCli(transport *fasthttp.Client, cfg *Conf, logger *zerolog.Logger) *
 	return &HTTPCli{transport: transport, cfg: cfg, logger: logger}
 }
 
-func (c *HTTPCli) makeRequest(uri string, resp *fasthttp.Response) (int, int, error) {
+func (c *HTTPCli) makeRequest(uri string, resp *fasthttp.Response) (int64, int64, error) {
 	req := fasthttp.AcquireRequest()
 
 	defer fasthttp.ReleaseRequest(req)
@@ -59,11 +59,11 @@ func (c *HTTPCli) makeRequest(uri string, resp *fasthttp.Response) (int, int, er
 	return creditsLeft, creditsUsed, nil
 }
 
-func (c *HTTPCli) getCredits(resp *fasthttp.Response) (creditsLeft int, creditsUsed int, err error) {
+func (c *HTTPCli) getCredits(resp *fasthttp.Response) (creditsLeft int64, creditsUsed int64, err error) {
 	creditsLeftStr := string(resp.Header.Peek(dictionary.APICreditsLeft))
 
 	if creditsLeftStr != "" {
-		creditsLeft, err = strconv.Atoi(creditsLeftStr)
+		creditsLeft, err = strconv.ParseInt(creditsLeftStr, 10, 0)
 		if err != nil {
 			c.logger.Err(err).Str("val", creditsLeftStr).Msg("str to int")
 
@@ -74,7 +74,7 @@ func (c *HTTPCli) getCredits(resp *fasthttp.Response) (creditsLeft int, creditsU
 	creditsUsedStr := string(resp.Header.Peek(dictionary.APICreditsUsed))
 
 	if creditsUsedStr != "" {
-		creditsUsed, err = strconv.Atoi(creditsUsedStr)
+		creditsUsed, err = strconv.ParseInt(creditsUsedStr, 10, 0)
 		if err != nil {
 			c.logger.Err(err).Str("val", creditsUsedStr).Msg("str to int")
 

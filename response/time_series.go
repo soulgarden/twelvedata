@@ -1,9 +1,9 @@
 package response
 
 type TimeSeries struct {
-	Meta   *TimeSeriesMeta    `json:"meta"`
-	Values []*TimeSeriesValue `json:"values"`
-	Status string             `json:"status"`
+	Meta   TimeSeriesMeta    `json:"meta"`
+	Values []TimeSeriesValue `json:"values"`
+	Status string            `json:"status"`
 }
 
 type TimeSeriesMeta struct {
