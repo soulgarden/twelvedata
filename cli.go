@@ -397,10 +397,9 @@ func (c *Cli) GetEtfs(symbol, exchange, micCode, country string, showPlan, inclu
 }
 
 func (c *Cli) GetQuote(
-	symbol, interval, exchange, micCode, country, volumeTimePeriod, instrumentType string,
+	symbol, interval, exchange, micCode, country, volumeTimePeriod, instrumentType, prepost string,
 	eod bool,
-	rollingPeriod string,
-	decimalPlaces int,
+	rollingPeriod, decimalPlaces int,
 	timezone string,
 ) (
 	quotes *response.Quotes,
@@ -419,8 +418,9 @@ func (c *Cli) GetQuote(
 	uri = strings.Replace(uri, "{country}", country, 1)
 	uri = strings.Replace(uri, "{volume_time_period}", volumeTimePeriod, 1)
 	uri = strings.Replace(uri, "{type}", instrumentType, 1)
+	uri = strings.Replace(uri, "{prepost}", prepost, 1)
 	uri = strings.Replace(uri, "{eod}", strconv.FormatBool(eod), 1)
-	uri = strings.Replace(uri, "{rolling_period}", rollingPeriod, 1)
+	uri = strings.Replace(uri, "{rolling_period}", strconv.Itoa(rollingPeriod), 1)
 	uri = strings.Replace(uri, "{dp}", strconv.Itoa(decimalPlaces), 1)
 	uri = strings.Replace(uri, "{timezone}", timezone, 1)
 
@@ -806,6 +806,8 @@ func (c *Cli) processQuote(resp *fasthttp.Response) (quotes *response.Quotes, er
 	if quotesErr != nil {
 		quoteErr := c.parseQuote(resp, quotes)
 		if quoteErr != nil {
+			c.logger.Err(quotesErr).Msg("parse quotes")
+
 			return quotes, quotesErr
 		}
 	}
@@ -852,8 +854,6 @@ func (c *Cli) parseQuotes(
 		}
 
 		if err := json.Unmarshal(item, &quoteResp); err != nil {
-			c.logger.Err(err).Bytes("val", item).Msg("unmarshall")
-
 			return fmt.Errorf("unmarshal json: %w", err)
 		}
 

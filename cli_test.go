@@ -1281,8 +1281,9 @@ func TestCli_GetQuote(t *testing.T) {
 		country          string
 		volumeTimePeriod string
 		instrumentType   string
+		prepost          string
 		eod              bool
-		rollingPeriod    string
+		rollingPeriod    int
 		dp               int
 		timezone         string
 	}
@@ -1306,16 +1307,16 @@ func TestCli_GetQuote(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:   "AAPL",
-				interval: "1day",
-				exchange: "",
-				micCode:  "",
-				country:  "",
-
+				symbol:           "AAPL",
+				interval:         "1day",
+				exchange:         "",
+				micCode:          "",
+				country:          "",
 				volumeTimePeriod: "",
 				instrumentType:   "",
+				prepost:          "",
 				eod:              false,
-				rollingPeriod:    "",
+				rollingPeriod:    24,
 				dp:               5,
 				timezone:         "",
 			},
@@ -1389,16 +1390,16 @@ func TestCli_GetQuote(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:   "AAPL",
-				interval: "1day",
-				exchange: "",
-				micCode:  "",
-				country:  "",
-
+				symbol:           "AAPL",
+				interval:         "1day",
+				exchange:         "",
+				micCode:          "",
+				country:          "",
 				volumeTimePeriod: "",
 				instrumentType:   "",
+				prepost:          "",
 				eod:              false,
-				rollingPeriod:    "",
+				rollingPeriod:    24,
 				dp:               5,
 				timezone:         "",
 			},
@@ -1430,7 +1431,7 @@ func TestCli_GetQuote(t *testing.T) {
 				volumeTimePeriod: "",
 				instrumentType:   "",
 				eod:              false,
-				rollingPeriod:    "",
+				rollingPeriod:    24,
 				dp:               5,
 				timezone:         "",
 			},
@@ -1495,16 +1496,16 @@ func TestCli_GetQuote(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:   "AAPL",
-				interval: "1day",
-				exchange: "",
-				micCode:  "",
-				country:  "",
-
+				symbol:           "AAPL",
+				interval:         "1day",
+				exchange:         "",
+				micCode:          "",
+				country:          "",
 				volumeTimePeriod: "",
 				instrumentType:   "",
+				prepost:          "",
 				eod:              false,
-				rollingPeriod:    "",
+				rollingPeriod:    24,
 				dp:               5,
 				timezone:         "",
 			},
@@ -1535,6 +1536,7 @@ func TestCli_GetQuote(t *testing.T) {
 				tt.args.country,
 				tt.args.volumeTimePeriod,
 				tt.args.instrumentType,
+				tt.args.prepost,
 				tt.args.eod,
 				tt.args.rollingPeriod,
 				tt.args.dp,
@@ -1588,6 +1590,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -1652,6 +1655,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -1677,6 +1681,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "NOTFOUND",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusOK,
@@ -1697,6 +1702,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusInternalServerError,
@@ -1775,6 +1781,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1827,6 +1834,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1855,6 +1863,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "NOTFOUND",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1878,6 +1887,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1959,6 +1969,9 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
+				exchange:  "",
+				micCode:   "",
+				country:   "",
 				dp:        2,
 				startDate: "",
 				endDate:   "",
@@ -2037,6 +2050,9 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
+				exchange:  "",
+				micCode:   "",
+				country:   "",
 				dp:        2,
 				startDate: "",
 				endDate:   "",
@@ -2062,6 +2078,9 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
+				exchange:  "",
+				micCode:   "",
+				country:   "",
 				dp:        2,
 				startDate: "",
 				endDate:   "",
@@ -2140,6 +2159,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -2329,6 +2349,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -2354,6 +2375,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "NOTFOUND",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusOK,
@@ -2373,6 +2395,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -2398,6 +2421,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusInternalServerError,
@@ -2644,6 +2668,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2672,6 +2697,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				symbol:    "NOTFOUND",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2692,9 +2718,13 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:   "AAPL",
-				exchange: "",
-				country:  "",
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				micCode:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "",
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -2776,6 +2806,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2898,6 +2929,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2926,6 +2958,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "NOTFOUND",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2949,6 +2982,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -3032,10 +3066,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -3128,10 +3163,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -3156,10 +3192,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "NOTFOUND",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode:    http.StatusOK,
 			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
@@ -3179,10 +3216,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -3260,6 +3298,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -3321,6 +3360,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -3346,6 +3386,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "NOTFOUND",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusOK,
@@ -3366,6 +3407,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusInternalServerError,

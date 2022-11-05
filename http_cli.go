@@ -93,7 +93,7 @@ func (c *HTTPCli) logRequest(
 ) {
 	var event *zerolog.Event
 
-	if err != nil {
+	if err == nil {
 		event = c.logger.Debug()
 	} else {
 		event = c.logger.Err(err)
