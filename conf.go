@@ -35,7 +35,7 @@ type CoreData struct {
 // nolint: lll
 type Fundamentals struct {
 	EarningsCalendarURL    string `json:"earnings_calendar_url"    default:"/earnings_calendar?apikey={apikey}&exchange={exchange}&mic_code={mic_code}&country={country}&dp={dp}&start_date={start_date}&end_date={end_date}"`
-	ProfileURL             string `json:"profile_url"              default:"/profile?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code;}&country={country}"`
+	ProfileURL             string `json:"profile_url"              default:"/profile?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}"`
 	InsiderTransactionsURL string `json:"insider_transactions_url" default:"/insider_transactions?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}"`
 	IncomeStatementURL     string `json:"income_statement_url"     default:"/income_statement?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&period={period}&start_date={start_date}&end_date={end_date}"`
 	BalanceSheetURL        string `json:"balance_sheet_url"        default:"/balance_sheet?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&period={period}&start_date={start_date}&end_date={end_date}"`
