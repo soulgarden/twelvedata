@@ -22,7 +22,7 @@ type fields struct {
 	logger  *zerolog.Logger
 }
 
-func startServer(t *testing.T, responseCode, wantCreditsLeft, wantCreditsUsed int, responseBody string) string {
+func startServer(t *testing.T, responseCode int, wantCreditsLeft, wantCreditsUsed int64, responseBody string) string {
 	t.Helper()
 
 	server := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
@@ -30,8 +30,8 @@ func startServer(t *testing.T, responseCode, wantCreditsLeft, wantCreditsUsed in
 			cw.WriteHeader(responseCode)
 		}
 
-		cw.Header().Add("api-credits-left", strconv.Itoa(wantCreditsLeft))
-		cw.Header().Add("api-credits-used", strconv.Itoa(wantCreditsUsed))
+		cw.Header().Add("api-credits-left", strconv.FormatInt(wantCreditsLeft, 10))
+		cw.Header().Add("api-credits-used", strconv.FormatInt(wantCreditsUsed, 10))
 
 		_, err := cw.Write([]byte(responseBody))
 		if err != nil {
@@ -48,7 +48,7 @@ func startServer(t *testing.T, responseCode, wantCreditsLeft, wantCreditsUsed in
 
 func runAssertions(
 	t *testing.T,
-	gotCreditsLeft, gotCreditsUsed, wantCreditsLeft, wantCreditsUsed int,
+	gotCreditsLeft, gotCreditsUsed, wantCreditsLeft, wantCreditsUsed int64,
 	gotErr, wantErr error,
 	gotResp, wantResp interface{},
 ) {
@@ -77,11 +77,13 @@ func TestCli_GetStocks(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		symbol         string
-		exchange       string
-		country        string
-		instrumentType string
-		showPlan       bool
+		symbol          string
+		exchange        string
+		micCode         string
+		country         string
+		instrumentType  string
+		showPlan        bool
+		includeDelisted bool
 	}
 
 	tests := []struct {
@@ -91,8 +93,8 @@ func TestCli_GetStocks(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Stocks
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -106,6 +108,7 @@ func TestCli_GetStocks(t *testing.T) {
 			args: args{
 				symbol:         "AAPL",
 				exchange:       "",
+				micCode:        "",
 				country:        "",
 				instrumentType: "",
 				showPlan:       true,
@@ -188,6 +191,7 @@ func TestCli_GetStocks(t *testing.T) {
 			args: args{
 				symbol:         "AAPL",
 				exchange:       "",
+				micCode:        "",
 				country:        "",
 				instrumentType: "",
 				showPlan:       true,
@@ -215,6 +219,7 @@ func TestCli_GetStocks(t *testing.T) {
 			args: args{
 				symbol:         "NOTFOUND",
 				exchange:       "",
+				micCode:        "",
 				country:        "",
 				instrumentType: "",
 				showPlan:       true,
@@ -243,6 +248,7 @@ func TestCli_GetStocks(t *testing.T) {
 			args: args{
 				symbol:         "AAPL",
 				exchange:       "",
+				micCode:        "",
 				country:        "",
 				instrumentType: "",
 				showPlan:       true,
@@ -270,9 +276,11 @@ func TestCli_GetStocks(t *testing.T) {
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetStocks(
 				tt.args.symbol,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 				tt.args.instrumentType,
 				tt.args.showPlan,
+				tt.args.includeDelisted,
 			)
 
 			runAssertions(
@@ -298,6 +306,7 @@ func TestCli_GetExchanges(t *testing.T) {
 		name           string
 		code           string
 		country        string
+		showPlan       bool
 	}
 
 	tests := []struct {
@@ -307,8 +316,8 @@ func TestCli_GetExchanges(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Exchanges
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -335,7 +344,7 @@ func TestCli_GetExchanges(t *testing.T) {
 				"status":"ok"
 			}`,
 			wantResp: &response.Exchanges{
-				Data: []*response.Exchange{
+				Data: []response.Exchange{
 					{
 						Name:     "ASX",
 						Code:     "XASX",
@@ -401,7 +410,7 @@ func TestCli_GetExchanges(t *testing.T) {
 				"status":"ok"
 			}`,
 			wantResp: &response.Exchanges{
-				Data: []*response.Exchange{},
+				Data: []response.Exchange{},
 			},
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
@@ -444,6 +453,7 @@ func TestCli_GetExchanges(t *testing.T) {
 				tt.args.name,
 				tt.args.code,
 				tt.args.country,
+				tt.args.showPlan,
 			)
 
 			runAssertions(
@@ -465,10 +475,12 @@ func TestCli_GetEtfs(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		symbol   string
-		exchange string
-		country  string
-		showPlan bool
+		symbol          string
+		exchange        string
+		micCode         string
+		country         string
+		showPlan        bool
+		includeDelisted bool
 	}
 
 	tests := []struct {
@@ -478,8 +490,8 @@ func TestCli_GetEtfs(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Etfs
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -526,7 +538,7 @@ func TestCli_GetEtfs(t *testing.T) {
 				"status":"ok"
 			}`,
 			wantResp: &response.Etfs{
-				Data: []*response.Etf{
+				Data: []response.Etf{
 					{
 						Symbol:   "QQQ",
 						Name:     "Invesco QQQ Trust, Series 1",
@@ -600,7 +612,7 @@ func TestCli_GetEtfs(t *testing.T) {
 				"status":"ok"
 			}`,
 			wantResp: &response.Etfs{
-				Data: []*response.Etf{},
+				Data: []response.Etf{},
 			},
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
@@ -640,8 +652,10 @@ func TestCli_GetEtfs(t *testing.T) {
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEtfs(
 				tt.args.symbol,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 				tt.args.showPlan,
+				tt.args.includeDelisted,
 			)
 
 			runAssertions(
@@ -663,8 +677,10 @@ func TestCli_GetIndices(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		symbol  string
-		country string
+		symbol          string
+		country         string
+		showPlan        bool
+		includeDelisted bool
 	}
 
 	tests := []struct {
@@ -674,13 +690,12 @@ func TestCli_GetIndices(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Indices
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
 			name: "success",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -699,7 +714,7 @@ func TestCli_GetIndices(t *testing.T) {
 				"status":"ok"
 			}`,
 			wantResp: &response.Indices{
-				Data: []*response.Index{
+				Data: []response.Index{
 					{
 						Symbol:   "IXIC",
 						Name:     "NASDAQ Composite",
@@ -755,7 +770,7 @@ func TestCli_GetIndices(t *testing.T) {
 				"status":"ok"
 			}`,
 			wantResp: &response.Indices{
-				Data: []*response.Index{},
+				Data: []response.Index{},
 			},
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
@@ -792,7 +807,12 @@ func TestCli_GetIndices(t *testing.T) {
 
 			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
-			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetIndices(tt.args.symbol, tt.args.country)
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetIndices(
+				tt.args.symbol,
+				tt.args.country,
+				tt.args.showPlan,
+				tt.args.includeDelisted,
+			)
 
 			runAssertions(
 				t,
@@ -816,10 +836,18 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		symbol         string
 		interval       string
 		exchange       string
+		micCode        string
 		country        string
 		instrumentType string
 		outputSize     int
 		prePost        string
+		db             int
+		order          string
+		timezone       string
+		date           string
+		startDate      string
+		endDate        string
+		previousClose  bool
 	}
 
 	tests := []struct {
@@ -829,8 +857,8 @@ func TestCli_GetTimeSeries(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.TimeSeries
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -870,7 +898,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 				"status":"ok"
 			}`,
 			wantResp: &response.TimeSeries{
-				Meta: &response.TimeSeriesMeta{
+				Meta: response.TimeSeriesMeta{
 					Symbol:           "AAPL",
 					Interval:         "1min",
 					Currency:         "USD",
@@ -879,7 +907,7 @@ func TestCli_GetTimeSeries(t *testing.T) {
 					MicCode:          "XNAS",
 					Type:             "Common Stock",
 				},
-				Values: []*response.TimeSeriesValue{
+				Values: []response.TimeSeriesValue{
 					{
 						Datetime: "2022-02-07 15:59:00",
 						Open:     "171.42000",
@@ -1037,10 +1065,18 @@ func TestCli_GetTimeSeries(t *testing.T) {
 				tt.args.symbol,
 				tt.args.interval,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 				tt.args.instrumentType,
 				tt.args.outputSize,
 				tt.args.prePost,
+				tt.args.db,
+				tt.args.order,
+				tt.args.timezone,
+				tt.args.date,
+				tt.args.startDate,
+				tt.args.endDate,
+				tt.args.previousClose,
 			)
 
 			runAssertions(
@@ -1062,9 +1098,10 @@ func TestCli_GetExchangeRate(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		symbol    string
-		timeZone  string
-		precision int
+		symbol   string
+		date     string
+		timeZone string
+		dp       int
 	}
 
 	tests := []struct {
@@ -1074,8 +1111,8 @@ func TestCli_GetExchangeRate(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.ExchangeRate
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -1087,9 +1124,9 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:    "USD/JPY",
-				timeZone:  "",
-				precision: 2,
+				symbol:   "USD/JPY",
+				timeZone: "",
+				dp:       2,
 			},
 			responseCode: http.StatusOK,
 
@@ -1112,9 +1149,9 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:    "USD/JPY",
-				timeZone:  "",
-				precision: 2,
+				symbol:   "USD/JPY",
+				timeZone: "",
+				dp:       2,
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -1136,9 +1173,9 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:    "NOT/FOUND",
-				timeZone:  "",
-				precision: 2,
+				symbol:   "NOT/FOUND",
+				timeZone: "",
+				dp:       2,
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -1162,9 +1199,9 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:    "ZAC/USD",
-				timeZone:  "",
-				precision: 2,
+				symbol:   "ZAC/USD",
+				timeZone: "",
+				dp:       2,
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -1188,9 +1225,9 @@ func TestCli_GetExchangeRate(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:    "USD/JPY",
-				timeZone:  "",
-				precision: 2,
+				symbol:   "USD/JPY",
+				timeZone: "",
+				dp:       2,
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -1213,8 +1250,9 @@ func TestCli_GetExchangeRate(t *testing.T) {
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetExchangeRate(
 				tt.args.symbol,
+				tt.args.date,
 				tt.args.timeZone,
-				tt.args.precision,
+				tt.args.dp,
 			)
 
 			runAssertions(
@@ -1232,19 +1270,22 @@ func TestCli_GetExchangeRate(t *testing.T) {
 	}
 }
 
-func TestCli_GetQuotes(t *testing.T) {
+func TestCli_GetQuote(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
+		symbol           string
 		interval         string
 		exchange         string
+		micCode          string
 		country          string
 		volumeTimePeriod string
 		instrumentType   string
-		prePost          string
+		prepost          string
+		eod              bool
+		rollingPeriod    int
+		dp               int
 		timezone         string
-		decimalPlaces    int
-		symbols          []string
 	}
 
 	tests := []struct {
@@ -1254,28 +1295,30 @@ func TestCli_GetQuotes(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Quotes
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
 			name: "success",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
+				symbol:           "AAPL",
 				interval:         "1day",
 				exchange:         "",
+				micCode:          "",
 				country:          "",
 				volumeTimePeriod: "",
 				instrumentType:   "",
-				prePost:          "",
+				prepost:          "",
+				eod:              false,
+				rollingPeriod:    24,
+				dp:               5,
 				timezone:         "",
-				decimalPlaces:    5,
-				symbols:          []string{"AAPL"},
 			},
 			responseCode: http.StatusOK,
 
@@ -1307,7 +1350,7 @@ func TestCli_GetQuotes(t *testing.T) {
 				}
 			}`,
 			wantResp: &response.Quotes{
-				Data: []*response.Quote{{
+				Data: []response.Quote{{
 					Symbol:        "AAPL",
 					Name:          "Apple Inc",
 					Exchange:      "NASDAQ",
@@ -1333,7 +1376,6 @@ func TestCli_GetQuotes(t *testing.T) {
 						Range:             "116.209999 - 182.940002",
 					},
 				}},
-				Errors: []*response.QuoteError{},
 			},
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 1,
@@ -1348,15 +1390,18 @@ func TestCli_GetQuotes(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
+				symbol:           "AAPL",
 				interval:         "1day",
 				exchange:         "",
+				micCode:          "",
 				country:          "",
 				volumeTimePeriod: "",
 				instrumentType:   "",
-				prePost:          "",
+				prepost:          "",
+				eod:              false,
+				rollingPeriod:    24,
+				dp:               5,
 				timezone:         "",
-				decimalPlaces:    5,
-				symbols:          []string{"AAPL"},
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -1372,22 +1417,23 @@ func TestCli_GetQuotes(t *testing.T) {
 		},
 		{
 			name: "not found symbols",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
+				symbol:           "NOTFOUND1,NOTFOUND2",
 				interval:         "1day",
 				exchange:         "",
+				micCode:          "",
 				country:          "",
 				volumeTimePeriod: "",
 				instrumentType:   "",
-				prePost:          "",
+				eod:              false,
+				rollingPeriod:    24,
+				dp:               5,
 				timezone:         "",
-				decimalPlaces:    5,
-				symbols:          []string{"NOTFOUND1", "NOTFOUND2"},
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -1414,8 +1460,7 @@ func TestCli_GetQuotes(t *testing.T) {
 				}
 			}`,
 			wantResp: &response.Quotes{
-				Data: []*response.Quote{},
-				Errors: []*response.QuoteError{
+				Errors: []response.QuoteError{
 					{
 						Code:    400,
 						Message: "**symbol** not found: NOTFOUND1. Please specify it correctly according to API Documentation.",
@@ -1451,15 +1496,18 @@ func TestCli_GetQuotes(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
+				symbol:           "AAPL",
 				interval:         "1day",
 				exchange:         "",
+				micCode:          "",
 				country:          "",
 				volumeTimePeriod: "",
 				instrumentType:   "",
-				prePost:          "",
+				prepost:          "",
+				eod:              false,
+				rollingPeriod:    24,
+				dp:               5,
 				timezone:         "",
-				decimalPlaces:    5,
-				symbols:          []string{"AAPL"},
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -1480,16 +1528,19 @@ func TestCli_GetQuotes(t *testing.T) {
 
 			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
-			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetQuotes(
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetQuote(
+				tt.args.symbol,
 				tt.args.interval,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 				tt.args.volumeTimePeriod,
 				tt.args.instrumentType,
-				tt.args.prePost,
+				tt.args.prepost,
+				tt.args.eod,
+				tt.args.rollingPeriod,
+				tt.args.dp,
 				tt.args.timezone,
-				tt.args.decimalPlaces,
-				tt.args.symbols,
 			)
 
 			runAssertions(
@@ -1513,6 +1564,7 @@ func TestCli_GetProfile(t *testing.T) {
 	type args struct {
 		symbol   string
 		exchange string
+		micCode  string
 		country  string
 	}
 
@@ -1523,8 +1575,8 @@ func TestCli_GetProfile(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Profile
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -1538,6 +1590,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -1563,14 +1616,19 @@ func TestCli_GetProfile(t *testing.T) {
 				"phone":"408 996 1010"
 			}`,
 			wantResp: &response.Profile{
-				Symbol:    "AAPL",
-				Name:      "Apple Inc",
-				Exchange:  "NASDAQ",
-				MicCode:   "XNAS",
-				Sector:    "Technology",
-				Industry:  "Consumer Electronics",
-				Employees: 154000,
-				Website:   "https://www.apple.com",
+				Symbol:   "AAPL",
+				Name:     "Apple Inc",
+				Exchange: "NASDAQ",
+				MicCode:  "XNAS",
+				Sector:   "Technology",
+				Industry: "Consumer Electronics",
+				Employees: null.Int{
+					NullInt64: sql.NullInt64{
+						Int64: 154000,
+						Valid: true,
+					},
+				},
+				Website: "https://www.apple.com",
 				//nolint: lll
 				Description: "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. It also sells various related services. In addition, the company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of multi-purpose tablets; AirPods Max, an over-ear wireless headphone; and wearables, home, and accessories comprising AirPods, Apple TV, Apple Watch, Beats products, HomePod, and iPod touch. Further, it provides AppleCare support services; cloud services store services; and operates various platforms, including the App Store that allow customers to discover and download applications and digital content, such as books, music, video, games, and podcasts. Additionally, the company offers various services, such as Apple Arcade, a game subscription service; Apple Music, which offers users a curated listening experience with on-demand radio stations; Apple News+, a subscription news and magazine service; Apple TV+, which offers exclusive original content; Apple Card, a co-branded credit card; and Apple Pay, a cashless payment service, as well as licenses its intellectual property. The company serves consumers, and small and mid-sized businesses; and the education, enterprise, and government markets. It distributes third-party applications for its products through the App Store. The company also sells its products through its retail and online stores, and direct sales force; and third-party cellular network carriers, wholesalers, retailers, and resellers. Apple Inc. was incorporated in 1977 and is headquartered in Cupertino, California.",
 				Type:        "Common Stock",
@@ -1597,6 +1655,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -1622,6 +1681,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "NOTFOUND",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusOK,
@@ -1642,6 +1702,7 @@ func TestCli_GetProfile(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusInternalServerError,
@@ -1666,6 +1727,7 @@ func TestCli_GetProfile(t *testing.T) {
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetProfile(
 				tt.args.symbol,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 			)
 
@@ -1690,6 +1752,7 @@ func TestCli_GetDividends(t *testing.T) {
 	type args struct {
 		symbol    string
 		exchange  string
+		micCode   string
 		country   string
 		r         string
 		startDate string
@@ -1703,8 +1766,8 @@ func TestCli_GetDividends(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Dividends
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -1718,6 +1781,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1740,7 +1804,7 @@ func TestCli_GetDividends(t *testing.T) {
 				]
 			}`,
 			wantResp: &response.Dividends{
-				Meta: &response.DividendsMeta{
+				Meta: response.DividendsMeta{
 					Symbol:           "AAPL",
 					Name:             "Apple Inc",
 					Currency:         "USD",
@@ -1748,7 +1812,7 @@ func TestCli_GetDividends(t *testing.T) {
 					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 				},
-				Dividends: []*response.Dividend{
+				Dividends: []response.Dividend{
 					{
 						PaymentDate: "2022-02-04",
 						Amount:      0.22,
@@ -1770,6 +1834,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1798,6 +1863,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "NOTFOUND",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1821,6 +1887,7 @@ func TestCli_GetDividends(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
 				r:         "last",
 				startDate: "",
@@ -1848,6 +1915,7 @@ func TestCli_GetDividends(t *testing.T) {
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetDividends(
 				tt.args.symbol,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 				tt.args.r,
 				tt.args.startDate,
@@ -1873,9 +1941,12 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		decimalPlaces int
-		startDate     string
-		endDate       string
+		exchange  string
+		micCode   string
+		country   string
+		dp        int
+		startDate string
+		endDate   string
 	}
 
 	tests := []struct {
@@ -1885,8 +1956,8 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Earnings
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -1898,9 +1969,12 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				decimalPlaces: 2,
-				startDate:     "",
-				endDate:       "",
+				exchange:  "",
+				micCode:   "",
+				country:   "",
+				dp:        2,
+				startDate: "",
+				endDate:   "",
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -1933,6 +2007,7 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 							Currency: "USD",
 							Exchange: "NYSE",
 							MicCode:  "XNYS",
+							Country:  "United States",
 							Time:     "Time Not Supplied",
 							EpsEstimate: null.Float{
 								NullFloat64: sql.NullFloat64{
@@ -1975,9 +2050,12 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				decimalPlaces: 2,
-				startDate:     "",
-				endDate:       "",
+				exchange:  "",
+				micCode:   "",
+				country:   "",
+				dp:        2,
+				startDate: "",
+				endDate:   "",
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -2000,9 +2078,12 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				decimalPlaces: 2,
-				startDate:     "",
-				endDate:       "",
+				exchange:  "",
+				micCode:   "",
+				country:   "",
+				dp:        2,
+				startDate: "",
+				endDate:   "",
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -2024,7 +2105,10 @@ func TestCli_GetEarningsCalendar(t *testing.T) {
 			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
 
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEarningsCalendar(
-				tt.args.decimalPlaces,
+				tt.args.exchange,
+				tt.args.micCode,
+				tt.args.country,
+				tt.args.dp,
 				tt.args.startDate,
 				tt.args.endDate,
 			)
@@ -2050,6 +2134,7 @@ func TestCli_GetStatistics(t *testing.T) {
 	type args struct {
 		symbol   string
 		exchange string
+		micCode  string
 		country  string
 	}
 
@@ -2060,13 +2145,12 @@ func TestCli_GetStatistics(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Statistics
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
 			name: "success",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -2075,6 +2159,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -2165,7 +2250,7 @@ func TestCli_GetStatistics(t *testing.T) {
 				}
 			}`,
 			wantResp: &response.Statistics{
-				Meta: &response.StatisticsMeta{
+				Meta: response.StatisticsMeta{
 					Symbol:           "AAPL",
 					Name:             "Apple Inc",
 					Currency:         "USD",
@@ -2173,75 +2258,75 @@ func TestCli_GetStatistics(t *testing.T) {
 					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 				},
-				Statistics: &response.StatisticsValues{
-					ValuationsMetrics: &response.StatisticsValuationsMetrics{
-						MarketCapitalization: 2880798195712,
-						EnterpriseValue:      3022112423936,
-						TrailingPe:           31.299448,
-						ForwardPe:            28.412607,
-						PegRatio:             2,
-						PriceToSalesTtm:      7.874971,
-						PriceToBookMrq:       45.71463,
-						EnterpriseToRevenue:  8.261,
-						EnterpriseToEbitda:   25.135,
+				Statistics: response.StatisticsValues{
+					ValuationsMetrics: response.StatisticsValuationsMetrics{
+						MarketCapitalization: null.IntFrom(2880798195712),
+						EnterpriseValue:      null.IntFrom(3022112423936),
+						TrailingPe:           null.FloatFrom(31.299448),
+						ForwardPe:            null.FloatFrom(28.412607),
+						PegRatio:             null.FloatFrom(2),
+						PriceToSalesTtm:      null.FloatFrom(7.874971),
+						PriceToBookMrq:       null.FloatFrom(45.71463),
+						EnterpriseToRevenue:  null.FloatFrom(8.261),
+						EnterpriseToEbitda:   null.FloatFrom(25.135),
 					},
-					Financials: &response.StatisticsFinancials{
+					Financials: response.StatisticsFinancials{
 						FiscalYearEnds:    "2021-09-25",
 						MostRecentQuarter: "2021-09-25",
-						ProfitMargin:      0.25882,
-						OperatingMargin:   0.29782,
-						ReturnOnAssetsTtm: 0.20179,
-						ReturnOnEquityTtm: 1.47443,
-						IncomeStatement: &response.StatisticsIncomeStatement{
-							RevenueTtm:                 365817004032,
-							RevenuePerShareTtm:         21.904,
-							QuarterlyRevenueGrowth:     0.288,
-							GrossProfitTtm:             152836000000,
-							Ebitda:                     120233000960,
-							NetIncomeToCommonTtm:       94679998464,
-							DilutedEpsTtm:              5.61,
-							QuarterlyEarningsGrowthYoy: 0.622,
+						ProfitMargin:      null.FloatFrom(0.25882),
+						OperatingMargin:   null.FloatFrom(0.29782),
+						ReturnOnAssetsTtm: null.FloatFrom(0.20179),
+						ReturnOnEquityTtm: null.FloatFrom(1.47443),
+						IncomeStatement: response.StatisticsIncomeStatement{
+							RevenueTtm:                 null.IntFrom(365817004032),
+							RevenuePerShareTtm:         null.FloatFrom(21.904),
+							QuarterlyRevenueGrowth:     null.FloatFrom(0.288),
+							GrossProfitTtm:             null.IntFrom(152836000000),
+							Ebitda:                     null.IntFrom(120233000960),
+							NetIncomeToCommonTtm:       null.IntFrom(94679998464),
+							DilutedEpsTtm:              null.FloatFrom(5.61),
+							QuarterlyEarningsGrowthYoy: null.FloatFrom(0.622),
 						},
-						BalanceSheet: &response.StatisticsBalanceSheet{
-							RevenueTtm:           365817004032,
-							TotalCashMrq:         62639001600,
-							TotalCashPerShareMrq: 3.818,
-							TotalDebtMrq:         136521998336,
-							TotalDebtToEquityMrq: 216.392,
-							CurrentRatioMrq:      1.075,
-							BookValuePerShareMrq: 3.841,
+						BalanceSheet: response.StatisticsBalanceSheet{
+							RevenueTtm:           null.IntFrom(365817004032),
+							TotalCashMrq:         null.IntFrom(62639001600),
+							TotalCashPerShareMrq: null.FloatFrom(3.818),
+							TotalDebtMrq:         null.IntFrom(136521998336),
+							TotalDebtToEquityMrq: null.FloatFrom(216.392),
+							CurrentRatioMrq:      null.FloatFrom(1.075),
+							BookValuePerShareMrq: null.FloatFrom(3.841),
 						},
-						CashFlow: &response.StatisticsCashFlow{
-							OperatingCashFlowTtm:   104037998592,
-							LeveredFreeCashFlowTtm: 73295003648,
+						CashFlow: response.StatisticsCashFlow{
+							OperatingCashFlowTtm:   null.IntFrom(104037998592),
+							LeveredFreeCashFlowTtm: null.IntFrom(73295003648),
 						},
 					},
-					StockStatistics: &response.StockStatistics{
-						SharesOutstanding:               16406400000,
-						FloatShares:                     16389662475,
-						Avg10Volume:                     94468150,
-						Avg30Volume:                     94056423,
-						SharesShort:                     113277024,
-						ShortRatio:                      1,
-						ShortPercentOfSharesOutstanding: 0.0069,
-						PercentHeldByInsiders:           0.0007,
-						PercentHeldByInstitutions:       0.58707,
+					StockStatistics: response.StockStatistics{
+						SharesOutstanding:               null.IntFrom(16406400000),
+						FloatShares:                     null.IntFrom(16389662475),
+						Avg10Volume:                     null.IntFrom(94468150),
+						Avg30Volume:                     null.IntFrom(94056423),
+						SharesShort:                     null.IntFrom(113277024),
+						ShortRatio:                      null.FloatFrom(1),
+						ShortPercentOfSharesOutstanding: null.FloatFrom(0.0069),
+						PercentHeldByInsiders:           null.FloatFrom(0.0007),
+						PercentHeldByInstitutions:       null.FloatFrom(0.58707),
 					},
-					StockPriceSummary: &response.StockPriceSummary{
-						FiftyTwoWeekLow:    116.21,
-						FiftyTwoWeekHigh:   182.94,
-						FiftyTwoWeekChange: 0,
-						Beta:               1.203116,
-						Day50Ma:            171.6632,
-						Day200Ma:           149.5189,
+					StockPriceSummary: response.StockPriceSummary{
+						FiftyTwoWeekLow:    null.FloatFrom(116.21),
+						FiftyTwoWeekHigh:   null.FloatFrom(182.94),
+						FiftyTwoWeekChange: null.Float{NullFloat64: sql.NullFloat64{}},
+						Beta:               null.FloatFrom(1.203116),
+						Day50Ma:            null.FloatFrom(171.6632),
+						Day200Ma:           null.FloatFrom(149.5189),
 					},
-					DividendsAndSplits: &response.DividendsAndSplits{
-						ForwardAnnualDividendRate:   0.88,
-						ForwardAnnualDividendYield:  0.0049,
-						TrailingAnnualDividendRate:  0.85,
-						TrailingAnnualDividendYield: 0.004861866,
-						YearAverageDividendYield:    1.17,
-						PayoutRatio:                 0.1515,
+					DividendsAndSplits: response.DividendsAndSplits{
+						ForwardAnnualDividendRate:   null.FloatFrom(0.88),
+						ForwardAnnualDividendYield:  null.FloatFrom(0.0049),
+						TrailingAnnualDividendRate:  null.FloatFrom(0.85),
+						TrailingAnnualDividendYield: null.FloatFrom(0.004861866),
+						YearAverageDividendYield:    null.FloatFrom(1.17),
+						PayoutRatio:                 null.FloatFrom(0.1515),
 						DividendDate:                "2022-02-10",
 						ExDividendDate:              "2021-11-05",
 						LastSplitFactor:             "4-for-1 split",
@@ -2264,6 +2349,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -2289,6 +2375,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "NOTFOUND",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusOK,
@@ -2308,6 +2395,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -2333,6 +2421,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusInternalServerError,
@@ -2357,6 +2446,7 @@ func TestCli_GetStatistics(t *testing.T) {
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetStatistics(
 				tt.args.symbol,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 			)
 
@@ -2382,6 +2472,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 		symbol    string
 		exchange  string
 		country   string
+		micCode   string
 		startDate string
 		endDate   string
 		period    string
@@ -2394,8 +2485,8 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.BalanceSheets
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -2410,9 +2501,10 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -2489,7 +2581,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				]
 			}`,
 			wantResp: &response.BalanceSheets{
-				Meta: &response.BalanceSheetsMeta{
+				Meta: response.BalanceSheetsMeta{
 					Symbol:           "AAPL",
 					Name:             "Apple Inc",
 					Currency:         "USD",
@@ -2498,64 +2590,64 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 					ExchangeTimezone: "America/New_York",
 					Period:           "Annual",
 				},
-				BalanceSheet: []*response.BalanceSheet{
+				BalanceSheet: []response.BalanceSheet{
 					{
 						FiscalDate: "2021-09-30",
-						Assets: &response.BalanceSheetAssets{
-							CurrentAssets: &response.BalanceSheetCurrentAssets{
-								Cash:                      17305000000,
-								CashEquivalents:           17635000000,
-								CashAndCashEquivalents:    34940000000,
-								OtherShortTermInvestments: 27699000000,
-								AccountsReceivable:        26278000000,
-								OtherReceivables:          25228000000,
-								Inventory:                 6580000000,
-								PrepaidAssets:             0,
-								OtherCurrentAssets:        14111000000,
-								TotalCurrentAssets:        134836000000,
+						Assets: response.BalanceSheetAssets{
+							CurrentAssets: response.BalanceSheetCurrentAssets{
+								Cash:                      null.IntFrom(17305000000),
+								CashEquivalents:           null.IntFrom(17635000000),
+								CashAndCashEquivalents:    null.IntFrom(34940000000),
+								OtherShortTermInvestments: null.IntFrom(27699000000),
+								AccountsReceivable:        null.IntFrom(26278000000),
+								OtherReceivables:          null.IntFrom(25228000000),
+								Inventory:                 null.IntFrom(6580000000),
+								PrepaidAssets:             null.Int{NullInt64: sql.NullInt64{}},
+								OtherCurrentAssets:        null.IntFrom(14111000000),
+								TotalCurrentAssets:        null.IntFrom(134836000000),
 							},
-							NonCurrentAssets: &response.BalanceSheetNonCurrentAssets{
-								Properties:                  0,
-								LandAndImprovements:         20041000000,
-								MachineryFurnitureEquipment: 78659000000,
-								Leases:                      11023000000,
-								AccumulatedDepreciation:     -70283000000,
-								Goodwill:                    0,
-								IntangibleAssets:            0,
-								InvestmentsAndAdvances:      127877000000,
-								OtherNonCurrentAssets:       48849000000,
-								TotalNonCurrentAssets:       216166000000,
+							NonCurrentAssets: response.BalanceSheetNonCurrentAssets{
+								Properties:                  null.IntFrom(0),
+								LandAndImprovements:         null.IntFrom(20041000000),
+								MachineryFurnitureEquipment: null.IntFrom(78659000000),
+								Leases:                      null.IntFrom(11023000000),
+								AccumulatedDepreciation:     null.IntFrom(-70283000000),
+								Goodwill:                    null.Int{NullInt64: sql.NullInt64{}},
+								IntangibleAssets:            null.Int{NullInt64: sql.NullInt64{}},
+								InvestmentsAndAdvances:      null.IntFrom(127877000000),
+								OtherNonCurrentAssets:       null.IntFrom(48849000000),
+								TotalNonCurrentAssets:       null.IntFrom(216166000000),
 							},
-							TotalAssets: 351002000000,
+							TotalAssets: null.IntFrom(351002000000),
 						},
-						Liabilities: &response.BalanceSheetLiabilities{
-							CurrentLiabilities: &response.BalanceSheetCurrentLiabilities{
-								AccountsPayable:         54763000000,
-								AccruedExpenses:         0,
-								ShortTermDebt:           15613000000,
-								DeferredRevenue:         7612000000,
-								OtherCurrentLiabilities: 47493000000,
-								TotalCurrentLiabilities: 125481000000,
-								TaxPayable:              0,
+						Liabilities: response.BalanceSheetLiabilities{
+							CurrentLiabilities: response.BalanceSheetCurrentLiabilities{
+								AccountsPayable:         null.IntFrom(54763000000),
+								AccruedExpenses:         null.Int{NullInt64: sql.NullInt64{}},
+								ShortTermDebt:           null.IntFrom(15613000000),
+								DeferredRevenue:         null.IntFrom(7612000000),
+								OtherCurrentLiabilities: null.IntFrom(47493000000),
+								TotalCurrentLiabilities: null.IntFrom(125481000000),
+								TaxPayable:              null.Int{NullInt64: sql.NullInt64{}},
 							},
-							NonCurrentLiabilities: &response.BalanceSheetNonCurrentLiabilities{
-								LongTermDebt:                109106000000,
-								ProvisionForRisksAndCharges: 24689000000,
-								DeferredLiabilities:         0,
-								OtherNonCurrentLiabilities:  28636000000,
-								TotalNonCurrentLiabilities:  162431000000,
-								LongTermProvisions:          0,
+							NonCurrentLiabilities: response.BalanceSheetNonCurrentLiabilities{
+								LongTermDebt:                null.IntFrom(109106000000),
+								ProvisionForRisksAndCharges: null.IntFrom(24689000000),
+								DeferredLiabilities:         null.Int{NullInt64: sql.NullInt64{}},
+								OtherNonCurrentLiabilities:  null.IntFrom(28636000000),
+								TotalNonCurrentLiabilities:  null.IntFrom(162431000000),
+								LongTermProvisions:          null.Int{NullInt64: sql.NullInt64{}},
 							},
-							TotalLiabilities: 287912000000,
+							TotalLiabilities: null.IntFrom(287912000000),
 						},
-						ShareholdersEquity: &response.BalanceSheetShareholdersEquity{
-							CommonStock:             57365000000,
-							RetainedEarnings:        5562000000,
-							OtherShareholdersEquity: 163000000,
-							TotalShareholdersEquity: 63090000000,
-							AdditionalPaidInCapital: 0,
-							TreasuryStock:           0,
-							MinorityInterest:        0,
+						ShareholdersEquity: response.BalanceSheetShareholdersEquity{
+							CommonStock:             null.IntFrom(57365000000),
+							RetainedEarnings:        null.IntFrom(5562000000),
+							OtherShareholdersEquity: null.IntFrom(163000000),
+							TotalShareholdersEquity: null.IntFrom(63090000000),
+							AdditionalPaidInCapital: null.Int{NullInt64: sql.NullInt64{}},
+							TreasuryStock:           null.Int{NullInt64: sql.NullInt64{}},
+							MinorityInterest:        null.Int{NullInt64: sql.NullInt64{}},
 						},
 					},
 				},
@@ -2576,6 +2668,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2604,6 +2697,7 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				symbol:    "NOTFOUND",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2624,9 +2718,13 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				symbol:   "AAPL",
-				exchange: "",
-				country:  "",
+				symbol:    "AAPL",
+				exchange:  "",
+				country:   "",
+				micCode:   "",
+				startDate: "",
+				endDate:   "",
+				period:    "",
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -2651,9 +2749,10 @@ func TestCli_GetBalanceSheet(t *testing.T) {
 				tt.args.symbol,
 				tt.args.exchange,
 				tt.args.country,
+				tt.args.micCode,
+				tt.args.period,
 				tt.args.startDate,
 				tt.args.endDate,
-				tt.args.period,
 			)
 
 			runAssertions(
@@ -2678,6 +2777,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 		symbol    string
 		exchange  string
 		country   string
+		micCode   string
 		startDate string
 		endDate   string
 		period    string
@@ -2690,15 +2790,15 @@ func TestCli_GetCashFlow(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.CashFlows
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
 			name: "success",
 
 			fields: fields{
-				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				cfg:     &Conf{Timeout: 0, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
 				logger:  &zerolog.Logger{},
 			},
@@ -2706,6 +2806,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2763,7 +2864,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				]
 			}`,
 			wantResp: &response.CashFlows{
-				Meta: &response.CashFlowsMeta{
+				Meta: response.CashFlowsMeta{
 					Symbol:           "AAPL",
 					Name:             "Apple Inc",
 					Currency:         "USD",
@@ -2772,43 +2873,43 @@ func TestCli_GetCashFlow(t *testing.T) {
 					ExchangeTimezone: "America/New_York",
 					Period:           "Annual",
 				},
-				CashFlow: []*response.CashFlow{
+				CashFlow: []response.CashFlow{
 					{
 						FiscalDate: "2021-09-30",
-						OperatingActivities: &response.CashFlowOperatingActivities{
-							NetIncome:              94680000000,
-							Depreciation:           11284000000,
-							DeferredTaxes:          -4774000000,
-							StockBasedCompensation: 7906000000,
-							OtherNonCashItems:      -147000000,
-							AccountsReceivable:     -14028000000,
-							AccountsPayable:        12326000000,
-							OtherAssetsLiabilities: -3209000000,
-							OperatingCashFlow:      104038000000,
+						OperatingActivities: response.CashFlowOperatingActivities{
+							NetIncome:              null.IntFrom(94680000000),
+							Depreciation:           null.IntFrom(11284000000),
+							DeferredTaxes:          null.IntFrom(-4774000000),
+							StockBasedCompensation: null.IntFrom(7906000000),
+							OtherNonCashItems:      null.IntFrom(-147000000),
+							AccountsReceivable:     null.IntFrom(-14028000000),
+							AccountsPayable:        null.IntFrom(12326000000),
+							OtherAssetsLiabilities: null.IntFrom(-3209000000),
+							OperatingCashFlow:      null.IntFrom(104038000000),
 						},
-						InvestingActivities: &response.CashFlowInvestingActivities{
-							CapitalExpenditures:    -11085000000,
-							NetIntangibles:         0,
-							NetAcquisitions:        -33000000,
-							PurchaseOfInvestments:  -109689000000,
-							SaleOfInvestments:      106870000000,
-							OtherInvestingActivity: -608000000,
-							InvestingCashFlow:      -14545000000,
+						InvestingActivities: response.CashFlowInvestingActivities{
+							CapitalExpenditures:    null.IntFrom(-11085000000),
+							NetIntangibles:         null.Int{NullInt64: sql.NullInt64{}},
+							NetAcquisitions:        null.IntFrom(-33000000),
+							PurchaseOfInvestments:  null.IntFrom(-109689000000),
+							SaleOfInvestments:      null.IntFrom(106870000000),
+							OtherInvestingActivity: null.IntFrom(-608000000),
+							InvestingCashFlow:      null.IntFrom(-14545000000),
 						},
-						FinancingActivities: &response.CashFlowFinancingActivities{
-							LongTermDebtIssuance:  20393000000,
-							LongTermDebtPayments:  -8750000000,
-							ShortTermDebtIssuance: 1022000000,
-							CommonStockIssuance:   1105000000,
-							CommonStockRepurchase: -85971000000,
-							CommonDividends:       -14467000000,
-							OtherFinancingCharges: -6685000000,
-							FinancingCashFlow:     -93353000000,
+						FinancingActivities: response.CashFlowFinancingActivities{
+							LongTermDebtIssuance:  null.IntFrom(20393000000),
+							LongTermDebtPayments:  null.IntFrom(-8750000000),
+							ShortTermDebtIssuance: null.IntFrom(1022000000),
+							CommonStockIssuance:   null.IntFrom(1105000000),
+							CommonStockRepurchase: null.IntFrom(-85971000000),
+							CommonDividends:       null.IntFrom(-14467000000),
+							OtherFinancingCharges: null.IntFrom(-6685000000),
+							FinancingCashFlow:     null.IntFrom(-93353000000),
 						},
-						EndCashPosition: 35929000000,
-						IncomeTaxPaid:   25385000000,
-						InterestPaid:    2687000000,
-						FreeCashFlow:    115123000000,
+						EndCashPosition: null.IntFrom(35929000000),
+						IncomeTaxPaid:   null.IntFrom(25385000000),
+						InterestPaid:    null.IntFrom(2687000000),
+						FreeCashFlow:    null.IntFrom(115123000000),
 					},
 				},
 			},
@@ -2828,6 +2929,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2856,6 +2958,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "NOTFOUND",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2879,6 +2982,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				symbol:    "AAPL",
 				exchange:  "",
 				country:   "",
+				micCode:   "",
 				startDate: "",
 				endDate:   "",
 				period:    "annual",
@@ -2906,6 +3010,7 @@ func TestCli_GetCashFlow(t *testing.T) {
 				tt.args.symbol,
 				tt.args.exchange,
 				tt.args.country,
+				tt.args.micCode,
 				tt.args.startDate,
 				tt.args.endDate,
 				tt.args.period,
@@ -2932,6 +3037,7 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 	type args struct {
 		symbol    string
 		exchange  string
+		micCode   string
 		country   string
 		period    string
 		startDate string
@@ -2945,8 +3051,8 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.IncomeStatements
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -2960,10 +3066,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -3006,7 +3113,7 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 				]
 			}`,
 			wantResp: &response.IncomeStatements{
-				Meta: &response.IncomeStatementsMeta{
+				Meta: response.IncomeStatementsMeta{
 					Symbol:           "AAPL",
 					Name:             "Apple Inc",
 					Currency:         "USD",
@@ -3015,30 +3122,30 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 					ExchangeTimezone: "America/New_York",
 					Period:           "Annual",
 				},
-				IncomeStatement: []*response.IncomeStatement{{
+				IncomeStatement: []response.IncomeStatement{{
 					FiscalDate:  "2021-09-30",
-					Sales:       365817000000,
-					CostOfGoods: 212981000000,
-					GrossProfit: 152836000000,
-					OperatingExpense: &response.IncomeStatementOperatingExpense{
-						ResearchAndDevelopment:          21914000000,
-						SellingGeneralAndAdministrative: 21973000000,
-						OtherOperatingExpenses:          0,
+					Sales:       null.IntFrom(365817000000),
+					CostOfGoods: null.IntFrom(212981000000),
+					GrossProfit: null.IntFrom(152836000000),
+					OperatingExpense: response.IncomeStatementOperatingExpense{
+						ResearchAndDevelopment:          null.IntFrom(21914000000),
+						SellingGeneralAndAdministrative: null.IntFrom(21973000000),
+						OtherOperatingExpenses:          null.Int{NullInt64: sql.NullInt64{}},
 					},
-					OperatingIncome: 108949000000,
-					NonOperatingInterest: &response.IncomeStatementNonOperatingInterest{
-						Income:  2843000000,
-						Expense: 2645000000,
+					OperatingIncome: null.IntFrom(108949000000),
+					NonOperatingInterest: response.IncomeStatementNonOperatingInterest{
+						Income:  null.IntFrom(2843000000),
+						Expense: null.IntFrom(2645000000),
 					},
-					OtherIncomeExpense:       60000000,
-					PretaxIncome:             109207000000,
-					IncomeTax:                14527000000,
-					NetIncome:                94680000000,
-					EpsBasic:                 5.67,
-					EpsDiluted:               5.61,
-					BasicSharesOutstanding:   16701272000,
-					DilutedSharesOutstanding: 16701272000,
-					Ebitda:                   123136000000,
+					OtherIncomeExpense:       null.IntFrom(60000000),
+					PretaxIncome:             null.IntFrom(109207000000),
+					IncomeTax:                null.IntFrom(14527000000),
+					NetIncome:                null.IntFrom(94680000000),
+					EpsBasic:                 null.FloatFrom(5.67),
+					EpsDiluted:               null.FloatFrom(5.61),
+					BasicSharesOutstanding:   null.IntFrom(16701272000),
+					DilutedSharesOutstanding: null.IntFrom(16701272000),
+					Ebitda:                   null.IntFrom(123136000000),
 				}},
 			},
 			wantCreditsLeft: 10,
@@ -3056,10 +3163,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -3084,10 +3192,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "NOTFOUND",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode:    http.StatusOK,
 			responseBody:    `{"code":404,"message":"Data not found","status":"error"}`,
@@ -3107,10 +3216,11 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			args: args{
 				symbol:    "AAPL",
 				exchange:  "",
+				micCode:   "",
 				country:   "",
+				period:    "annual",
 				startDate: "",
 				endDate:   "",
-				period:    "annual",
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -3134,6 +3244,7 @@ func TestCli_GetIncomeStatement(t *testing.T) {
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetIncomeStatement(
 				tt.args.symbol,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 				tt.args.period,
 				tt.args.startDate,
@@ -3161,6 +3272,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 	type args struct {
 		symbol   string
 		exchange string
+		micCode  string
 		country  string
 	}
 
@@ -3171,8 +3283,8 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.InsiderTransactions
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -3186,6 +3298,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -3212,7 +3325,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 				]
 			}`,
 			wantResp: &response.InsiderTransactions{
-				Meta: &response.InsiderTransactionsMeta{
+				Meta: response.InsiderTransactionsMeta{
 					Symbol:           "AAPL",
 					Name:             "Apple Inc",
 					Currency:         "USD",
@@ -3220,7 +3333,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 					MicCode:          "XNAS",
 					ExchangeTimezone: "America/New_York",
 				},
-				InsiderTransactions: []*response.InsiderTransaction{
+				InsiderTransactions: []response.InsiderTransaction{
 					{
 						FullName:     "COOK TIMOTHY D",
 						Position:     "Chief Executive Officer",
@@ -3247,6 +3360,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode: http.StatusOK,
@@ -3272,6 +3386,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "NOTFOUND",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusOK,
@@ -3292,6 +3407,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			args: args{
 				symbol:   "AAPL",
 				exchange: "",
+				micCode:  "",
 				country:  "",
 			},
 			responseCode:    http.StatusInternalServerError,
@@ -3316,6 +3432,7 @@ func TestCli_GetInsiderTransactions(t *testing.T) {
 			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetInsiderTransactions(
 				tt.args.symbol,
 				tt.args.exchange,
+				tt.args.micCode,
 				tt.args.country,
 			)
 
@@ -3343,8 +3460,8 @@ func TestCli_GetUsage(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.Usage
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -3364,10 +3481,10 @@ func TestCli_GetUsage(t *testing.T) {
 			}`,
 			wantResp: &response.Usage{
 				TimeStamp:      "2022-02-11 13:05:55",
-				CurrentUsage:   312,
-				PlanLimit:      610,
-				DailyUsage:     0,
-				PlanDailyLimit: 0,
+				CurrentUsage:   null.IntFrom(312),
+				PlanLimit:      null.IntFrom(610),
+				DailyUsage:     null.Int{},
+				PlanDailyLimit: null.Int{},
 			},
 			wantCreditsLeft: 10,
 			wantCreditsUsed: 100,
@@ -3441,11 +3558,11 @@ func TestCli_GetMarketMovers(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		instrument    string
-		direction     string
-		outputSize    int
-		country       string
-		decimalPlaces int
+		instrument string
+		direction  string
+		outputSize int
+		country    string
+		dp         int
 	}
 
 	tests := []struct {
@@ -3455,8 +3572,8 @@ func TestCli_GetMarketMovers(t *testing.T) {
 		responseCode    int
 		responseBody    string
 		wantResp        *response.MarketMovers
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
@@ -3468,11 +3585,11 @@ func TestCli_GetMarketMovers(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				instrument:    "stocks",
-				direction:     "gainers",
-				outputSize:    30,
-				country:       "india",
-				decimalPlaces: 5,
+				instrument: "stocks",
+				direction:  "gainers",
+				outputSize: 30,
+				country:    "india",
+				dp:         5,
 			},
 			responseCode: http.StatusOK,
 			responseBody: `
@@ -3495,7 +3612,7 @@ func TestCli_GetMarketMovers(t *testing.T) {
 			}
 			`,
 			wantResp: &response.MarketMovers{
-				Values: []*response.MarketMover{{
+				Values: []response.MarketMover{{
 					Symbol:        "FINKURVE",
 					Name:          "Finkurve Financial Services Limited",
 					Exchange:      "BSE",
@@ -3522,11 +3639,11 @@ func TestCli_GetMarketMovers(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				instrument:    "stocks",
-				direction:     "gainers",
-				outputSize:    30,
-				country:       "",
-				decimalPlaces: 5,
+				instrument: "stocks",
+				direction:  "gainers",
+				outputSize: 30,
+				country:    "",
+				dp:         5,
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -3549,11 +3666,11 @@ func TestCli_GetMarketMovers(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				instrument:    "notfound",
-				direction:     "gainers",
-				outputSize:    30,
-				country:       "",
-				decimalPlaces: 5,
+				instrument: "notfound",
+				direction:  "gainers",
+				outputSize: 30,
+				country:    "",
+				dp:         5,
 			},
 			responseCode: http.StatusOK,
 			//nolint: lll
@@ -3575,11 +3692,11 @@ func TestCli_GetMarketMovers(t *testing.T) {
 				logger:  &zerolog.Logger{},
 			},
 			args: args{
-				instrument:    "stocks",
-				direction:     "gainers",
-				outputSize:    30,
-				country:       "",
-				decimalPlaces: 5,
+				instrument: "stocks",
+				direction:  "gainers",
+				outputSize: 30,
+				country:    "",
+				dp:         5,
 			},
 			responseCode:    http.StatusInternalServerError,
 			responseBody:    ``,
@@ -3604,7 +3721,7 @@ func TestCli_GetMarketMovers(t *testing.T) {
 				tt.args.direction,
 				tt.args.outputSize,
 				tt.args.country,
-				tt.args.decimalPlaces,
+				tt.args.dp,
 			)
 
 			runAssertions(
@@ -3637,14 +3754,13 @@ func TestCli_GetMarketState(t *testing.T) {
 		args            args
 		responseCode    int
 		responseBody    string
-		wantResp        []*response.MarketState
-		wantCreditsLeft int
-		wantCreditsUsed int
+		wantResp        []response.MarketState
+		wantCreditsLeft int64
+		wantCreditsUsed int64
 		wantErr         error
 	}{
 		{
 			name: "success",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
@@ -3668,7 +3784,7 @@ func TestCli_GetMarketState(t *testing.T) {
 				}
 			]
 			`,
-			wantResp: []*response.MarketState{
+			wantResp: []response.MarketState{
 				{
 					Name:         "NYSE",
 					Code:         "XNYS",
@@ -3684,7 +3800,6 @@ func TestCli_GetMarketState(t *testing.T) {
 		},
 		{
 			name: "too many requests",
-
 			fields: fields{
 				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},

@@ -1,7 +1,7 @@
 package response
 
 type Etfs struct {
-	Data []*Etf `json:"data"`
+	Data []Etf `json:"data"`
 }
 
 type Etf struct {

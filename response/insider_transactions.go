@@ -1,8 +1,8 @@
 package response
 
 type InsiderTransactions struct {
-	Meta                *InsiderTransactionsMeta `json:"meta"`
-	InsiderTransactions []*InsiderTransaction    `json:"insider_transactions"`
+	Meta                InsiderTransactionsMeta `json:"meta"`
+	InsiderTransactions []InsiderTransaction    `json:"insider_transactions"`
 }
 
 type InsiderTransactionsMeta struct {

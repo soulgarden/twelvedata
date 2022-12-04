@@ -1,0 +1,7 @@
+/vendor
+/.git*
+/.idea
+
+*_gen.go
+*_gen_test.go
+*_mock_test.go

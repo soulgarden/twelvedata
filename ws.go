@@ -122,8 +122,11 @@ func (ws *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct
 			}
 		case <-ticker.C:
 			err := conn.SetWriteDeadline(time.Now().Add(dictionary.WriteWait))
+			if err != nil {
+				ws.logger.Err(err).Msg("set write deadline")
+			}
 
-			ws.logger.Err(err).Msg("set write deadline")
+			ws.logger.Debug().Msg("set write deadline")
 
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return fmt.Errorf("write message: %w", err)

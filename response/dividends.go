@@ -1,8 +1,8 @@
 package response
 
 type Dividends struct {
-	Meta      *DividendsMeta `json:"meta"`
-	Dividends []*Dividend    `json:"dividends"`
+	Meta      DividendsMeta `json:"meta"`
+	Dividends []Dividend    `json:"dividends"`
 }
 
 type DividendsMeta struct {

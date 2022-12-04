@@ -1,7 +1,7 @@
 package response
 
 type Exchanges struct {
-	Data []*Exchange `json:"data"`
+	Data []Exchange `json:"data"`
 }
 
 type Exchange struct {
