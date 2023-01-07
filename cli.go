@@ -524,6 +524,41 @@ func (c *Cli) GetEarningsCalendar(exchange, micCode, country string, decimalPlac
 	return earningsResp, creditsLeft, creditsUsed, nil
 }
 
+func (c *Cli) GetEarning(date, time string) (
+	earningsResp *response.Earnings,
+	creditsLeft int64,
+	creditsUsed int64,
+	err error,
+) {
+	resp := fasthttp.AcqureResponse()
+
+	defer fasthttp.ReleaseResponse(resp)
+
+	uri := strings.Replace(c.cfg.BaseURL+c.cfg.Fundamentals.EarningsCalendarURL, "{apikey}", c.cfg.APIKey, 1)
+	uri = strings.Replace(uri, "{time}", url.QueryEscape(time), 1)
+	uri = strings.Replace(uri, "{date}", url.QueryEscape(date), 1)
+
+	if creditsLeft, creditsUsed, err = c.httpCli.makeRequest(uri, resp); err != nil {
+		return nil, 0, 0, err
+	}
+
+	if _, err = c.CheckErrorInResponse(resp); err != nil {
+		if !errors.Is(err, dictionary.ErrTooManyRequests) {
+			c.logger.Err(err).Msg("Check error in response")
+		}
+
+		return nil, creditsLeft, creditsUsed, err
+	}
+
+	if err := json.Unmarshal(resp.Body(), &earningsResp); err != nil {
+		c.logger.Err(err).Bytes("body", resp.Body()).Msg("unmarshall")
+
+		return nil, creditsLeft, creditsUsed, fmt.Errorf("unmarshal json: %w", err)
+	}
+
+	return earningsResp, creditsLeft, creditsUsed, nil
+}
+
 func (c *Cli) GetExchangeRate(
 	symbol, date, timeZone string, decimalPlaces int,
 ) (
