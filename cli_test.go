@@ -1937,6 +1937,172 @@ func TestCli_GetDividends(t *testing.T) {
 	}
 }
 
+func TestCli_GetEarning(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		time string
+		date string
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		responseCode    int
+		responseBody    string
+		wantResp        *response.Earnings
+		wantCreditsLeft int64
+		wantCreditsUsed int64
+		wantErr         error
+	}{
+		{
+			name: "success",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				date: "",
+				time: "",
+			},
+			responseCode: http.StatusOK,
+			responseBody: `
+				{
+					 "earnings":{
+						:2023-01-02:[
+								{
+									"date": "2020-04-30",
+									"time": "After Hours",
+									"eps_estimate": 2.09,
+									"eps_actual": 2.55,
+									"difference": 0.46,
+									"surprise_prc": 22.01
+								}
+							]
+						},
+						"status":"ok"
+					}`,
+			wantResp: &response.Earnings{
+				Earnings: map[string][]*response.Earning{
+					"2020-05-08": {
+						{
+							Symbol:   "BR",
+							Name:     "Broadridge Financial Solutions Inc",
+							Currency: "USD",
+							Exchange: "NYSE",
+							MicCode:  "XNYS",
+							Country:  "United States",
+							Time:     "Time Not Supplied",
+							EpsEstimate: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 1.72,
+									Valid:   true,
+								},
+							},
+							EpsActual: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: 1.67,
+									Valid:   true,
+								},
+							},
+							Difference: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: -0.05,
+									Valid:   true,
+								},
+							},
+							SurprisePrc: null.Float{
+								NullFloat64: sql.NullFloat64{
+									Float64: -2.9,
+									Valid:   true,
+								},
+							},
+						},
+					},
+				},
+			},
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 40,
+			wantErr:         nil,
+		},
+		{
+			name: "too many requests",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				date: "",
+				time: "",
+			},
+			responseCode: http.StatusOK,
+			//nolint: lll
+			responseBody: `{
+				"code":429,
+				"message":"You have run out of API credits for the current minute. 1000 API credits were used, with the current limit being 987. Wait for the next minute or consider switching to a higher tier plan at https://twelvedata.com/pricing",
+				"status":"error"
+			}`,
+			wantResp:        nil,
+			wantCreditsLeft: 10,
+			wantCreditsUsed: 40,
+			wantErr:         dictionary.ErrTooManyRequests,
+		},
+		{
+			name: "500 internal server error",
+
+			fields: fields{
+				cfg:     &Conf{Timeout: 10, APIKey: "demo"},
+				httpCli: &fasthttp.Client{},
+				logger:  &zerolog.Logger{},
+			},
+			args: args{
+				date: "",
+				time: "",
+			},
+			responseCode:    http.StatusInternalServerError,
+			responseBody:    ``,
+			wantResp:        nil,
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         dictionary.ErrBadStatusCode,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tt.fields.cfg.BaseURL = startServer(t, tt.responseCode, tt.wantCreditsLeft, tt.wantCreditsUsed, tt.responseBody)
+
+			c := NewCli(tt.fields.cfg, NewHTTPCli(tt.fields.httpCli, tt.fields.cfg, tt.fields.logger), tt.fields.logger)
+
+			gotResp, gotCreditsLeft, gotCreditsUsed, gotErr := c.GetEarning(
+				tt.args.date,
+				tt.args.time,
+			)
+
+			runAssertions(
+				t,
+				gotCreditsLeft,
+				gotCreditsUsed,
+				tt.wantCreditsLeft,
+				tt.wantCreditsUsed,
+				gotErr,
+				tt.wantErr,
+				gotResp,
+				tt.wantResp,
+			)
+		})
+	}
+}
+
 func TestCli_GetEarningsCalendar(t *testing.T) {
 	t.Parallel()
 
