@@ -2796,9 +2796,8 @@ func TestCli_GetCashFlow(t *testing.T) {
 	}{
 		{
 			name: "success",
-
 			fields: fields{
-				cfg:     &Conf{Timeout: 0, APIKey: "demo"},
+				cfg:     &Conf{Timeout: 1, APIKey: "demo"},
 				httpCli: &fasthttp.Client{},
 				logger:  &zerolog.Logger{},
 			},

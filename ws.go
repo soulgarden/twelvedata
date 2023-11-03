@@ -16,7 +16,7 @@ import (
 
 type WS struct {
 	url      *url.URL
-	eventsCh chan *response.PriceEvent
+	eventsCh chan response.PriceEvent
 	dialer   *websocket.Dialer
 	logger   *zerolog.Logger
 }
@@ -30,7 +30,7 @@ func NewWS(cfg *Conf, logger *zerolog.Logger, dialer *websocket.Dialer) *WS {
 			Path:     cfg.WebSocket.PriceURL,
 			RawQuery: "apikey=" + cfg.APIKey,
 		},
-		eventsCh: make(chan *response.PriceEvent, dictionary.EventsChSize),
+		eventsCh: make(chan response.PriceEvent, dictionary.EventsChSize),
 		logger:   logger,
 	}
 
@@ -68,7 +68,7 @@ func (ws *WS) Subscribe(ctx context.Context, symbols []string) error {
 	return ws.ping(ctx, conn, done)
 }
 
-func (ws *WS) Consume() <-chan *response.PriceEvent {
+func (ws *WS) Consume() <-chan response.PriceEvent {
 	return ws.eventsCh
 }
 
@@ -84,9 +84,9 @@ func (ws *WS) read(conn *websocket.Conn, done chan<- struct{}) {
 			return
 		}
 
-		event := &response.PriceEvent{}
+		event := response.PriceEvent{}
 
-		if err := json.Unmarshal(message, event); err != nil {
+		if err := json.Unmarshal(message, &event); err != nil {
 			ws.logger.Err(err).Bytes("val", message).Msg("unmarshall")
 
 			continue
