@@ -20,7 +20,7 @@ func TestWS_Subscribe(t *testing.T) {
 
 	type fields struct {
 		url      *url.URL
-		eventsCh chan *response.PriceEvent
+		eventsCh chan response.PriceEvent
 		dialer   *websocket.Dialer
 		logger   zerolog.Logger
 	}
@@ -48,7 +48,7 @@ func TestWS_Subscribe(t *testing.T) {
 					Host:   "127.0.0.1",
 					Path:   "/quotes/price",
 				},
-				eventsCh: make(chan *response.PriceEvent),
+				eventsCh: make(chan response.PriceEvent),
 				dialer:   websocket.DefaultDialer,
 				logger:   zerolog.New(os.Stdout),
 			},
