@@ -89,7 +89,7 @@ func TestWS_Subscribe(t *testing.T) {
 
 			server := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
 				upgrader := websocket.Upgrader{
-					Error: func(w http.ResponseWriter, r *http.Request, status int, reason error) {
+					Error: func(w http.ResponseWriter, _ *http.Request, status int, reason error) {
 						http.Error(w, reason.Error(), status)
 					},
 				}
@@ -97,6 +97,7 @@ func TestWS_Subscribe(t *testing.T) {
 				ws, err := upgrader.Upgrade(cw, sr, nil)
 				if err != nil {
 					t.Error(err)
+
 					_ = ws.Close()
 				}
 
