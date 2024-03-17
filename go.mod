@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/fasthttp/websocket v1.5.6
+	github.com/gorilla/schema v1.2.1
 	github.com/rs/zerolog v1.31.0
 	github.com/valyala/fasthttp v1.50.0
 	gopkg.in/guregu/null.v4 v4.0.0
