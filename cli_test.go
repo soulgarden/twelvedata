@@ -25,7 +25,7 @@ type fields struct {
 func startServer(t *testing.T, responseCode int, wantCreditsLeft, wantCreditsUsed int64, responseBody string) string {
 	t.Helper()
 
-	server := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(cw http.ResponseWriter, _ *http.Request) {
 		if responseCode == http.StatusInternalServerError {
 			cw.WriteHeader(responseCode)
 		}
