@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/fasthttp/websocket v1.5.8
 	github.com/rs/zerolog v1.32.0
-	github.com/valyala/fasthttp v1.52.0
+	github.com/valyala/fasthttp v1.53.0
 	gopkg.in/guregu/null.v4 v4.0.0
 )
 
@@ -16,6 +16,6 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/savsgio/gotils v0.0.0-20240303185622-093b76447511 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	golang.org/x/net v0.24.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 )
