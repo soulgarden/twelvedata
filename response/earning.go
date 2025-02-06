@@ -4,6 +4,7 @@ import "gopkg.in/guregu/null.v4"
 
 type Earnings struct {
 	Earnings map[string][]*Earning `json:"earnings"`
+	Status   string                `json:"status"`
 }
 
 type Earning struct {
@@ -14,8 +15,8 @@ type Earning struct {
 	MicCode     string     `json:"mic_code"`
 	Country     string     `json:"country"`
 	Time        string     `json:"time"`
-	EpsEstimate null.Float `json:"eps_estimate"`
-	EpsActual   null.Float `json:"eps_actual"`
+	EPSEstimate null.Float `json:"eps_estimate"`
+	EPSActual   null.Float `json:"eps_actual"`
 	Difference  null.Float `json:"difference"`
 	SurprisePrc null.Float `json:"surprise_prc"`
 }

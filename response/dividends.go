@@ -1,5 +1,7 @@
 package response
 
+import "gopkg.in/guregu/null.v4"
+
 type Dividends struct {
 	Meta      DividendsMeta `json:"meta"`
 	Dividends []Dividend    `json:"dividends"`
@@ -15,6 +17,6 @@ type DividendsMeta struct {
 }
 
 type Dividend struct {
-	PaymentDate string  `json:"payment_date"`
-	Amount      float64 `json:"amount"`
+	ExDate string     `json:"ex_date"`
+	Amount null.Float `json:"amount"`
 }

@@ -23,15 +23,16 @@ func NewEndpoint[Request any, Response any, Credits response.Credits, Error erro
 	}
 }
 
-func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Request) (resp Response, creds Credits, err Error) {
+// TODO: return response.Credits => Credits
+func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Request) (resp Response, creds response.Credits, err Error) {
 	httpResp := fasthttp.AcquireResponse()
 
 	defer fasthttp.ReleaseResponse(httpResp)
 
-	// todo: replace url placeholders
-
-	var creditsLeft, creditsUsed int64
-	var innerErr error
+	var (
+		creditsLeft, creditsUsed int64
+		innerErr                 error
+	)
 
 	values := url.Values{}
 
@@ -51,15 +52,23 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 		return resp, creds, NewError[Error](innerErr, nil)
 	}
 
+	creds = &response.CreditsImpl{}
+
 	creds.SetCreditsLeft(creditsLeft)
 	creds.SetCreditsUsed(creditsUsed)
 
-	if innerErr := json.Unmarshal(httpResp.Body(), &resp); err != nil {
-		//c.logger.Err(innerErr).Bytes("body", httpResp.Body()).Msg("unmarshall")
-		return resp, creds, NewError[Error](fmt.Errorf("unmarshall json: %w", innerErr), nil)
+	var respErr response.Error
+
+	if innerErr := json.Unmarshal(httpResp.Body(), &respErr); innerErr == nil && respErr.Status == "error" { // TODO: const
+		return resp, creds, NewError[Error](fmt.Errorf("error received: %s", respErr.Error()), respErr)
 	}
 
-	// handle 404/400/500/timeout errors
+	if innerErr := json.Unmarshal(httpResp.Body(), &resp); innerErr != nil {
+		//c.logger.Err(innerErr).Bytes("body", httpResp.Body()).Msg("unmarshall") TODO: cleanup
+		return resp, creds, NewError[Error](fmt.Errorf("unmarshall json: %w", innerErr), nil) // TODO: set error
+	}
+
+	// TODO: handle 404/400/500/timeout errors
 
 	return resp, creds, err
 }

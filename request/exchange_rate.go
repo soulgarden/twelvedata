@@ -1,6 +1,9 @@
 package request
 
 type GetExchangeRate struct {
-	symbol, date, timeZone string
-	decimalPlaces          int
+	ApiKey
+	Symbol        string `schema:"symbol,omitempty"`
+	Date          string `schema:"date,omitempty"`
+	TimeZone      string `schema:"time_zone,omitempty"`
+	DecimalPlaces int    `schema:"dp,omitempty"`
 }

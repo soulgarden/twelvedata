@@ -20,6 +20,7 @@ type IncomeStatementsMeta struct {
 type IncomeStatement struct {
 	FiscalDate                    string                              `json:"fiscal_date"`
 	Quarter                       null.Int                            `json:"quarter"`
+	Year                          null.Int                            `json:"year"`
 	Sales                         null.Int                            `json:"sales"`
 	CostOfGoods                   null.Int                            `json:"cost_of_goods"`
 	GrossProfit                   null.Int                            `json:"gross_profit"`
@@ -30,11 +31,11 @@ type IncomeStatement struct {
 	PretaxIncome                  null.Int                            `json:"pretax_income"`
 	IncomeTax                     null.Int                            `json:"income_tax"`
 	NetIncome                     null.Int                            `json:"net_income"`
-	EpsBasic                      null.Float                          `json:"eps_basic"`
-	EpsDiluted                    null.Float                          `json:"eps_diluted"`
+	EPSBasic                      null.Float                          `json:"eps_basic"`
+	EPSDiluted                    null.Float                          `json:"eps_diluted"`
 	BasicSharesOutstanding        null.Int                            `json:"basic_shares_outstanding"`
 	DilutedSharesOutstanding      null.Int                            `json:"diluted_shares_outstanding"`
-	Ebitda                        null.Int                            `json:"ebitda"`
+	EBITDA                        null.Int                            `json:"ebitda"`
 	NetIncomeContinuousOperations null.Int                            `json:"net_income_continuous_operations"`
 	MinorityInterests             null.Int                            `json:"minority_interests"`
 	PreferredStockDividends       null.Int                            `json:"preferred_stock_dividends"`

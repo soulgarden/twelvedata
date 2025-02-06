@@ -1,7 +1,8 @@
 package response
 
 type Exchanges struct {
-	Data []Exchange `json:"data"`
+	Data   []Exchange `json:"data"`
+	Status string     `json:"status"`
 }
 
 type Exchange struct {
@@ -9,4 +10,6 @@ type Exchange struct {
 	Code     string `json:"code"`
 	Country  string `json:"country"`
 	Timezone string `json:"timezone"`
+
+	Access *Access `json:"access"`
 }

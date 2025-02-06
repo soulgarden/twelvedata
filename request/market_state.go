@@ -1,5 +1,8 @@
 package request
 
 type GetMarketState struct {
-	exchange, code, country string
+	ApiKey
+	Exchange string `schema:"exchange,omitempty"`
+	Code     string `schema:"code,omitempty"`
+	Country  string `schema:"country,omitempty"`
 }

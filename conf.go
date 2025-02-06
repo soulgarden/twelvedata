@@ -16,32 +16,32 @@ type Conf struct {
 
 // nolint: lll
 type ReferenceData struct {
-	StocksURL      string `default:"/stocks?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&type={type}&show_plan={show_plan}&include_delisted={include_delisted}" json:"stocks_url"`
-	ExchangesURL   string `default:"/exchanges?apikey={apikey}&type={type}&name={name}&code={code}&country={country}&show_plan={show_plan}"                                                                  json:"exchange_url"`
-	IndicesURL     string `default:"/indices?apikey={apikey}&symbol={symbol}&country={country}&show_plan={show_plan}&include_delisted={include_delisted}"                                                    json:"indices_url"`
-	EtfsURL        string `default:"/etf?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&show_plan={show_plan}&include_delisted={include_delisted}"                json:"etfs_url"`
-	MarketStateURL string `default:"/market_state?apikey={apikey}&exchange={exchange}&code={code}&country={country}"                                                                                         json:"market_state_url"`
+	StocksURL      string `default:"/stocks"       json:"stocks_url"`
+	ExchangesURL   string `default:"/exchanges"    json:"exchange_url"`
+	IndicesURL     string `default:"/indices"      json:"indices_url"`
+	EtfsURL        string `default:"/etf"          json:"etfs_url"`
+	MarketStateURL string `default:"/market_state" json:"market_state_url"`
 }
 
 // nolint: lll
 type CoreData struct {
-	TimeSeriesURL string `default:"/time_series?apikey={apikey}&symbol={symbol}&interval={interval}&exchange={exchange}&mic_code={mic_code}&country={country}&type={type}&outputsize={outputsize}&prepost={prepost}&dp={dp}&order={order}&timezone={timezone}&date={date}&start_date={start_date}&end_date={end_date}&previous_close={previous_close}" json:"time_series_url"`
-	QuotesURL     string `default:"/quote?apikey={apikey}&symbol={symbol}&interval={interval}&exchange={exchange}&mic_code={mic_code}&country={country}&volume_time_period={volume_time_period}&type={type}&prepost={prepost}&eod={eod}&rolling_period={rolling_period}&dp={dp}&timezone={timezone}"                                                   json:"quotes_url"`
+	TimeSeriesURL string `default:"/time_series" json:"time_series_url"`
+	QuotesURL     string `default:"/quote"       json:"quotes_url"`
 
-	ExchangeRateURL string `default:"/exchange_rate?apikey={apikey}&symbol={symbol}&date={date}&dp={dp}&timezone={timezone}"                              json:"exchange_rate_url"`
-	MarketMoversURL string `default:"/market_movers/{instrument}?apikey={apikey}&direction={direction}&outputsize={outputsize}&country={country}&dp={dp}" json:"market_movers_url"`
+	ExchangeRateURL string `default:"/exchange_rate" json:"exchange_rate_url"`
+	MarketMoversURL string `default:"/market_movers" json:"market_movers_url"`
 }
 
 // nolint: lll
 type Fundamentals struct {
-	EarningsCalendarURL    string `default:"/earnings_calendar?apikey={apikey}&exchange={exchange}&mic_code={mic_code}&country={country}&dp={dp}&start_date={start_date}&end_date={end_date}"                        json:"earnings_calendar_url"`
-	ProfileURL             string `default:"/profile?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}"                                                                      json:"profile_url"`
-	InsiderTransactionsURL string `default:"/insider_transactions?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}"                                                         json:"insider_transactions_url"`
-	IncomeStatementURL     string `default:"/income_statement?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&period={period}&start_date={start_date}&end_date={end_date}" json:"income_statement_url"`
-	BalanceSheetURL        string `default:"/balance_sheet?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&period={period}&start_date={start_date}&end_date={end_date}"    json:"balance_sheet_url"`
-	CashFlowURL            string `default:"/cash_flow?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&period={period}&start_date={start_date}&end_date={end_date}"        json:"cash_flow_url"`
-	DividendsURL           string `default:"/dividends?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}&range={range}&start_date={start_date}&end_date={end_date}"          json:"dividends_url"`
-	StatisticsURL          string `default:"/statistics?apikey={apikey}&symbol={symbol}&exchange={exchange}&mic_code={mic_code}&country={country}"                                                                   json:"statistics_url"`
+	EarningsCalendarURL    string `default:"/earnings_calendar"    json:"earnings_calendar_url"`
+	ProfileURL             string `default:"/profile"              json:"profile_url"`
+	InsiderTransactionsURL string `default:"/insider_transactions" json:"insider_transactions_url"`
+	IncomeStatementURL     string `default:"/income_statement"     json:"income_statement_url"`
+	BalanceSheetURL        string `default:"/balance_sheet"        json:"balance_sheet_url"`
+	CashFlowURL            string `default:"/cash_flow"            json:"cash_flow_url"`
+	DividendsURL           string `default:"/dividends"            json:"dividends_url"`
+	StatisticsURL          string `default:"/statistics"           json:"statistics_url"`
 }
 
 type WebSocket struct {
@@ -49,5 +49,5 @@ type WebSocket struct {
 }
 
 type Advanced struct {
-	UsageURL string `default:"/api_usage?apikey={apikey}" json:"usage_url"`
+	UsageURL string `default:"/api_usage" json:"usage_url"`
 }

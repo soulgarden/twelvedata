@@ -1,10 +1,20 @@
 package request
 
 type GetTimeSeries struct {
-	symbol, interval, exchange, micCode, country, instrumentType string
-	outputSize                                                   int
-	prePost                                                      string
-	decimalPlaces                                                int
-	order, timezone, date, startDate, endDate                    string
-	previousClose                                                bool
+	ApiKey
+	Symbol         string `schema:"symbol,omitempty"`
+	Interval       string `schema:"interval,omitempty"`
+	Exchange       string `schema:"exchange,omitempty"`
+	MicCode        string `schema:"mic_code,omitempty"`
+	Country        string `schema:"country,omitempty"`
+	InstrumentType string `schema:"type,omitempty"`
+	OutputSize     int    `schema:"outputsize,omitempty"`
+	PrePost        string `schema:"prepost,omitempty"`
+	DecimalPlaces  int    `schema:"dp,omitempty"`
+	Order          string `schema:"order,omitempty"`
+	TimeZone       string `schema:"timezone,omitempty"`
+	Date           string `schema:"date,omitempty"`
+	StartDate      string `schema:"start_date,omitempty"`
+	EndDate        string `schema:"end_date,omitempty"`
+	PreviousClose  bool   `schema:"previous_close,omitempty"`
 }

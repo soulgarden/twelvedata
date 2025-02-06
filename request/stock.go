@@ -2,11 +2,11 @@ package request
 
 type GetStock struct {
 	ApiKey
-	symbol          string `schema:"symbol"`
-	exchange        string `schema:"exchange"`
-	micCode         string `schema:"mic_code"`
-	country         string `schema:"country"`
-	instrumentType  string `schema:"type"`
-	showPlan        bool   `schema:"show_plan"`
-	includeDelisted bool   `schema:"include_delisted"`
+	Symbol          string `schema:"symbol,omitempty"`
+	Exchange        string `schema:"exchange,omitempty"`
+	MicCode         string `schema:"mic_code,omitempty"`
+	Country         string `schema:"country,omitempty"`
+	InstrumentType  string `schema:"type,omitempty"`
+	ShowPlan        bool   `schema:"show_plan,omitempty"`
+	IncludeDelisted bool   `schema:"include_delisted,omitempty"`
 }

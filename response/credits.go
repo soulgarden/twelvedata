@@ -13,21 +13,21 @@ type CreditsImpl struct {
 }
 
 func NewCreditsImpl(creditsLeft int64, creditsUsed int64) Credits {
-	return CreditsImpl{CreditsLeft: creditsLeft, CreditsUsed: creditsUsed}
+	return &CreditsImpl{CreditsLeft: creditsLeft, CreditsUsed: creditsUsed}
 }
 
-func (c CreditsImpl) SetCreditsLeft(val int64) int64 {
+func (c *CreditsImpl) SetCreditsLeft(val int64) {
 	c.CreditsLeft = val
 }
 
-func (c CreditsImpl) SetCreditsUsed(val int64) int64 {
+func (c *CreditsImpl) SetCreditsUsed(val int64) {
 	c.CreditsUsed = val
 }
 
-func (c CreditsImpl) GetCreditsLeft() int64 {
+func (c *CreditsImpl) GetCreditsLeft() int64 {
 	return c.CreditsLeft
 }
 
-func (c CreditsImpl) GetCreditsUsed() int64 {
+func (c *CreditsImpl) GetCreditsUsed() int64 {
 	return c.CreditsUsed
 }

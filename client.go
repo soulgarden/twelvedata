@@ -15,7 +15,7 @@ type Client interface {
 	GetExchanges(request.GetExchanges) (response.Exchanges, response.Credits, error)
 	GetIndices(request.GetIndices) (response.Indices, response.Credits, error)
 	GetEtfs(request.GetEtfs) (response.Etfs, response.Credits, error)
-	GetQuote(request.GetQuote) (response.Quotes, response.Credits, error)
+	GetQuote(request.GetQuote) (response.Quote, response.Credits, error)
 	GetUsage(request.GetUsage) (response.Usage, response.Credits, error)
 	GetEarningsCalendar(request.GetEarningsCalendar) (response.Earnings, response.Credits, error)
 	GetExchangeRate(request.GetExchangeRate) (response.ExchangeRate, response.Credits, error)

@@ -15,6 +15,7 @@ type Profile struct {
 	Type        string   `json:"type"`
 	CEO         string   `json:"CEO"`
 	Address     string   `json:"address"`
+	Address2    string   `json:"address2"`
 	City        string   `json:"city"`
 	Zip         string   `json:"zip"`
 	State       string   `json:"state"`

@@ -1,4 +1,5 @@
 package dictionary
 
-const APICreditsUsed = "api-credits-used"
-const APICreditsLeft = "api-credits-left"
+const APICreditsUsed = "Api-credits-used"
+const APICreditsLeft = "Api-credits-left"
+const APICreditsRequest = "Api-credits-request"

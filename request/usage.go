@@ -1,3 +1,5 @@
 package request
 
-type GetUsage struct{}
+type GetUsage struct {
+	ApiKey
+}
