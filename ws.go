@@ -36,6 +36,8 @@ func NewWS(cfg *Conf, logger *zerolog.Logger, dialer *websocket.Dialer) *WS {
 
 	if dialer == nil {
 		ws.dialer = websocket.DefaultDialer
+	} else {
+		ws.dialer = dialer
 	}
 
 	return ws

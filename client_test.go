@@ -1,451 +1,318 @@
 package twelvedata
 
 import (
-	"github.com/fasthttp/websocket"
+	"net/http"
+	"net/http/httptest"
+	"reflect"
+	"strconv"
+	"testing"
+
 	"github.com/rs/zerolog"
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
 	"github.com/valyala/fasthttp"
 	"gopkg.in/guregu/null.v4"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"reflect"
-	"strconv"
-	"testing"
 )
 
-//func TestEndpoint_Call(t *testing.T) {
-//	type args[Request any] struct {
-//		req Request
-//	}
-//	type testCase[Request any, Response any, Credits response.Credits, Error error] struct {
-//		name      string
-//		endpoint  Endpoint[Request, Response, Credits, Error]
-//		args      args[Request]
-//		wantResp  Response
-//		wantCreds Credits
-//		wantErr   Error
-//	}
-//	tests := []testCase[ /* TODO: Insert concrete types here */ ]{}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			gotResp, gotCreds, gotErr := tt.endpoint.Call(tt.args.req)
-//			if !reflect.DeepEqual(gotResp, tt.wantResp) {
-//				t.Errorf("Call() gotResp = %v, wantUsage %v", gotResp, tt.wantResp)
-//			}
-//			if !reflect.DeepEqual(gotCreds, tt.wantCreds) {
-//				t.Errorf("Call() gotCreds = %v, wantUsage %v", gotCreds, tt.wantCreds)
-//			}
-//			if !reflect.DeepEqual(gotErr, tt.wantErr) {
-//				t.Errorf("Call() gotErr = %v, wantUsage %v", gotErr, tt.wantErr)
-//			}
-//		})
-//	}
-//}
-//
-//func TestErrImpl_Error(t *testing.T) {
-//	type testCase[Err error] struct {
-//		name string
-//		e    ErrImpl[Err]
-//		wantUsage string
-//	}
-//	tests := []testCase[ /* TODO: Insert concrete types here */ ]{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := tt.e.Error(); got != tt.wantUsage {
-//				t.Errorf("Error() = %v, wantUsage %v", got, tt.wantUsage)
-//			}
-//		})
-//	}
-//}
-
-//func TestHTTPCli_getCredits(t *testing.T) {
-//	type fields struct {
-//		transport *fasthttp.Client
-//		cfg       *Conf
-//		logger    *zerolog.Logger
-//	}
-//	type args struct {
-//		resp *fasthttp.Response
-//	}
-//	tests := []struct {
-//		name            string
-//		fields          fields
-//		args            args
-//		wantCreditsLeft int64
-//		wantCreditsUsed int64
-//		wantErr         bool
-//	}{
-//		{},
-//	}
-//
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			c := &HTTPCli{
-//				transport: tt.fields.transport,
-//				cfg:       tt.fields.cfg,
-//				logger:    tt.fields.logger,
-//			}
-//			gotCreditsLeft, gotCreditsUsed, err := c.getCredits(tt.args.resp)
-//			if (err != nil) != tt.wantErr {
-//				t.Errorf("getCredits() error = %v, wantErr %v", err, tt.wantErr)
-//				return
-//			}
-//
-//			if gotCreditsLeft != tt.wantCreditsLeft {
-//				t.Errorf("getCredits() gotCreditsLeft = %v, wantUsage %v", gotCreditsLeft, tt.wantCreditsLeft)
-//			}
-//
-//			if gotCreditsUsed != tt.wantCreditsUsed {
-//				t.Errorf("getCredits() gotCreditsUsed = %v, wantUsage %v", gotCreditsUsed, tt.wantCreditsUsed)
-//			}
-//		})
-//	}
-//}
-
-//func TestHTTPCli_logRequest(t *testing.T) {
-//	type fields struct {
-//		transport *fasthttp.Client
-//		cfg       *Conf
-//		logger    *zerolog.Logger
-//	}
-//	type args struct {
-//		req      *fasthttp.Request
-//		resp     *fasthttp.Response
-//		duration time.Duration
-//		err      error
-//	}
-//	tests := []struct {
-//		name   string
-//		fields fields
-//		args   args
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			c := &HTTPCli{
-//				transport: tt.fields.transport,
-//				cfg:       tt.fields.cfg,
-//				logger:    tt.fields.logger,
-//			}
-//			c.logRequest(tt.args.req, tt.args.resp, tt.args.duration, tt.args.err)
-//		})
-//	}
-//}
-
-//func TestHTTPCli_makeRequest(t *testing.T) {
-//	type fields struct {
-//		transport *fasthttp.Client
-//		cfg       *Conf
-//		logger    *zerolog.Logger
-//	}
-//	type args struct {
-//		uri  string
-//		resp *fasthttp.Response
-//	}
-//	tests := []struct {
-//		name    string
-//		fields  fields
-//		args    args
-//		want    int64
-//		want1   int64
-//		wantErr bool
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			c := &HTTPCli{
-//				transport: tt.fields.transport,
-//				cfg:       tt.fields.cfg,
-//				logger:    tt.fields.logger,
-//			}
-//			got, got1, err := c.makeRequest(tt.args.uri, tt.args.resp)
-//			if (err != nil) != tt.wantErr {
-//				t.Errorf("makeRequest() error = %v, wantErr %v", err, tt.wantErr)
-//				return
-//			}
-//			if got != tt.want {
-//				t.Errorf("makeRequest() got = %v, wantUsage %v", got, tt.want)
-//			}
-//			if got1 != tt.want1 {
-//				t.Errorf("makeRequest() got1 = %v, wantUsage %v", got1, tt.want1)
-//			}
-//		})
-//	}
-//}
-
-//func TestNewClient(t *testing.T) {
-//	type args struct {
-//		httpCli *HTTPCli
-//		cfg     *Conf
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want Client
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := NewClient(tt.args.httpCli, tt.args.cfg); !reflect.DeepEqual(got, tt.want) {
-//				t.Errorf("NewClient() = %v, wantUsage %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
-
-//func TestNewEndpoint(t *testing.T) {
-//	type args struct {
-//		httpCli *HTTPCli
-//		URI     string
-//	}
-//	type testCase[Request any, Response any, Credits response.Credits, Error error] struct {
-//		name string
-//		args args
-//		wantUsage *Endpoint[Request, Response, Credits, Error]
-//	}
-//	tests := []testCase[ /* TODO: Insert concrete types here */ ]{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := NewEndpoint(tt.args.httpCli, tt.args.URI); !reflect.DeepEqual(got, tt.wantUsage) {
-//				t.Errorf("NewEndpoint() = %v, wantUsage %v", got, tt.wantUsage)
-//			}
-//		})
-//	}
-//}
-
-//func TestNewError(t *testing.T) {
-//	type args[T error] struct {
-//		err error
-//		t   T
-//	}
-//	type testCase[T error] struct {
-//		name string
-//		args args[T]
-//		wantUsage ErrImpl
-//	}
-//	tests := []testCase[ /* TODO: Insert concrete types here */ ]{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := NewError(tt.args.err, tt.args.t); !reflect.DeepEqual(got, tt.wantUsage) {
-//				t.Errorf("NewError() = %v, wantUsage %v", got, tt.wantUsage)
-//			}
-//		})
-//	}
-//}
-
-//func TestNewHTTPCli(t *testing.T) {
-//	type args struct {
-//		transport *fasthttp.Client
-//		cfg       *Conf
-//		logger    *zerolog.Logger
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want *HTTPCli
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := NewHTTPCli(tt.args.transport, tt.args.cfg, tt.args.logger); !reflect.DeepEqual(got, tt.want) {
-//				t.Errorf("NewHTTPCli() = %v, wantUsage %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
-
-//func TestNewWS(t *testing.T) {
-//	type args struct {
-//		cfg    *Conf
-//		logger *zerolog.Logger
-//		dialer *websocket.Dialer
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want *WS
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			if got := NewWS(tt.args.cfg, tt.args.logger, tt.args.dialer); !reflect.DeepEqual(got, tt.want) {
-//				t.Errorf("NewWS() = %v, wantUsage %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
-
-//func TestWS_Consume(t *testing.T) {
-//	type fields struct {
-//		url      *url.URL
-//		eventsCh chan response.PriceEvent
-//		dialer   *websocket.Dialer
-//		logger   *zerolog.Logger
-//	}
-//	tests := []struct {
-//		name   string
-//		fields fields
-//		want   <-chan response.PriceEvent
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			ws := &WS{
-//				url:      tt.fields.url,
-//				eventsCh: tt.fields.eventsCh,
-//				dialer:   tt.fields.dialer,
-//				logger:   tt.fields.logger,
-//			}
-//			if got := ws.Consume(); !reflect.DeepEqual(got, tt.want) {
-//				t.Errorf("Consume() = %v, wantUsage %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
-
-//func TestWS_Subscribe(t *testing.T) {
-//	type fields struct {
-//		url      *url.URL
-//		eventsCh chan response.PriceEvent
-//		dialer   *websocket.Dialer
-//		logger   *zerolog.Logger
-//	}
-//	type args struct {
-//		ctx     context.Context
-//		symbols []string
-//	}
-//	tests := []struct {
-//		name    string
-//		fields  fields
-//		args    args
-//		wantErr bool
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			ws := &WS{
-//				url:      tt.fields.url,
-//				eventsCh: tt.fields.eventsCh,
-//				dialer:   tt.fields.dialer,
-//				logger:   tt.fields.logger,
-//			}
-//			if err := ws.Subscribe(tt.args.ctx, tt.args.symbols); (err != nil) != tt.wantErr {
-//				t.Errorf("Subscribe() error = %v, wantErr %v", err, tt.wantErr)
-//			}
-//		})
-//	}
-//}
-
-//func TestWS_ping(t *testing.T) {
-//	type fields struct {
-//		url      *url.URL
-//		eventsCh chan response.PriceEvent
-//		dialer   *websocket.Dialer
-//		logger   *zerolog.Logger
-//	}
-//	type args struct {
-//		ctx  context.Context
-//		conn *websocket.Conn
-//		done <-chan struct{}
-//	}
-//	tests := []struct {
-//		name    string
-//		fields  fields
-//		args    args
-//		wantErr bool
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			ws := &WS{
-//				url:      tt.fields.url,
-//				eventsCh: tt.fields.eventsCh,
-//				dialer:   tt.fields.dialer,
-//				logger:   tt.fields.logger,
-//			}
-//			if err := ws.ping(tt.args.ctx, tt.args.conn, tt.args.done); (err != nil) != tt.wantErr {
-//				t.Errorf("ping() error = %v, wantErr %v", err, tt.wantErr)
-//			}
-//		})
-//	}
-//}
-
-//func TestWS_read(t *testing.T) {
-//	type fields struct {
-//		url      *url.URL
-//		eventsCh chan response.PriceEvent
-//		dialer   *websocket.Dialer
-//		logger   *zerolog.Logger
-//	}
-//	type args struct {
-//		conn *websocket.Conn
-//		done chan<- struct{}
-//	}
-//	tests := []struct {
-//		name   string
-//		fields fields
-//		args   args
-//	}{
-//		// TODO: Add test cases.
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			ws := &WS{
-//				url:      tt.fields.url,
-//				eventsCh: tt.fields.eventsCh,
-//				dialer:   tt.fields.dialer,
-//				logger:   tt.fields.logger,
-//			}
-//			ws.read(tt.args.conn, tt.args.done)
-//		})
-//	}
-//}
-
-func TestWS_sendSubscribeMessage(t *testing.T) {
-	type fields struct {
-		url      *url.URL
-		eventsCh chan response.PriceEvent
-		dialer   *websocket.Dialer
-		logger   *zerolog.Logger
+func TestErrImpl_Error(t *testing.T) {
+	type testCase[Err error] struct {
+		name string
+		e    ErrImpl[Err]
+		want string
 	}
-	type args struct {
-		conn    *websocket.Conn
-		symbols []string
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
+
+	tests := []testCase[error]{
+		{
+			name: "simple error",
+			e: ErrImpl[error]{
+				generic: nil,
+				inner:   fasthttp.ErrTimeout,
+			},
+			want: "timeout",
+		},
+		{
+			name: "api error",
+			e: ErrImpl[error]{
+				generic: nil,
+				inner:   response.Error{Code: 401, Message: "Invalid API key", Status: "error"},
+			},
+			want: "code: 401, message: Invalid API key, status: error",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ws := &WS{
-				url:      tt.fields.url,
-				eventsCh: tt.fields.eventsCh,
-				dialer:   tt.fields.dialer,
-				logger:   tt.fields.logger,
+			if got := tt.e.Error(); got != tt.want {
+				t.Errorf("Error() = %v, want %v", got, tt.want)
 			}
-			if err := ws.sendSubscribeMessage(tt.args.conn, tt.args.symbols); (err != nil) != tt.wantErr {
-				t.Errorf("sendSubscribeMessage() error = %v, wantErr %v", err, tt.wantErr)
+		})
+	}
+}
+
+func TestHTTPCli_getCredits(t *testing.T) {
+	type fields struct {
+		transport *fasthttp.Client
+		cfg       *Conf
+		logger    *zerolog.Logger
+	}
+
+	type args struct {
+		resp *fasthttp.Response
+	}
+
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		wantCreditsLeft int64
+		wantCreditsUsed int64
+		wantErr         bool
+	}{
+		{
+			name: "valid credits headers",
+			fields: fields{
+				transport: &fasthttp.Client{},
+				cfg:       &Conf{},
+				logger:    &zerolog.Logger{},
+			},
+			args: args{
+				resp: func() *fasthttp.Response {
+					resp := fasthttp.AcquireResponse()
+					resp.Header.Set("Api-credits-left", "500")
+					resp.Header.Set("Api-credits-used", "10")
+
+					return resp
+				}(),
+			},
+			wantCreditsLeft: 500,
+			wantCreditsUsed: 10,
+			wantErr:         false,
+		},
+		{
+			name: "invalid credits left header",
+			fields: fields{
+				transport: &fasthttp.Client{},
+				cfg:       &Conf{},
+				logger:    &zerolog.Logger{},
+			},
+			args: args{
+				resp: func() *fasthttp.Response {
+					resp := fasthttp.AcquireResponse()
+					resp.Header.Set("Api-credits-left", "invalid")
+					resp.Header.Set("Api-credits-used", "5")
+
+					return resp
+				}(),
+			},
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         true,
+		},
+		{
+			name: "missing headers",
+			fields: fields{
+				transport: &fasthttp.Client{},
+				cfg:       &Conf{},
+				logger:    &zerolog.Logger{},
+			},
+			args: args{
+				resp: fasthttp.AcquireResponse(),
+			},
+			wantCreditsLeft: 0,
+			wantCreditsUsed: 0,
+			wantErr:         false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &HTTPCli{
+				transport: tt.fields.transport,
+				cfg:       tt.fields.cfg,
+				logger:    tt.fields.logger,
+			}
+
+			gotCreditsLeft, gotCreditsUsed, err := c.getCredits(tt.args.resp)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("getCredits() error = %v, wantErr %v", err, tt.wantErr)
+
+				return
+			}
+
+			if gotCreditsLeft != tt.wantCreditsLeft {
+				t.Errorf("getCredits() gotCreditsLeft = %v, want %v", gotCreditsLeft, tt.wantCreditsLeft)
+			}
+
+			if gotCreditsUsed != tt.wantCreditsUsed {
+				t.Errorf("getCredits() gotCreditsUsed = %v, want %v", gotCreditsUsed, tt.wantCreditsUsed)
+			}
+		})
+	}
+}
+
+func TestNewClient(t *testing.T) {
+	type args struct {
+		httpCli *HTTPCli
+		cfg     *Conf
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want Client
+	}{
+		{
+			name: "new client with valid config",
+			args: args{
+				httpCli: &HTTPCli{
+					transport: &fasthttp.Client{},
+					cfg:       &Conf{BaseURL: "https://api.twelvedata.com"},
+					logger:    &zerolog.Logger{},
+				},
+				cfg: &Conf{
+					BaseURL:       "https://api.twelvedata.com",
+					ReferenceData: ReferenceData{StocksURL: "/stocks"},
+					CoreData:      CoreData{TimeSeriesURL: "/time_series"},
+				},
+			},
+			want: client{
+				getStocks:     NewEndpoint[request.GetStock, response.Stocks, response.Credits, error](&HTTPCli{transport: &fasthttp.Client{}, cfg: &Conf{BaseURL: "https://api.twelvedata.com"}, logger: &zerolog.Logger{}}, "https://api.twelvedata.com/stocks"),
+				getTimeSeries: NewEndpoint[request.GetTimeSeries, response.TimeSeries, response.Credits, error](&HTTPCli{transport: &fasthttp.Client{}, cfg: &Conf{BaseURL: "https://api.twelvedata.com"}, logger: &zerolog.Logger{}}, "https://api.twelvedata.com/time_series"),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := NewClient(tt.args.httpCli, tt.args.cfg)
+			if got == nil {
+				t.Errorf("NewClient() returned nil")
+			}
+		})
+	}
+}
+
+func TestNewEndpoint(t *testing.T) {
+	type args struct {
+		httpCli *HTTPCli
+		URI     string
+	}
+
+	type testCase[Request any, Response any, Credits response.Credits, Error error] struct {
+		name string
+		args args
+		want *Endpoint[Request, Response, Credits, Error]
+	}
+
+	tests := []testCase[request.GetStock, response.Stocks, response.Credits, error]{
+		{
+			name: "new endpoint for stocks",
+			args: args{
+				httpCli: &HTTPCli{
+					transport: &fasthttp.Client{},
+					cfg:       &Conf{},
+					logger:    &zerolog.Logger{},
+				},
+				URI: "https://api.twelvedata.com/stocks",
+			},
+			want: &Endpoint[request.GetStock, response.Stocks, response.Credits, error]{
+				httpCli: &HTTPCli{
+					transport: &fasthttp.Client{},
+					cfg:       &Conf{},
+					logger:    &zerolog.Logger{},
+				},
+				URL: "https://api.twelvedata.com/stocks",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewEndpoint[request.GetStock, response.Stocks, response.Credits, error](tt.args.httpCli, tt.args.URI); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewEndpoint() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNewError(t *testing.T) {
+	type args[T error] struct {
+		err error
+		t   T
+	}
+
+	type testCase[T error] struct {
+		name string
+		args args[T]
+		want ErrImpl[T]
+	}
+
+	tests := []testCase[error]{
+		{
+			name: "new error with nil generic",
+			args: args[error]{
+				err: fasthttp.ErrTimeout,
+				t:   nil,
+			},
+			want: ErrImpl[error]{
+				generic: nil,
+				inner:   fasthttp.ErrTimeout,
+			},
+		},
+		{
+			name: "new error with api error",
+			args: args[error]{
+				err: fasthttp.ErrDialTimeout,
+				t:   response.Error{Code: 500, Message: "Internal server error", Status: "error"},
+			},
+			want: ErrImpl[error]{
+				generic: response.Error{Code: 500, Message: "Internal server error", Status: "error"},
+				inner:   fasthttp.ErrDialTimeout,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewError(tt.args.err, tt.args.t); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewError() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNewHTTPCli(t *testing.T) {
+	type args struct {
+		transport *fasthttp.Client
+		cfg       *Conf
+		logger    *zerolog.Logger
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want *HTTPCli
+	}{
+		{
+			name: "new http client",
+			args: args{
+				transport: &fasthttp.Client{},
+				cfg: &Conf{
+					APIKey:  "test-key",
+					Timeout: 15,
+				},
+				logger: &zerolog.Logger{},
+			},
+			want: &HTTPCli{
+				transport: &fasthttp.Client{},
+				cfg: &Conf{
+					APIKey:  "test-key",
+					Timeout: 15,
+				},
+				logger: &zerolog.Logger{},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewHTTPCli(tt.args.transport, tt.args.cfg, tt.args.logger); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewHTTPCli() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -456,6 +323,7 @@ func Test_client_GetBalanceSheet(t *testing.T) {
 		req request.GetBalanceSheet
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -675,18 +543,24 @@ func Test_client_GetBalanceSheet(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetBalanceSheet(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") {
 				t.Errorf("GetBalanceSheet() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr) {
 				t.Errorf("GetBalanceSheet() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetBalanceSheet() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetBalanceSheet() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -699,6 +573,7 @@ func Test_client_GetCashFlow(t *testing.T) {
 		req request.GetCashFlow
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -860,18 +735,24 @@ func Test_client_GetCashFlow(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetCashFlow(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") {
 				t.Errorf("GetCashFlow() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr) {
 				t.Errorf("GetCashFlow() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetCashFlow() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetCashFlow() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -884,6 +765,7 @@ func Test_client_GetDividends(t *testing.T) {
 		req request.GetDividends
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -977,15 +859,20 @@ func Test_client_GetDividends(t *testing.T) {
 			got, got1, err := cli.GetDividends(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") {
 				t.Errorf("GetDividends() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr) {
 				t.Errorf("GetDividends() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetDividends() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetDividends() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -998,6 +885,7 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 		req request.GetEarningsCalendar
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1102,11 +990,14 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 			got, got1, err := cli.GetEarningsCalendar(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetEarningsCalendar() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetEarningsCalendar() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetEarningsCalendar() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1119,6 +1010,7 @@ func Test_client_GetEtfs(t *testing.T) {
 		req request.GetEtfs
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1214,14 +1106,18 @@ func Test_client_GetEtfs(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetEtfs(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetEtfs() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetEtfs() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetEtfs() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1234,6 +1130,7 @@ func Test_client_GetExchangeRate(t *testing.T) {
 		req request.GetExchangeRate
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1303,14 +1200,18 @@ func Test_client_GetExchangeRate(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetExchangeRate(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetExchangeRate() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetExchangeRate() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetExchangeRate() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1323,6 +1224,7 @@ func Test_client_GetExchanges(t *testing.T) {
 		req request.GetExchanges
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1412,14 +1314,18 @@ func Test_client_GetExchanges(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetExchanges(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetExchanges() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetExchanges() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetExchanges() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1432,6 +1338,7 @@ func Test_client_GetIncomeStatement(t *testing.T) {
 		req request.GetIncomeStatement
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1577,14 +1484,18 @@ func Test_client_GetIncomeStatement(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetIncomeStatement(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetIncomeStatement() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetIncomeStatement() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetIncomeStatement() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1597,6 +1508,7 @@ func Test_client_GetIndices(t *testing.T) {
 		req request.GetIndices
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1685,14 +1597,18 @@ func Test_client_GetIndices(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetIndices(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetIndices() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetIndices() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetIndices() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1705,6 +1621,7 @@ func Test_client_GetInsiderTransactions(t *testing.T) {
 		req request.GetInsiderTransactions
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1860,14 +1777,18 @@ func Test_client_GetInsiderTransactions(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetInsiderTransactions(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetInsiderTransactions() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetInsiderTransactions() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetInsiderTransactions() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1880,6 +1801,7 @@ func Test_client_GetMarketMovers(t *testing.T) {
 		req request.GetMarketMovers
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -1981,11 +1903,14 @@ func Test_client_GetMarketMovers(t *testing.T) {
 			got, got1, err := cli.GetMarketMovers(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetMarketMovers() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetMarketMovers() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetMarketMovers() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -1998,6 +1923,7 @@ func Test_client_GetMarketState(t *testing.T) {
 		req request.GetMarketState
 		url string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
@@ -2083,14 +2009,18 @@ func Test_client_GetMarketState(t *testing.T) {
 					tt.args.url,
 				),
 			}
+
 			got, got1, err := cli.GetMarketState(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetMarketState() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetMarketState() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetMarketState() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -2211,11 +2141,14 @@ func Test_client_GetProfile(t *testing.T) {
 			got, got1, err := cli.GetProfile(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetProfile() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetProfile() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetProfile() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -2366,11 +2299,14 @@ func Test_client_GetQuote(t *testing.T) {
 			got, got1, err := cli.GetQuote(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetQuote() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetQuote() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetQuote() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -2626,11 +2562,14 @@ func Test_client_GetStatistics(t *testing.T) {
 			got, got1, err := cli.GetStatistics(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetStatistics() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetStatistics() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetStatistics() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -2753,11 +2692,14 @@ func Test_client_GetStocks(t *testing.T) {
 			got, got1, err := cli.GetStocks(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetStocks() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetStocks() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetStocks() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -2885,6 +2827,7 @@ func Test_client_GetTimeSeries(t *testing.T) {
 			gotTimeSeries, gotCredits, err := cli.GetTimeSeries(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetTimeSeries() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 
@@ -2979,8 +2922,9 @@ func Test_client_GetUsage(t *testing.T) {
 			}
 
 			gotUsage, gotCredits, err := cli.GetUsage(tt.args.req)
-			if (err != nil) != ("" != tt.wantErr) || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
+			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetUsage() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 
@@ -2998,7 +2942,7 @@ func Test_client_GetUsage(t *testing.T) {
 func mockServer(t *testing.T, responseCode int, wantCreditsLeft, wantCreditsUsed int64, responseBody string) string {
 	t.Helper()
 
-	server := httptest.NewUnstartedServer(http.HandlerFunc(func(cw http.ResponseWriter, sr *http.Request) {
+	server := httptest.NewUnstartedServer(http.HandlerFunc(func(cw http.ResponseWriter, _ *http.Request) {
 		if responseCode == http.StatusInternalServerError {
 			cw.WriteHeader(responseCode)
 		}
@@ -3012,7 +2956,7 @@ func mockServer(t *testing.T, responseCode int, wantCreditsLeft, wantCreditsUsed
 		}
 	}))
 
-	server.Start() // TODO
+	server.Start()
 
 	t.Cleanup(func() {
 		server.Close()

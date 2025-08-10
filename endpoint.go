@@ -3,10 +3,11 @@ package twelvedata
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
+
 	"github.com/gorilla/schema"
 	"github.com/soulgarden/twelvedata/response"
 	"github.com/valyala/fasthttp"
-	"net/url"
 )
 
 var encoder = schema.NewEncoder()
@@ -23,7 +24,6 @@ func NewEndpoint[Request any, Response any, Credits response.Credits, Error erro
 	}
 }
 
-// TODO: return response.Credits => Credits
 func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Request) (resp Response, creds response.Credits, err Error) {
 	httpResp := fasthttp.AcquireResponse()
 
@@ -59,13 +59,12 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 
 	var respErr response.Error
 
-	if innerErr := json.Unmarshal(httpResp.Body(), &respErr); innerErr == nil && respErr.Status == "error" { // TODO: const
+	if innerErr := json.Unmarshal(httpResp.Body(), &respErr); innerErr == nil && respErr.Status == "error" {
 		return resp, creds, NewError[Error](fmt.Errorf("error received: %s", respErr.Error()), respErr)
 	}
 
 	if innerErr := json.Unmarshal(httpResp.Body(), &resp); innerErr != nil {
-		//c.logger.Err(innerErr).Bytes("body", httpResp.Body()).Msg("unmarshall") TODO: cleanup
-		return resp, creds, NewError[Error](fmt.Errorf("unmarshall json: %w", innerErr), nil) // TODO: set error
+		return resp, creds, NewError[Error](fmt.Errorf("unmarshall json: %w", innerErr), nil)
 	}
 
 	// TODO: handle 404/400/500/timeout errors
