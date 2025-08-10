@@ -1,6 +1,6 @@
 module github.com/soulgarden/twelvedata/examples
 
-go 1.21.3
+go 1.24.3
 
 require (
 	github.com/jinzhu/configor v1.2.1

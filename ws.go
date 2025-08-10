@@ -3,7 +3,6 @@ package twelvedata
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/url"
 	"strings"
 	"time"
@@ -48,7 +47,11 @@ func (ws *WS) Subscribe(ctx context.Context, symbols []string) error {
 	if err != nil {
 		ws.logger.Err(err).Str("url", ws.url.String()).Msg("dial")
 
-		return fmt.Errorf("dial ws: %w", err)
+		return &WSConnectionError{
+			URL:     ws.url.String(),
+			Message: "Failed to establish WebSocket connection",
+			Cause:   err,
+		}
 	}
 
 	defer conn.Close()
@@ -64,7 +67,11 @@ func (ws *WS) Subscribe(ctx context.Context, symbols []string) error {
 
 	err = ws.sendSubscribeMessage(conn, symbols)
 	if err != nil {
-		return err
+		return &WSSubscriptionError{
+			Symbols: symbols,
+			Message: "Failed to send subscription message",
+			Cause:   err,
+		}
 	}
 
 	return ws.ping(ctx, conn, done)
@@ -90,7 +97,7 @@ func (ws *WS) read(conn *websocket.Conn, done chan<- struct{}) {
 
 		if err := json.Unmarshal(message, &event); err != nil {
 			ws.logger.Err(err).Bytes("val", message).Msg("unmarshall")
-
+			// Log but continue processing other messages
 			continue
 		}
 
@@ -115,7 +122,10 @@ func (ws *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct
 			ws.logger.Err(err).Msg("write close connection message")
 
 			if err != nil {
-				return fmt.Errorf("write close message: %w", err)
+				return &WSMessageError{
+					Message: "Failed to write close message",
+					Cause:   err,
+				}
 			}
 
 			select {
@@ -131,7 +141,10 @@ func (ws *WS) ping(ctx context.Context, conn *websocket.Conn, done <-chan struct
 			ws.logger.Debug().Msg("set write deadline")
 
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				return fmt.Errorf("write message: %w", err)
+				return &WSMessageError{
+					Message: "Failed to write ping message",
+					Cause:   err,
+				}
 			}
 		}
 	}
@@ -149,7 +162,10 @@ func (ws *WS) sendSubscribeMessage(conn *websocket.Conn, symbols []string) error
 	if err != nil {
 		ws.logger.Err(err).Msg("write message to ws")
 
-		return fmt.Errorf("write message: %w", err)
+		return &WSMessageError{
+			Message: "Failed to write subscribe message",
+			Cause:   err,
+		}
 	}
 
 	return nil

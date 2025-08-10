@@ -44,9 +44,10 @@ func (c *HTTPCli) makeRequest(uri string, resp *fasthttp.Response) (int64, int64
 	}
 
 	if resp.StatusCode() != http.StatusOK {
-		c.logRequest(req, resp, time.Since(start), dictionary.ErrBadStatusCode)
+		httpErr := NewHTTPError(resp.StatusCode(), resp.Body(), uri, nil, nil)
+		c.logRequest(req, resp, time.Since(start), httpErr)
 
-		return 0, 0, dictionary.ErrBadStatusCode
+		return 0, 0, httpErr
 	}
 
 	c.logRequest(req, resp, time.Since(start), nil)
