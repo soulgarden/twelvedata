@@ -352,7 +352,8 @@ func (e SymbolNotFoundError) Error() string {
 	if e.Symbol != "" {
 		return fmt.Sprintf("Symbol Not Found: %s - %s", e.Symbol, e.Message)
 	}
-	return fmt.Sprintf("Symbol Not Found: %s", e.Message)
+
+	return "Symbol Not Found: " + e.Message
 }
 
 func (e SymbolNotFoundError) Unwrap() error {
@@ -371,7 +372,8 @@ func (e PlanLimitationError) Error() string {
 	if e.Feature != "" && e.Plan != "" {
 		return fmt.Sprintf("Plan Limitation: %s is not available with %s plan", e.Feature, e.Plan)
 	}
-	return fmt.Sprintf("Plan Limitation: %s", e.Message)
+
+	return "Plan Limitation: " + e.Message
 }
 
 func (e PlanLimitationError) Unwrap() error {
@@ -390,7 +392,8 @@ func (e InsufficientCreditsError) Error() string {
 	if e.Required > 0 && e.Available >= 0 {
 		return fmt.Sprintf("Insufficient Credits: required %d, available %d", e.Required, e.Available)
 	}
-	return fmt.Sprintf("Insufficient Credits: %s", e.Message)
+
+	return "Insufficient Credits: " + e.Message
 }
 
 func (e InsufficientCreditsError) Unwrap() error {
@@ -413,7 +416,7 @@ func (e APIKeyError) Error() string {
 	case "expired":
 		return "API Key Error: API key has expired"
 	default:
-		return fmt.Sprintf("API Key Error: %s", e.Message)
+		return "API Key Error: " + e.Message
 	}
 }
 
@@ -425,21 +428,25 @@ func (e APIKeyError) Unwrap() error {
 
 func IsSymbolNotFoundError(err error) bool {
 	var symbolErr *SymbolNotFoundError
+
 	return errors.As(err, &symbolErr)
 }
 
 func IsPlanLimitationError(err error) bool {
 	var planErr *PlanLimitationError
+
 	return errors.As(err, &planErr)
 }
 
 func IsInsufficientCreditsError(err error) bool {
 	var creditsErr *InsufficientCreditsError
+
 	return errors.As(err, &creditsErr)
 }
 
 func IsAPIKeyError(err error) bool {
 	var keyErr *APIKeyError
+
 	return errors.As(err, &keyErr)
 }
 
@@ -465,6 +472,7 @@ func ParseDomainError(apiError *response.Error, statusCode int, url string) erro
 	if strings.Contains(message, "not found:") && strings.Contains(message, "**") ||
 		strings.Contains(message, "with specified criteria not found") && strings.Contains(message, "**") {
 		symbol := extractSymbolFromMessage(apiError.Message)
+
 		return &SymbolNotFoundError{
 			Symbol:  symbol,
 			Message: apiError.Message,
@@ -475,6 +483,7 @@ func ParseDomainError(apiError *response.Error, statusCode int, url string) erro
 	// Check for plan limitation errors
 	if strings.Contains(message, strings.ToLower(dictionary.IsNotAvailableWithYourPlanMsg)) {
 		feature := extractFeatureFromMessage(apiError.Message)
+
 		return &PlanLimitationError{
 			Feature: feature,
 			Message: apiError.Message,
@@ -510,25 +519,29 @@ func ParseDomainError(apiError *response.Error, statusCode int, url string) erro
 	return nil
 }
 
-// extractSymbolFromMessage tries to extract the symbol name from error messages like "**AAPL** not found:"
+// extractSymbolFromMessage tries to extract the symbol name from error messages like "**AAPL** not found:".
 func extractSymbolFromMessage(message string) string {
 	// Look for pattern **SYMBOL**
 	start := strings.Index(message, "**")
 	if start == -1 {
 		return ""
 	}
+
 	start += 2
+
 	end := strings.Index(message[start:], "**")
 	if end == -1 {
 		return ""
 	}
+
 	return message[start : start+end]
 }
 
-// extractFeatureFromMessage tries to extract the feature name from plan limitation messages
+// extractFeatureFromMessage tries to extract the feature name from plan limitation messages.
 func extractFeatureFromMessage(message string) string {
 	// Look for text before " is not available with your plan"
 	planMsg := strings.ToLower(dictionary.IsNotAvailableWithYourPlanMsg)
+
 	idx := strings.LastIndex(strings.ToLower(message), planMsg)
 	if idx == -1 {
 		return ""
@@ -548,5 +561,6 @@ func WrapWithDomainError(err error, apiError *response.Error, statusCode int, ur
 	if domainErr := ParseDomainError(apiError, statusCode, url); domainErr != nil {
 		return domainErr
 	}
+
 	return err
 }

@@ -7,10 +7,13 @@ const (
 	Exchanges   = 1
 	MarketState = 1
 
-	TimeSeries   = 1
-	ExchangeRate = 1
-	Quote        = 1
-	MarketMovers = 100
+	TimeSeries      = 1
+	TimeSeriesCross = 5
+	ExchangeRate    = 1
+	Quote           = 1
+	Price           = 1
+	EOD             = 1
+	MarketMovers    = 100
 
 	Profile              = 10
 	Dividends            = 20

@@ -8,6 +8,7 @@ import (
 type Client interface {
 	GetStocks(request.GetStock) (response.Stocks, response.Credits, error)
 	GetTimeSeries(request.GetTimeSeries) (response.TimeSeries, response.Credits, error)
+	GetTimeSeriesCross(request.GetTimeSeriesCross) (response.TimeSeriesCross, response.Credits, error)
 	GetProfile(request.GetProfile) (response.Profile, response.Credits, error)
 	GetInsiderTransactions(request.GetInsiderTransactions) (response.InsiderTransactions, response.Credits, error)
 	GetDividends(request.GetDividends) (response.Dividends, response.Credits, error)
@@ -24,4 +25,6 @@ type Client interface {
 	GetCashFlow(request.GetCashFlow) (response.CashFlows, response.Credits, error)
 	GetMarketMovers(request.GetMarketMovers) (response.MarketMovers, response.Credits, error)
 	GetMarketState(request.GetMarketState) ([]response.MarketState, response.Credits, error)
+	GetPrice(request.GetPrice) (response.Price, response.Credits, error)
+	GetEOD(request.GetEOD) (response.EOD, response.Credits, error)
 }

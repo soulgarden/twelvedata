@@ -1,0 +1,20 @@
+package request
+
+type GetTimeSeriesCross struct {
+	ApiKey
+	Base          string `schema:"base,omitempty"`
+	Quote         string `schema:"quote,omitempty"`
+	Interval      string `schema:"interval,omitempty"`
+	BaseType      string `schema:"base_type,omitempty"`
+	BaseExchange  string `schema:"base_exchange,omitempty"`
+	BaseMicCode   string `schema:"base_mic_code,omitempty"`
+	QuoteType     string `schema:"quote_type,omitempty"`
+	QuoteExchange string `schema:"quote_exchange,omitempty"`
+	QuoteMicCode  string `schema:"quote_mic_code,omitempty"`
+	OutputSize    int    `schema:"outputsize,omitempty"`
+	StartDate     string `schema:"start_date,omitempty"`
+	EndDate       string `schema:"end_date,omitempty"`
+	Adjust        bool   `schema:"adjust,omitempty"`
+	DecimalPlaces int    `schema:"dp,omitempty"`
+	TimeZone      string `schema:"timezone,omitempty"`
+}

@@ -71,6 +71,7 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 	statusCode := httpResp.StatusCode()
 	if statusCode >= 400 {
 		var apiError response.Error
+
 		var parsedAPIError *response.Error
 
 		// Try to parse API error from response body
@@ -87,6 +88,7 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 
 		// Fall back to HTTP error types
 		typedErr := NewHTTPError(statusCode, httpResp.Body(), uri.String(), parsedAPIError, nil)
+
 		return resp, creds, NewError[Error](typedErr, nil)
 	}
 

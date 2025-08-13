@@ -1803,20 +1803,24 @@ func Test_client_GetMarketMovers(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		args    args
-		want    response.MarketMovers
-		want1   response.Credits
-		wantErr string
+		name        string
+		args        args
+		want        response.MarketMovers
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
 	}{
 		{
 			name: "success",
 			args: args{
 				req: request.GetMarketMovers{
-					ApiKey: request.ApiKey{ApiKey: ""},
+					ApiKey:           request.ApiKey{ApiKey: ""},
+					Market:           "stocks",
+					Direction:        "gainers",
+					PriceGreaterThan: 10.0,
 				},
-				// Для мока используем только первый объект из массива
-				url: mockServer(
+				// Mock uses only the first object from the array
+				url: mockServerWithURL(
 					t,
 					http.StatusOK,
 					100,
@@ -1828,10 +1832,10 @@ func Test_client_GetMarketMovers(t *testing.T) {
 					      "name": "Bassett Furniture Industries Inc",
 					      "exchange": "NASDAQ",
 					      "mic_code": "XNAS",
-					      "datetime": "2022-01-31 09:34:00",
+					      "datetime": "2023-10-01T12:00:00Z",
 					      "last": 17.25,
-					      "high": 17.35,
-					      "low": 15.90999,
+					      "high": 18,
+					      "low": 16.5,
 					      "volume": 108297,
 					      "change": 3.31,
 					      "percent_change": 23.74462
@@ -1839,6 +1843,7 @@ func Test_client_GetMarketMovers(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
+					"/market_movers/stocks?direction=gainers&price_greater_than=10.000000",
 				),
 			},
 			want: response.MarketMovers{
@@ -1848,10 +1853,10 @@ func Test_client_GetMarketMovers(t *testing.T) {
 						Name:          "Bassett Furniture Industries Inc",
 						Exchange:      "NASDAQ",
 						MicCode:       "XNAS",
-						Datetime:      "2022-01-31 09:34:00",
+						Datetime:      "2023-10-01T12:00:00Z",
 						Last:          17.25,
-						High:          17.35,
-						Low:           15.90999,
+						High:          18,
+						Low:           16.5,
 						Volume:        108297,
 						Change:        3.31,
 						PercentChange: 23.74462,
@@ -1859,8 +1864,9 @@ func Test_client_GetMarketMovers(t *testing.T) {
 				},
 				Status: "ok",
 			},
-			want1:   response.NewCreditsImpl(100, 100),
-			wantErr: "",
+			want1:       response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+			expectedURL: "/market_movers/stocks?direction=gainers&price_greater_than=10.000000",
 		},
 		{
 			name: "wrong api key",
@@ -1896,7 +1902,7 @@ func Test_client_GetMarketMovers(t *testing.T) {
 						},
 						logger: &zerolog.Logger{},
 					},
-					tt.args.url,
+					tt.args.url+"/market_movers/{market}",
 				),
 			}
 
@@ -1939,7 +1945,7 @@ func Test_client_GetMarketState(t *testing.T) {
 						ApiKey: "",
 					},
 				},
-				// Для мока используем только один объект из массива
+				// Mock uses only one object from the array
 				url: mockServer(
 					t,
 					http.StatusOK,
@@ -2292,7 +2298,7 @@ func Test_client_GetQuote(t *testing.T) {
 						},
 						logger: &zerolog.Logger{},
 					},
-					tt.args.url,
+					tt.args.url+"/quote",
 				),
 			}
 
@@ -2939,10 +2945,310 @@ func Test_client_GetUsage(t *testing.T) {
 	}
 }
 
+func Test_client_GetPrice(t *testing.T) {
+	type args struct {
+		req request.GetPrice
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.Price
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetPrice{
+					ApiKey: request.ApiKey{ApiKey: ""},
+					Symbol: "AAPL",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					`{"price": "200.99001"}`,
+					"/price?symbol=AAPL",
+				),
+			},
+			want:        response.Price{Price: "200.99001"},
+			want1:       response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+			expectedURL: "/price?symbol=AAPL",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cli := client{
+				getPrice: NewEndpoint[request.GetPrice, response.Price, response.Credits, error](
+					&HTTPCli{
+						transport: &fasthttp.Client{},
+						cfg: &Conf{
+							Timeout: 1,
+							BaseURL: tt.args.url,
+						},
+						logger: &zerolog.Logger{},
+					},
+					tt.args.url+"/price",
+				),
+			}
+
+			got, got1, err := cli.GetPrice(tt.args.req)
+			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
+				t.Errorf("GetPrice() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetPrice() got = %v, want %v", got, tt.want)
+			}
+
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("GetPrice() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func Test_client_GetEOD(t *testing.T) {
+	type args struct {
+		req request.GetEOD
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.EOD
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetEOD{
+					ApiKey: request.ApiKey{ApiKey: ""},
+					Symbol: "AAPL",
+					Date:   "2021-09-16",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					`{
+						"symbol": "AAPL",
+						"exchange": "NASDAQ",
+						"mic_code": "XNAS",
+						"currency": "USD",
+						"datetime": "2021-09-16",
+						"close": "148.79"
+					}`,
+					"/eod?date=2021-09-16&symbol=AAPL",
+				),
+			},
+			want: response.EOD{
+				Symbol:   "AAPL",
+				Exchange: "NASDAQ",
+				MicCode:  "XNAS",
+				Currency: "USD",
+				Datetime: "2021-09-16",
+				Close:    "148.79",
+			},
+			want1:       response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+			expectedURL: "/eod?date=2021-09-16&symbol=AAPL",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cli := client{
+				getEOD: NewEndpoint[request.GetEOD, response.EOD, response.Credits, error](
+					&HTTPCli{
+						transport: &fasthttp.Client{},
+						cfg: &Conf{
+							Timeout: 1,
+							BaseURL: tt.args.url,
+						},
+						logger: &zerolog.Logger{},
+					},
+					tt.args.url+"/eod",
+				),
+			}
+
+			got, got1, err := cli.GetEOD(tt.args.req)
+			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
+				t.Errorf("GetEOD() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetEOD() got = %v, want %v", got, tt.want)
+			}
+
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("GetEOD() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func Test_client_GetTimeSeriesCross(t *testing.T) {
+	type args struct {
+		req request.GetTimeSeriesCross
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.TimeSeriesCross
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetTimeSeriesCross{
+					ApiKey:   request.ApiKey{ApiKey: ""},
+					Base:     "JPY",
+					Quote:    "BTC",
+					Interval: "1day",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					`{
+						"meta": {
+							"symbol": "JPY/BTC",
+							"interval": "1day",
+							"currency": "BTC",
+							"exchange_timezone": "UTC",
+							"exchange": "Cross Rate",
+							"mic_code": "",
+							"type": "Cross Rate"
+						},
+						"values": [
+							{
+								"datetime": "2023-01-15 00:00:00",
+								"open": "0.00007541",
+								"high": "0.00007612",
+								"low": "0.00007398",
+								"close": "0.00007456",
+								"volume": "0"
+							}
+						],
+						"status": "ok"
+					}`,
+					"/time_series/cross?base=JPY&interval=1day&quote=BTC",
+				),
+			},
+			want: response.TimeSeriesCross{
+				Meta: response.TimeSeriesMeta{
+					Symbol:           "JPY/BTC",
+					Interval:         "1day",
+					Currency:         "BTC",
+					ExchangeTimezone: "UTC",
+					Exchange:         "Cross Rate",
+					MicCode:          "",
+					Type:             "Cross Rate",
+				},
+				Values: []response.TimeSeriesValue{
+					{
+						Datetime: "2023-01-15 00:00:00",
+						Open:     "0.00007541",
+						High:     "0.00007612",
+						Low:      "0.00007398",
+						Close:    "0.00007456",
+						Volume:   "0",
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+			expectedURL: "/time_series/cross?base=JPY&interval=1day&quote=BTC",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cli := client{
+				getTimeSeriesCross: NewEndpoint[request.GetTimeSeriesCross, response.TimeSeriesCross, response.Credits, error](
+					&HTTPCli{
+						transport: &fasthttp.Client{},
+						cfg: &Conf{
+							Timeout: 1,
+							BaseURL: tt.args.url,
+						},
+						logger: &zerolog.Logger{},
+					},
+					tt.args.url+"/time_series/cross",
+				),
+			}
+
+			got, got1, err := cli.GetTimeSeriesCross(tt.args.req)
+			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
+				t.Errorf("GetTimeSeriesCross() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetTimeSeriesCross() got = %v, want %v", got, tt.want)
+			}
+
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("GetTimeSeriesCross() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
 func mockServer(t *testing.T, responseCode int, wantCreditsLeft, wantCreditsUsed int64, responseBody string) string {
 	t.Helper()
 
 	server := httptest.NewUnstartedServer(http.HandlerFunc(func(cw http.ResponseWriter, _ *http.Request) {
+		if responseCode == http.StatusInternalServerError {
+			cw.WriteHeader(responseCode)
+		}
+
+		cw.Header().Add("Api-credits-left", strconv.FormatInt(wantCreditsLeft, 10))
+		cw.Header().Add("Api-credits-used", strconv.FormatInt(wantCreditsUsed, 10))
+
+		_, err := cw.Write([]byte(responseBody))
+		if err != nil {
+			t.Error(err)
+		}
+	}))
+
+	server.Start()
+
+	t.Cleanup(func() {
+		server.Close()
+	})
+
+	return server.URL
+}
+
+func mockServerWithURL(t *testing.T, responseCode int, wantCreditsLeft, wantCreditsUsed int64, responseBody string, expectedURL string) string {
+	t.Helper()
+
+	server := httptest.NewUnstartedServer(http.HandlerFunc(func(cw http.ResponseWriter, r *http.Request) {
+		// Check request URL
+		if expectedURL != "" && r.URL.String() != expectedURL {
+			t.Errorf("Expected URL %s, got %s", expectedURL, r.URL.String())
+		}
+
 		if responseCode == http.StatusInternalServerError {
 			cw.WriteHeader(responseCode)
 		}

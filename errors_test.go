@@ -558,6 +558,7 @@ func TestDomainErrorParsing(t *testing.T) {
 
 			if err == nil {
 				t.Errorf("Expected domain error, got nil")
+
 				return
 			}
 

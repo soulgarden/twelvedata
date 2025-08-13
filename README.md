@@ -24,11 +24,10 @@
 ## Core data
 
 * Time series          ✅
-* Exchange rate        ✅
-* Currency conversion  ❌
+* Time series cross    ✅
 * Quote                ✅
-* Real-time price      ❌
-* Edd of day price     ❌
+* Latest price         ✅
+* End of day price     ✅
 * Market movers        ✅
 
 ## Fundamentals

@@ -1,6 +1,8 @@
 package twelvedata
 
 import (
+	"strings"
+
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
 )
@@ -8,6 +10,7 @@ import (
 type client struct {
 	getStocks              *Endpoint[request.GetStock, response.Stocks, response.Credits, error]
 	getTimeSeries          *Endpoint[request.GetTimeSeries, response.TimeSeries, response.Credits, error]
+	getTimeSeriesCross     *Endpoint[request.GetTimeSeriesCross, response.TimeSeriesCross, response.Credits, error]
 	getProfile             *Endpoint[request.GetProfile, response.Profile, response.Credits, error]
 	getInsiderTransactions *Endpoint[request.GetInsiderTransactions, response.InsiderTransactions, response.Credits, error]
 	getDividends           *Endpoint[request.GetDividends, response.Dividends, response.Credits, error]
@@ -24,6 +27,8 @@ type client struct {
 	getBalanceSheet        *Endpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error]
 	getCashFlow            *Endpoint[request.GetCashFlow, response.CashFlows, response.Credits, error]
 	getMarketState         *Endpoint[request.GetMarketState, []response.MarketState, response.Credits, error]
+	getPrice               *Endpoint[request.GetPrice, response.Price, response.Credits, error]
+	getEOD                 *Endpoint[request.GetEOD, response.EOD, response.Credits, error]
 }
 
 func (cli client) GetStocks(req request.GetStock) (response.Stocks, response.Credits, error) {
@@ -32,6 +37,10 @@ func (cli client) GetStocks(req request.GetStock) (response.Stocks, response.Cre
 
 func (cli client) GetTimeSeries(req request.GetTimeSeries) (response.TimeSeries, response.Credits, error) {
 	return cli.getTimeSeries.Call(req)
+}
+
+func (cli client) GetTimeSeriesCross(req request.GetTimeSeriesCross) (response.TimeSeriesCross, response.Credits, error) {
+	return cli.getTimeSeriesCross.Call(req)
 }
 
 func (cli client) GetProfile(req request.GetProfile) (response.Profile, response.Credits, error) {
@@ -91,17 +100,32 @@ func (cli client) GetCashFlow(req request.GetCashFlow) (response.CashFlows, resp
 }
 
 func (cli client) GetMarketMovers(req request.GetMarketMovers) (response.MarketMovers, response.Credits, error) {
-	return cli.getMarketMovers.Call(req)
+	// Replace {market} placeholder with actual market value
+	url := strings.Replace(cli.getMarketMovers.URL, "{market}", req.Market, 1)
+	marketEndpoint := NewEndpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error](
+		cli.getMarketMovers.httpCli,
+		url,
+	)
+	return marketEndpoint.Call(req)
 }
 
 func (cli client) GetMarketState(req request.GetMarketState) ([]response.MarketState, response.Credits, error) {
 	return cli.getMarketState.Call(req)
 }
 
+func (cli client) GetPrice(req request.GetPrice) (response.Price, response.Credits, error) {
+	return cli.getPrice.Call(req)
+}
+
+func (cli client) GetEOD(req request.GetEOD) (response.EOD, response.Credits, error) {
+	return cli.getEOD.Call(req)
+}
+
 func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 	return client{
 		getStocks:              NewEndpoint[request.GetStock, response.Stocks, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.StocksURL),
 		getTimeSeries:          NewEndpoint[request.GetTimeSeries, response.TimeSeries, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.TimeSeriesURL),
+		getTimeSeriesCross:     NewEndpoint[request.GetTimeSeriesCross, response.TimeSeriesCross, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.TimeSeriesCrossURL),
 		getProfile:             NewEndpoint[request.GetProfile, response.Profile, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.ProfileURL),
 		getInsiderTransactions: NewEndpoint[request.GetInsiderTransactions, response.InsiderTransactions, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.InsiderTransactionsURL),
 		getDividends:           NewEndpoint[request.GetDividends, response.Dividends, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.DividendsURL),
@@ -118,5 +142,7 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getBalanceSheet:        NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetURL),
 		getCashFlow:            NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowURL),
 		getMarketState:         NewEndpoint[request.GetMarketState, []response.MarketState, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.MarketStateURL),
+		getPrice:               NewEndpoint[request.GetPrice, response.Price, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.PriceURL),
+		getEOD:                 NewEndpoint[request.GetEOD, response.EOD, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.EODURL),
 	}
 }

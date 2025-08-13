@@ -25,11 +25,14 @@ type ReferenceData struct {
 
 // nolint: lll
 type CoreData struct {
-	TimeSeriesURL string `default:"/time_series" json:"time_series_url"`
-	QuotesURL     string `default:"/quote"       json:"quotes_url"`
+	TimeSeriesURL      string `default:"/time_series"       json:"time_series_url"`
+	TimeSeriesCrossURL string `default:"/time_series/cross" json:"time_series_cross_url"`
+	QuotesURL          string `default:"/quote"             json:"quotes_url"`
+	PriceURL           string `default:"/price"             json:"price_url"`
+	EODURL             string `default:"/eod"               json:"eod_url"`
 
 	ExchangeRateURL string `default:"/exchange_rate" json:"exchange_rate_url"`
-	MarketMoversURL string `default:"/market_movers" json:"market_movers_url"`
+	MarketMoversURL string `default:"/market_movers/{market}" json:"market_movers_url"`
 }
 
 // nolint: lll
