@@ -16,11 +16,31 @@ type Conf struct {
 
 // nolint: lll
 type ReferenceData struct {
-	StocksURL      string `default:"/stocks"       json:"stocks_url"`
-	ExchangesURL   string `default:"/exchanges"    json:"exchange_url"`
-	IndicesURL     string `default:"/indices"      json:"indices_url"`
-	EtfsURL        string `default:"/etf"          json:"etfs_url"`
-	MarketStateURL string `default:"/market_state" json:"market_state_url"`
+	// Asset Catalogs
+	StocksURL           string `default:"/stocks"           json:"stocks_url"`
+	ForexPairsURL       string `default:"/forex_pairs"      json:"forex_pairs_url"`
+	CryptocurrenciesURL string `default:"/cryptocurrencies" json:"cryptocurrencies_url"`
+	EtfsURL             string `default:"/etf"              json:"etfs_url"`
+	FundsURL            string `default:"/funds"            json:"funds_url"`
+	CommoditiesURL      string `default:"/commodities"      json:"commodities_url"`
+	BondsURL            string `default:"/bonds"            json:"bonds_url"`
+
+	// Discovery
+	SymbolSearchURL      string `default:"/symbol_search"      json:"symbol_search_url"`
+	CrossListingsURL     string `default:"/cross_listings"     json:"cross_listings_url"`
+	EarliestTimestampURL string `default:"/earliest_timestamp" json:"earliest_timestamp_url"`
+
+	// Markets
+	ExchangesURL               string `default:"/exchanges"                json:"exchange_url"`
+	ExchangeScheduleURL        string `default:"/exchange_schedule"        json:"exchange_schedule_url"`
+	CryptocurrencyExchangesURL string `default:"/cryptocurrency_exchanges" json:"cryptocurrency_exchanges_url"`
+	IndicesURL                 string `default:"/indices"                  json:"indices_url"`
+	MarketStateURL             string `default:"/market_state"             json:"market_state_url"`
+
+	// Supporting Metadata
+	CountriesURL           string `default:"/countries"            json:"countries_url"`
+	InstrumentTypeURL      string `default:"/instrument_type"      json:"instrument_type_url"`
+	TechnicalIndicatorsURL string `default:"/technical_indicators" json:"technical_indicators_url"`
 }
 
 // nolint: lll
@@ -31,7 +51,7 @@ type CoreData struct {
 	PriceURL           string `default:"/price"             json:"price_url"`
 	EODURL             string `default:"/eod"               json:"eod_url"`
 
-	ExchangeRateURL string `default:"/exchange_rate" json:"exchange_rate_url"`
+	ExchangeRateURL string `default:"/exchange_rate"          json:"exchange_rate_url"`
 	MarketMoversURL string `default:"/market_movers/{market}" json:"market_movers_url"`
 }
 

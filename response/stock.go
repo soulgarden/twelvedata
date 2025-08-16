@@ -14,6 +14,7 @@ type Stock struct {
 	Country  string       `json:"country"`
 	Type     string       `json:"type"`
 	FigiCode string       `json:"figi_code"`
+	Isin     string       `json:"isin"`
 	Access   *StockAccess `json:"access"`
 }
 

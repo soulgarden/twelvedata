@@ -3001,6 +3001,7 @@ func Test_client_GetPrice(t *testing.T) {
 			got, got1, err := cli.GetPrice(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetPrice() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 
@@ -3086,6 +3087,7 @@ func Test_client_GetEOD(t *testing.T) {
 			got, got1, err := cli.GetEOD(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetEOD() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 
@@ -3200,6 +3202,7 @@ func Test_client_GetTimeSeriesCross(t *testing.T) {
 			got, got1, err := cli.GetTimeSeriesCross(tt.args.req)
 			if (err != nil) != (tt.wantErr != "") || (err != nil && !reflect.DeepEqual(err.Error(), tt.wantErr)) {
 				t.Errorf("GetTimeSeriesCross() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 
