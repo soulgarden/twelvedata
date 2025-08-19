@@ -1,7 +1,8 @@
 package request
 
+// GetPrice represents request parameters for price data.
 type GetPrice struct {
-	ApiKey
+	APIKey
 	Symbol         string `schema:"symbol,omitempty"`
 	FIGI           string `schema:"figi,omitempty"`
 	ISIN           string `schema:"isin,omitempty"`

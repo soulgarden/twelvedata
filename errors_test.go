@@ -694,6 +694,18 @@ func TestErrorMessageExtraction(t *testing.T) {
 			extractor: extractFeatureFromMessage,
 			expected:  "",
 		},
+		{
+			name:      "extract feature from exclusive message",
+			message:   "/dividends_calendar is available exclusively with grow or pro or ultra or enterprise plans",
+			extractor: extractFeatureFromExclusiveMessage,
+			expected:  "dividends calendar",
+		},
+		{
+			name:      "extract feature from exclusive message with path",
+			message:   "/api/v1/premium_data is available exclusively with pro plans",
+			extractor: extractFeatureFromExclusiveMessage,
+			expected:  "api/v1/premium data",
+		},
 	}
 
 	for _, tt := range tests {
@@ -814,24 +826,34 @@ func TestWrappedErrorHandling(t *testing.T) {
 
 // Helper function to get error type name for testing.
 func getErrorType(err error) string {
-	switch err.(type) {
-	case *BadRequestError:
-		return "*twelvedata.BadRequestError"
-	case *UnauthorizedError:
-		return "*twelvedata.UnauthorizedError"
-	case *NotFoundError:
-		return "*twelvedata.NotFoundError"
-	case *TooManyRequestsError:
-		return "*twelvedata.TooManyRequestsError"
-	case *InternalServerError:
-		return "*twelvedata.InternalServerError"
-	case *HTTPError:
-		return "*twelvedata.HTTPError"
-	case *TimeoutError:
-		return "*twelvedata.TimeoutError"
-	case *NetworkError:
-		return "*twelvedata.NetworkError"
-	default:
-		return "unknown"
+	{
+		var errCase0 *BadRequestError
+		var errCase1 *UnauthorizedError
+		var errCase2 *NotFoundError
+		var errCase3 *TooManyRequestsError
+		var errCase4 *InternalServerError
+		var errCase5 *HTTPError
+		var errCase6 *TimeoutError
+		var errCase7 *NetworkError
+		switch {
+		case errors.As(err, &errCase0):
+			return "*twelvedata.BadRequestError"
+		case errors.As(err, &errCase1):
+			return "*twelvedata.UnauthorizedError"
+		case errors.As(err, &errCase2):
+			return "*twelvedata.NotFoundError"
+		case errors.As(err, &errCase3):
+			return "*twelvedata.TooManyRequestsError"
+		case errors.As(err, &errCase4):
+			return "*twelvedata.InternalServerError"
+		case errors.As(err, &errCase5):
+			return "*twelvedata.HTTPError"
+		case errors.As(err, &errCase6):
+			return "*twelvedata.TimeoutError"
+		case errors.As(err, &errCase7):
+			return "*twelvedata.NetworkError"
+		default:
+			return "unknown"
+		}
 	}
 }

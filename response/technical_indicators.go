@@ -1,7 +1,9 @@
 package response
 
+// TechnicalIndicators represents a map of technical indicators by name.
 type TechnicalIndicators map[string]*TechnicalIndicator
 
+// TechnicalIndicator represents a single technical indicator with its configuration and details.
 type TechnicalIndicator struct {
 	Enable         bool                   `json:"enable"`
 	FullName       string                 `json:"full_name"`

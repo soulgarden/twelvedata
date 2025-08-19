@@ -1,10 +1,12 @@
 package response
 
+// MarketMovers represents the response structure for market movers data.
 type MarketMovers struct {
 	Values []MarketMover `json:"values"`
 	Status string        `json:"status"`
 }
 
+// MarketMover represents a single market mover with price and volume information.
 type MarketMover struct {
 	Symbol        string  `json:"symbol"`
 	Name          string  `json:"name"`

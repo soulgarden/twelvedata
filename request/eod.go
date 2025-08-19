@@ -1,7 +1,8 @@
 package request
 
+// GetEOD represents request parameters for end of day data.
 type GetEOD struct {
-	ApiKey
+	APIKey
 	Symbol         string `schema:"symbol,omitempty"`
 	FIGI           string `schema:"figi,omitempty"`
 	ISIN           string `schema:"isin,omitempty"`

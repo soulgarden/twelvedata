@@ -13,18 +13,21 @@ import (
 
 var encoder = schema.NewEncoder()
 
+// Endpoint represents a generic HTTP endpoint with type-safe request/response handling.
 type Endpoint[Request any, Response any, Credits response.Credits, Error error] struct {
 	httpCli *HTTPCli
 	URL     string
 }
 
-func NewEndpoint[Request any, Response any, Credits response.Credits, Error error](httpCli *HTTPCli, URI string) *Endpoint[Request, Response, Credits, Error] {
+// NewEndpoint creates a new endpoint instance with the specified HTTP client and URI.
+func NewEndpoint[Request any, Response any, Credits response.Credits, Error error](httpCli *HTTPCli, uri string) *Endpoint[Request, Response, Credits, Error] {
 	return &Endpoint[Request, Response, Credits, Error]{
 		httpCli: httpCli,
-		URL:     URI,
+		URL:     uri,
 	}
 }
 
+// Call executes the endpoint request and returns the response, credits, and any errors.
 func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Request) (resp Response, creds response.Credits, err Error) {
 	httpResp := fasthttp.AcquireResponse()
 
@@ -111,23 +114,26 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 	return resp, creds, err
 }
 
-func NewError[T error](err error, t T) ErrImpl[T] {
-	return ErrImpl[T]{
+// NewError creates a new generic error wrapper.
+func NewError[T error](err error, t T) ErrImplError[T] {
+	return ErrImplError[T]{
 		generic: t,
 		inner:   err,
 	}
 }
 
+// Error represents a generic error interface.
 type Error interface {
 	Error() string
 }
 
-type ErrImpl[Err error] struct {
+// ErrImplError represents a generic error implementation with type safety.
+type ErrImplError[Err error] struct {
 	generic Err
 	inner   error
 }
 
-func (e ErrImpl[Err]) Error() string {
+func (e ErrImplError[Err]) Error() string {
 	return e.inner.Error()
 }
 

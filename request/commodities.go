@@ -1,7 +1,8 @@
 package request
 
+// GetCommodities represents request parameters for commodities data.
 type GetCommodities struct {
-	ApiKey
+	APIKey
 	Symbol    string `schema:"symbol,omitempty"`
 	Category  string `schema:"category,omitempty"`
 	Format    string `schema:"format,omitempty"`

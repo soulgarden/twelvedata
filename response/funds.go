@@ -1,11 +1,13 @@
 package response
 
+// Funds represents the response structure for funds data.
 type Funds struct {
 	Data   []*Fund `json:"data"`
 	Count  int     `json:"count"`
 	Status string  `json:"status"`
 }
 
+// Fund represents a single investment fund with its details and access information.
 type Fund struct {
 	Symbol   string      `json:"symbol"`
 	Name     string      `json:"name"`
@@ -20,6 +22,7 @@ type Fund struct {
 	Access   *FundAccess `json:"access"`
 }
 
+// FundAccess represents access level information for fund data.
 type FundAccess struct {
 	Global string `json:"global"`
 	Plan   string `json:"plan"`

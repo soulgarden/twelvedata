@@ -279,36 +279,43 @@ func NewHTTPError(statusCode int, body []byte, url string, apiError *response.Er
 }
 
 // Error type checking helpers.
+
+// IsBadRequestError checks if an error is a BadRequestError type.
 func IsBadRequestError(err error) bool {
 	var badReqErr *BadRequestError
 
 	return errors.As(err, &badReqErr)
 }
 
+// IsUnauthorizedError checks if an error is an UnauthorizedError type.
 func IsUnauthorizedError(err error) bool {
 	var unauthorizedErr *UnauthorizedError
 
 	return errors.As(err, &unauthorizedErr)
 }
 
+// IsNotFoundError checks if an error is a NotFoundError type.
 func IsNotFoundError(err error) bool {
 	var notFoundErr *NotFoundError
 
 	return errors.As(err, &notFoundErr)
 }
 
+// IsRateLimitError checks if an error is a TooManyRequestsError type.
 func IsRateLimitError(err error) bool {
 	var rateLimitErr *TooManyRequestsError
 
 	return errors.As(err, &rateLimitErr)
 }
 
+// IsTimeoutError checks if an error is a TimeoutError type.
 func IsTimeoutError(err error) bool {
 	var timeoutErr *TimeoutError
 
 	return errors.As(err, &timeoutErr)
 }
 
+// IsNetworkError checks if an error is a NetworkError type.
 func IsNetworkError(err error) bool {
 	var networkErr *NetworkError
 
@@ -317,24 +324,28 @@ func IsNetworkError(err error) bool {
 
 // WebSocket error checking functions
 
+// IsWSConnectionError checks if an error is a WSConnectionError type.
 func IsWSConnectionError(err error) bool {
 	var wsConnErr *WSConnectionError
 
 	return errors.As(err, &wsConnErr)
 }
 
+// IsWSMessageError checks if an error is a WSMessageError type.
 func IsWSMessageError(err error) bool {
 	var wsMsgErr *WSMessageError
 
 	return errors.As(err, &wsMsgErr)
 }
 
+// IsWSSubscriptionError checks if an error is a WSSubscriptionError type.
 func IsWSSubscriptionError(err error) bool {
 	var wsSubErr *WSSubscriptionError
 
 	return errors.As(err, &wsSubErr)
 }
 
+// IsWSError checks if an error is any WebSocket-related error type.
 func IsWSError(err error) bool {
 	return IsWSConnectionError(err) || IsWSMessageError(err) || IsWSSubscriptionError(err)
 }
@@ -426,24 +437,28 @@ func (e APIKeyError) Unwrap() error {
 
 // Domain-specific error checking functions
 
+// IsSymbolNotFoundError checks if an error is a SymbolNotFoundError type.
 func IsSymbolNotFoundError(err error) bool {
 	var symbolErr *SymbolNotFoundError
 
 	return errors.As(err, &symbolErr)
 }
 
+// IsPlanLimitationError checks if an error is a PlanLimitationError type.
 func IsPlanLimitationError(err error) bool {
 	var planErr *PlanLimitationError
 
 	return errors.As(err, &planErr)
 }
 
+// IsInsufficientCreditsError checks if an error is an InsufficientCreditsError type.
 func IsInsufficientCreditsError(err error) bool {
 	var creditsErr *InsufficientCreditsError
 
 	return errors.As(err, &creditsErr)
 }
 
+// IsAPIKeyError checks if an error is an APIKeyError type.
 func IsAPIKeyError(err error) bool {
 	var keyErr *APIKeyError
 
@@ -461,7 +476,7 @@ func IsDomainError(err error) bool {
 // API error message parsing functions
 
 // ParseDomainError analyzes an API error response and converts it to a domain-specific error.
-func ParseDomainError(apiError *response.Error, statusCode int, url string) error {
+func ParseDomainError(apiError *response.Error, _ int, _ string) error {
 	if apiError == nil || apiError.Message == "" {
 		return nil
 	}
@@ -480,9 +495,20 @@ func ParseDomainError(apiError *response.Error, statusCode int, url string) erro
 		}
 	}
 
-	// Check for plan limitation errors
+	// Check for plan limitation errors (old format)
 	if strings.Contains(message, strings.ToLower(dictionary.IsNotAvailableWithYourPlanMsg)) {
 		feature := extractFeatureFromMessage(apiError.Message)
+
+		return &PlanLimitationError{
+			Feature: feature,
+			Message: apiError.Message,
+			Cause:   fmt.Errorf("API returned plan limitation: %s", apiError.Message),
+		}
+	}
+
+	// Check for plan limitation errors (new format: "is available exclusively with")
+	if strings.Contains(message, strings.ToLower(dictionary.IsAvailableExclusivelyMsg)) {
+		feature := extractFeatureFromExclusiveMessage(apiError.Message)
 
 		return &PlanLimitationError{
 			Feature: feature,
@@ -552,6 +578,24 @@ func extractFeatureFromMessage(message string) string {
 	feature = strings.TrimPrefix(feature, "The ")
 	feature = strings.TrimPrefix(feature, "This ")
 	feature = strings.TrimPrefix(feature, "Feature ")
+
+	return feature
+}
+
+// extractFeatureFromExclusiveMessage extracts feature name from new format messages like
+// "/dividends_calendar is available exclusively with grow or pro or ultra or enterprise plans.".
+func extractFeatureFromExclusiveMessage(message string) string {
+	exclusiveMsg := strings.ToLower(dictionary.IsAvailableExclusivelyMsg)
+	idx := strings.Index(strings.ToLower(message), exclusiveMsg)
+	if idx == -1 {
+		return ""
+	}
+
+	feature := strings.TrimSpace(message[:idx])
+	// Remove leading slash if present
+	feature = strings.TrimPrefix(feature, "/")
+	// Replace underscores with spaces for readability
+	feature = strings.ReplaceAll(feature, "_", " ")
 
 	return feature
 }

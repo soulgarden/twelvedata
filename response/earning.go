@@ -1,12 +1,14 @@
 package response
 
-import "gopkg.in/guregu/null.v4"
+import "github.com/guregu/null/v6"
 
+// Earnings represents the response structure for earnings data grouped by date.
 type Earnings struct {
 	Earnings map[string][]*Earning `json:"earnings"`
 	Status   string                `json:"status"`
 }
 
+// Earning represents a single earnings report with estimates and actuals.
 type Earning struct {
 	Symbol      string     `json:"symbol"`
 	Name        string     `json:"name"`

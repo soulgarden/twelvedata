@@ -1,5 +1,7 @@
+// Package request contains structures for API request parameters
 package request
 
-type ApiKey struct {
-	ApiKey string `schema:"apikey,omitempty"`
+// APIKey represents the API key authentication structure.
+type APIKey struct {
+	APIKey string `schema:"apikey,omitempty"`
 }

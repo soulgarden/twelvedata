@@ -1,7 +1,8 @@
 package request
 
+// GetForexPairs represents request parameters for forex pairs data.
 type GetForexPairs struct {
-	ApiKey
+	APIKey
 	Symbol        string `schema:"symbol,omitempty"`
 	CurrencyBase  string `schema:"currency_base,omitempty"`
 	CurrencyQuote string `schema:"currency_quote,omitempty"`

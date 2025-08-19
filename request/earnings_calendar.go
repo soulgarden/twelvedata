@@ -1,7 +1,8 @@
 package request
 
+// GetEarningsCalendar represents request parameters for earnings calendar data.
 type GetEarningsCalendar struct {
-	ApiKey
+	APIKey
 	Exchange      string `schema:"exchange,omitempty"`
 	MicCode       string `schema:"mic_code,omitempty"`
 	Country       string `schema:"country,omitempty"`

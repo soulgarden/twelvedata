@@ -1,7 +1,8 @@
 package request
 
+// GetTimeSeriesCross represents request parameters for cross time series data.
 type GetTimeSeriesCross struct {
-	ApiKey
+	APIKey
 	Base          string `schema:"base,omitempty"`
 	Quote         string `schema:"quote,omitempty"`
 	Interval      string `schema:"interval,omitempty"`

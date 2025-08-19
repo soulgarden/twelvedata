@@ -1,7 +1,8 @@
 package request
 
+// GetCashFlow represents request parameters for cash flow data.
 type GetCashFlow struct {
-	ApiKey
+	APIKey
 	Symbol    string `schema:"symbol,omitempty"`
 	Exchange  string `schema:"exchange,omitempty"`
 	MicCode   string `schema:"mic_code,omitempty"`

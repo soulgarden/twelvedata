@@ -1,7 +1,8 @@
 package request
 
+// GetStatistics represents request parameters for statistics data.
 type GetStatistics struct {
-	ApiKey
+	APIKey
 	Symbol   string `schema:"symbol,omitempty"`
 	Exchange string `schema:"exchange,omitempty"`
 	MicCode  string `schema:"mic_code,omitempty"`

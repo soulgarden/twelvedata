@@ -1,12 +1,14 @@
 package response
 
-import "gopkg.in/guregu/null.v4"
+import "github.com/guregu/null/v6"
 
+// Statistics represents the response structure for statistical data.
 type Statistics struct {
 	Meta       StatisticsMeta   `json:"meta"`
 	Statistics StatisticsValues `json:"statistics"`
 }
 
+// StatisticsMeta contains metadata for statistics data.
 type StatisticsMeta struct {
 	Symbol           string `json:"symbol"`
 	Name             string `json:"name"`
@@ -16,6 +18,7 @@ type StatisticsMeta struct {
 	ExchangeTimezone string `json:"exchange_timezone"`
 }
 
+// StatisticsValues contains comprehensive statistical metrics for a financial instrument.
 type StatisticsValues struct {
 	ValuationsMetrics  StatisticsValuationsMetrics `json:"valuations_metrics"`
 	Financials         StatisticsFinancials        `json:"financials"`
@@ -24,6 +27,7 @@ type StatisticsValues struct {
 	DividendsAndSplits DividendsAndSplits          `json:"dividends_and_splits"`
 }
 
+// StatisticsValuationsMetrics represents valuation metrics such as P/E ratios and market cap.
 type StatisticsValuationsMetrics struct {
 	MarketCapitalization null.Int   `json:"market_capitalization"`
 	EnterpriseValue      null.Int   `json:"enterprise_value"`
@@ -36,6 +40,7 @@ type StatisticsValuationsMetrics struct {
 	EnterpriseToEBITDA   null.Float `json:"enterprise_to_ebitda"`
 }
 
+// StatisticsFinancials represents financial metrics including margins and growth rates.
 type StatisticsFinancials struct {
 	FiscalYearEnds    string                    `json:"fiscal_year_ends"`
 	MostRecentQuarter string                    `json:"most_recent_quarter"`
@@ -49,6 +54,7 @@ type StatisticsFinancials struct {
 	CashFlow          StatisticsCashFlow        `json:"cash_flow"`
 }
 
+// StatisticsIncomeStatement represents income statement metrics from statistics data.
 type StatisticsIncomeStatement struct {
 	RevenueTTM                 null.Int   `json:"revenue_ttm"`
 	RevenuePerShareTTM         null.Float `json:"revenue_per_share_ttm"`
@@ -60,6 +66,7 @@ type StatisticsIncomeStatement struct {
 	QuarterlyEarningsGrowthYoY null.Float `json:"quarterly_earnings_growth_yoy"`
 }
 
+// StatisticsBalanceSheet represents balance sheet metrics from statistics data.
 type StatisticsBalanceSheet struct {
 	RevenueTTM           null.Int   `json:"revenue_ttm"`
 	TotalCashMRQ         null.Int   `json:"total_cash_mrq"`
@@ -70,11 +77,13 @@ type StatisticsBalanceSheet struct {
 	BookValuePerShareMRQ null.Float `json:"book_value_per_share_mrq"`
 }
 
+// StatisticsCashFlow represents cash flow metrics from statistics data.
 type StatisticsCashFlow struct {
 	OperatingCashFlowTTM   null.Int `json:"operating_cash_flow_ttm"`
 	LeveredFreeCashFlowTTM null.Int `json:"levered_free_cash_flow_ttm"`
 }
 
+// StockStatistics represents stock-specific statistical metrics.
 type StockStatistics struct {
 	SharesOutstanding               null.Int   `json:"shares_outstanding"`
 	FloatShares                     null.Int   `json:"float_shares"`
@@ -87,6 +96,7 @@ type StockStatistics struct {
 	PercentHeldByInstitutions       null.Float `json:"percent_held_by_institutions"`
 }
 
+// StockPriceSummary represents stock price summary metrics including moving averages.
 type StockPriceSummary struct {
 	FiftyTwoWeekLow    null.Float `json:"fifty_two_week_low"`
 	FiftyTwoWeekHigh   null.Float `json:"fifty_two_week_high"`
@@ -96,6 +106,7 @@ type StockPriceSummary struct {
 	Day200MA           null.Float `json:"day_200_ma"`
 }
 
+// DividendsAndSplits represents dividend and stock split information.
 type DividendsAndSplits struct {
 	ForwardAnnualDividendRate    null.Float `json:"forward_annual_dividend_rate"`
 	ForwardAnnualDividendYield   null.Float `json:"forward_annual_dividend_yield"`

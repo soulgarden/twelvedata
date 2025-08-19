@@ -1,7 +1,8 @@
 package request
 
+// GetBalanceSheet represents request parameters for balance sheet data.
 type GetBalanceSheet struct {
-	ApiKey
+	APIKey
 	Symbol    string `schema:"symbol,omitempty"`
 	Exchange  string `schema:"exchange,omitempty"`
 	MicCode   string `schema:"mic_code,omitempty"`

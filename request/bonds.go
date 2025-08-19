@@ -1,7 +1,8 @@
 package request
 
+// GetBonds represents request parameters for bonds data.
 type GetBonds struct {
-	ApiKey
+	APIKey
 	Symbol     string `schema:"symbol,omitempty"`
 	Exchange   string `schema:"exchange,omitempty"`
 	Country    string `schema:"country,omitempty"`

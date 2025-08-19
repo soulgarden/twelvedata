@@ -12,12 +12,14 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+// HTTPCli represents an HTTP client wrapper for API requests.
 type HTTPCli struct {
 	transport *fasthttp.Client
 	cfg       *Conf
 	logger    *zerolog.Logger
 }
 
+// NewHTTPCli creates a new HTTP client with the specified transport, configuration, and logger.
 func NewHTTPCli(transport *fasthttp.Client, cfg *Conf, logger *zerolog.Logger) *HTTPCli {
 	return &HTTPCli{transport: transport, cfg: cfg, logger: logger}
 }
@@ -38,9 +40,21 @@ func (c *HTTPCli) makeRequest(uri string, resp *fasthttp.Response) (int64, int64
 			return 0, 0, fmt.Errorf("http request: %w", err)
 		}
 
+		c.logger.Debug().Msg("retrying request after dial timeout")
+
+		// Reset response to ensure clean state for retry
+		resp.Reset()
+
+		// Record new start time for retry logging
+		retryStart := time.Now()
+
 		if err := c.transport.DoTimeout(req, resp, time.Duration(c.cfg.Timeout)*time.Second); err != nil {
+			c.logRequest(req, resp, time.Since(retryStart), err)
 			return 0, 0, fmt.Errorf("http cli request: %w", err)
 		}
+
+		// Log successful retry
+		c.logRequest(req, resp, time.Since(retryStart), nil)
 	}
 
 	if resp.StatusCode() != http.StatusOK {

@@ -1,24 +1,45 @@
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - tagliatelle
-        - dupl
-        - exhaustivestruct
-        - gci
-        - gofumpt
-        - funlen
-        - varnamelen
-        - containedctx
-        - maintidx
+version: "2"
+
 linters:
-  enable-all: true
+  settings:
+    dupl:
+      threshold: 150  # Increase threshold for technical indicator tests
+  
+  enable:
+    # Default enabled linters
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    
+    # Additional useful linters
+    - bodyclose
+    - containedctx
+    - contextcheck
+    - dupl
+    - errname
+    - errorlint
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - goheader
+    - goprintffuncname
+    - misspell
+    - nakedret
+    - prealloc
+    - revive
+    - unconvert
+    - whitespace
+    
   disable:
     - tagliatelle
-    - dupl
-    - exhaustivestruct
-    - gci
-    - gofumpt
     - nonamedreturns
     - exhaustruct
     - nolintlint
+    - varnamelen
+    - unparam  # Disabled due to issues with Go generics
+    - funlen   # Disabled - test functions are commonly long
+    - gosec    # Disabled - false positives on API constants
+    - maintidx # Disabled - maintainability index not critical for API client

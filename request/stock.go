@@ -1,7 +1,8 @@
 package request
 
+// GetStock represents request parameters for stock data.
 type GetStock struct {
-	ApiKey
+	APIKey
 	Symbol          string `schema:"symbol,omitempty"`
 	Exchange        string `schema:"exchange,omitempty"`
 	MicCode         string `schema:"mic_code,omitempty"`

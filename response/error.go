@@ -2,6 +2,7 @@ package response
 
 import "fmt"
 
+// Error represents an API error response with code, message and status.
 type Error struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`

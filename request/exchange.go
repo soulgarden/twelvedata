@@ -1,7 +1,8 @@
 package request
 
+// GetExchanges represents request parameters for exchanges data.
 type GetExchanges struct {
-	ApiKey
+	APIKey
 	InstrumentType string `schema:"type,omitempty"`
 	Name           string `schema:"name,omitempty"`
 	Code           string `schema:"code,omitempty"`

@@ -1,5 +1,6 @@
 package response
 
+// EOD represents end-of-day price data for a financial instrument.
 type EOD struct {
 	Symbol   string `json:"symbol"`
 	Exchange string `json:"exchange"`

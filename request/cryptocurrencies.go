@@ -1,7 +1,8 @@
 package request
 
+// GetCryptocurrencies represents request parameters for cryptocurrencies data.
 type GetCryptocurrencies struct {
-	ApiKey
+	APIKey
 	Symbol        string `schema:"symbol,omitempty"`
 	Exchange      string `schema:"exchange,omitempty"`
 	CurrencyBase  string `schema:"currency_base,omitempty"`

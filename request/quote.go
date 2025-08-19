@@ -1,7 +1,8 @@
 package request
 
+// GetQuote represents request parameters for quote data.
 type GetQuote struct {
-	ApiKey
+	APIKey
 	Symbol           string `schema:"symbol,omitempty"`
 	Interval         string `schema:"interval,omitempty"`
 	Exchange         string `schema:"exchange,omitempty"`

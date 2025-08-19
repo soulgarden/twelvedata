@@ -1,7 +1,8 @@
 package request
 
+// GetExchangeRate represents request parameters for exchange rate data.
 type GetExchangeRate struct {
-	ApiKey
+	APIKey
 	Symbol        string `schema:"symbol,omitempty"`
 	Date          string `schema:"date,omitempty"`
 	TimeZone      string `schema:"time_zone,omitempty"`

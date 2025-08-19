@@ -1,7 +1,8 @@
 package request
 
+// GetEarliestTimestamp represents request parameters for earliest timestamp data.
 type GetEarliestTimestamp struct {
-	ApiKey
+	APIKey
 	Symbol   string `schema:"symbol,omitempty"`
 	Figi     string `schema:"figi,omitempty"`
 	Isin     string `schema:"isin,omitempty"`

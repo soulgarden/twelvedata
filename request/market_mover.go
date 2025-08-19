@@ -1,7 +1,8 @@
 package request
 
+// GetMarketMovers represents request parameters for market movers data.
 type GetMarketMovers struct {
-	ApiKey
+	APIKey
 	Market           string  `schema:"-"` // Market goes in URL path, not query params
 	Direction        string  `schema:"direction,omitempty"`
 	OutputSize       int     `schema:"outputsize,omitempty"`

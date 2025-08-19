@@ -1,7 +1,8 @@
 package request
 
+// GetFunds represents request parameters for funds data.
 type GetFunds struct {
-	ApiKey
+	APIKey
 	Symbol   string `schema:"symbol,omitempty"`
 	Exchange string `schema:"exchange,omitempty"`
 	Country  string `schema:"country,omitempty"`

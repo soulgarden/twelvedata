@@ -1,12 +1,14 @@
 package response
 
-import "gopkg.in/guregu/null.v4"
+import "github.com/guregu/null/v6"
 
+// IncomeStatements represents the response structure for income statement data.
 type IncomeStatements struct {
 	Meta            IncomeStatementsMeta `json:"meta"`
 	IncomeStatement []IncomeStatement    `json:"income_statement"`
 }
 
+// IncomeStatementsMeta contains metadata for income statement data.
 type IncomeStatementsMeta struct {
 	Symbol           string `json:"symbol"`
 	Name             string `json:"name"`
@@ -17,6 +19,7 @@ type IncomeStatementsMeta struct {
 	Period           string `json:"period"`
 }
 
+// IncomeStatement represents financial income statement data for a specific fiscal period.
 type IncomeStatement struct {
 	FiscalDate                    string                              `json:"fiscal_date"`
 	Quarter                       null.Int                            `json:"quarter"`
@@ -41,12 +44,14 @@ type IncomeStatement struct {
 	PreferredStockDividends       null.Int                            `json:"preferred_stock_dividends"`
 }
 
+// IncomeStatementOperatingExpense represents operating expenses section of an income statement.
 type IncomeStatementOperatingExpense struct {
 	ResearchAndDevelopment          null.Int `json:"research_and_development"`
 	SellingGeneralAndAdministrative null.Int `json:"selling_general_and_administrative"`
 	OtherOperatingExpenses          null.Int `json:"other_operating_expenses"`
 }
 
+// IncomeStatementNonOperatingInterest represents non-operating interest section of an income statement.
 type IncomeStatementNonOperatingInterest struct {
 	Income  null.Int `json:"income"`
 	Expense null.Int `json:"expense"`

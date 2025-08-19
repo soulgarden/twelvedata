@@ -1,12 +1,14 @@
 package response
 
-import "gopkg.in/guregu/null.v4"
+import "github.com/guregu/null/v6"
 
+// Quotes represents a collection of quote data and any associated errors.
 type Quotes struct {
 	Data   []Quote
 	Errors []QuoteError
 }
 
+// Quote represents detailed market quote information for a financial instrument.
 type Quote struct {
 	Symbol                string             `json:"symbol"`
 	Name                  string             `json:"name"`
@@ -15,6 +17,7 @@ type Quote struct {
 	Currency              string             `json:"currency"`
 	Datetime              string             `json:"datetime"`
 	Timestamp             int                `json:"timestamp"`
+	LastQuoteAt           int                `json:"last_quote_at"`
 	Open                  string             `json:"open"`
 	High                  string             `json:"high"`
 	Low                   string             `json:"low"`
@@ -35,6 +38,7 @@ type Quote struct {
 	ExtendedTimestamp     null.Int           `json:"extended_timestamp"`
 }
 
+// QuoteFiftyTwoWeek represents 52-week high/low data for a quote.
 type QuoteFiftyTwoWeek struct {
 	Low               string `json:"low"`
 	High              string `json:"high"`
@@ -45,6 +49,7 @@ type QuoteFiftyTwoWeek struct {
 	Range             string `json:"range"`
 }
 
+// QuoteError represents an error that occurred while fetching quote data.
 type QuoteError struct {
 	Code    int             `json:"code"`
 	Message string          `json:"message"`
@@ -52,6 +57,7 @@ type QuoteError struct {
 	Meta    *QuoteErrorMeta `json:"meta"`
 }
 
+// QuoteErrorMeta contains metadata about the symbol that caused a quote error.
 type QuoteErrorMeta struct {
 	Symbol   string `json:"symbol"`
 	Interval string `json:"interval"`

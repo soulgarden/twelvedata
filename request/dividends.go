@@ -1,7 +1,8 @@
 package request
 
+// GetDividends represents request parameters for dividends data.
 type GetDividends struct {
-	ApiKey
+	APIKey
 	Symbol    string `schema:"symbol,omitempty"`
 	Exchange  string `schema:"exchange,omitempty"`
 	MicCode   string `schema:"mic_code,omitempty"`

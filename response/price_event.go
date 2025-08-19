@@ -1,5 +1,6 @@
 package response
 
+// PriceEvent represents a price event with timestamp and volume information.
 type PriceEvent struct {
 	Event     string  `json:"event"`
 	Symbol    string  `json:"symbol"`

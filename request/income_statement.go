@@ -1,7 +1,8 @@
 package request
 
+// GetIncomeStatement represents request parameters for income statement data.
 type GetIncomeStatement struct {
-	ApiKey
+	APIKey
 	Symbol    string `schema:"symbol,omitempty"`
 	Exchange  string `schema:"exchange,omitempty"`
 	MicCode   string `schema:"mic_code,omitempty"`

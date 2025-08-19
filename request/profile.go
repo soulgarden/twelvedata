@@ -1,7 +1,8 @@
 package request
 
+// GetProfile represents request parameters for company profile data.
 type GetProfile struct {
-	ApiKey
+	APIKey
 	Symbol   string `schema:"symbol,omitempty"`
 	Exchange string `schema:"exchange,omitempty"`
 	MicCode  string `schema:"mic_code,omitempty"`

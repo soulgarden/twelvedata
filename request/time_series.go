@@ -1,7 +1,8 @@
 package request
 
+// GetTimeSeries represents request parameters for time series data.
 type GetTimeSeries struct {
-	ApiKey
+	APIKey
 	Symbol         string `schema:"symbol,omitempty"`
 	Interval       string `schema:"interval,omitempty"`
 	Exchange       string `schema:"exchange,omitempty"`

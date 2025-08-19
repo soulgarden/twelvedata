@@ -1,7 +1,8 @@
 package request
 
+// GetCrossListings represents request parameters for cross listings data.
 type GetCrossListings struct {
-	ApiKey
+	APIKey
 	Symbol   string `schema:"symbol"`
 	Exchange string `schema:"exchange,omitempty"`
 	MicCode  string `schema:"mic_code,omitempty"`
