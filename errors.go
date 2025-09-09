@@ -517,11 +517,28 @@ func ParseDomainError(apiError *response.Error, _ int, _ string) error {
 		}
 	}
 
+	// Check for demo API key limitation errors
+	if strings.Contains(message, strings.ToLower(dictionary.DemoAPIKeyLimitationMsg)) {
+		return &PlanLimitationError{
+			Feature: "demo API key",
+			Message: apiError.Message,
+			Cause:   fmt.Errorf("API returned demo key limitation: %s", apiError.Message),
+		}
+	}
+
 	// Check for insufficient credits errors
 	if strings.Contains(message, strings.ToLower(dictionary.InsufficientCreditsMsg)) {
 		return &InsufficientCreditsError{
 			Message: apiError.Message,
 			Cause:   fmt.Errorf("API returned insufficient credits: %s", apiError.Message),
+		}
+	}
+
+	// Check for daily credit limit exhaustion (new pattern)
+	if strings.Contains(message, "you have run out of api credits") {
+		return &InsufficientCreditsError{
+			Message: apiError.Message,
+			Cause:   fmt.Errorf("API returned daily credit limit exhausted: %s", apiError.Message),
 		}
 	}
 

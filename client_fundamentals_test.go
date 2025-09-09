@@ -963,6 +963,32 @@ func Test_client_GetDividendsCalendar(t *testing.T) {
 			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
 		},
 		{
+			name: "demo API key limitation",
+			args: args{
+				req: request.GetDividendsCalendar{
+					APIKey: request.APIKey{
+						APIKey: "demo",
+					},
+					StartDate: "2024-01-01",
+					EndDate:   "2024-01-31",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					`{"code":403,"message":"The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.com/pricing. It is absolutely free, and it's yours for a lifetime. It only takes 10 seconds to obtain your own API key!","status":"error"}`,
+					"/?apikey=demo&end_date=2024-01-31&start_date=2024-01-01",
+				),
+			},
+			want:  response.DividendsCalendar(nil),
+			want1: response.NewCreditsImpl(100, 100),
+			wantErr: "Plan Limitation: The 'demo' API key is only used for initial familiarity. To become a full user, " +
+				"you can request your own API key at https://twelvedata.com/pricing. It is absolutely free, and it's yours for a lifetime. " +
+				"It only takes 10 seconds to obtain your own API key!",
+			expectedURL: "/?apikey=demo&end_date=2024-01-31&start_date=2024-01-01",
+		},
+		{
 			name: "wrong api key",
 			args: args{
 				req: request.GetDividendsCalendar{

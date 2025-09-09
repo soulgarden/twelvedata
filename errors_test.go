@@ -512,6 +512,19 @@ func TestDomainErrorParsing(t *testing.T) {
 			expectedMsg:   "Plan Limitation: Real-time data is not available with your plan",
 		},
 		{
+			name: "demo API key limitation error",
+			apiError: &response.Error{
+				Code:    403,
+				Message: "The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.com/pricing. It is absolutely free, and it's yours for a lifetime. It only takes 10 seconds to obtain your own API key!",
+				Status:  "error",
+			},
+			statusCode:    403,
+			url:           "https://api.twelvedata.com/dividends_calendar",
+			expectedType:  "PlanLimitationError",
+			expectedCheck: IsPlanLimitationError,
+			expectedMsg:   "Plan Limitation: The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.com/pricing. It is absolutely free, and it's yours for a lifetime. It only takes 10 seconds to obtain your own API key!",
+		},
+		{
 			name: "insufficient credits error",
 			apiError: &response.Error{
 				Code:    402,
@@ -549,6 +562,32 @@ func TestDomainErrorParsing(t *testing.T) {
 			expectedType:  "APIKeyError",
 			expectedCheck: IsAPIKeyError,
 			expectedMsg:   "API Key Error: API key is required",
+		},
+		{
+			name: "daily credit limit exhausted error (429 status)",
+			apiError: &response.Error{
+				Code:    429,
+				Message: "You have run out of API credits for the day. 7662 API credits were used, with the current limit being 800. Wait for the next day or consider switching to a paid plan that will remove daily limits at https://twelvedata.com/pricing",
+				Status:  "error",
+			},
+			statusCode:    429,
+			url:           "https://api.twelvedata.com/usage",
+			expectedType:  "InsufficientCreditsError",
+			expectedCheck: IsInsufficientCreditsError,
+			expectedMsg:   "Insufficient Credits: You have run out of API credits for the day. 7662 API credits were used, with the current limit being 800. Wait for the next day or consider switching to a paid plan that will remove daily limits at https://twelvedata.com/pricing",
+		},
+		{
+			name: "daily credit limit exhausted error (200 status)",
+			apiError: &response.Error{
+				Code:    429,
+				Message: "You have run out of API credits for the day. 5000 API credits were used, with the current limit being 800",
+				Status:  "error",
+			},
+			statusCode:    200,
+			url:           "https://api.twelvedata.com/usage",
+			expectedType:  "InsufficientCreditsError",
+			expectedCheck: IsInsufficientCreditsError,
+			expectedMsg:   "Insufficient Credits: You have run out of API credits for the day. 5000 API credits were used, with the current limit being 800",
 		},
 	}
 

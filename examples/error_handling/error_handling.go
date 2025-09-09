@@ -33,37 +33,60 @@ func main() {
 
 		// Check error type and handle accordingly
 		switch {
+		// Domain-specific errors (these are parsed from API response messages)
+		case twelvedata.IsSymbolNotFoundError(err):
+			fmt.Println("❌ Symbol not found")
+
+		case twelvedata.IsPlanLimitationError(err):
+			fmt.Println("❌ Plan limitation - feature not available in your plan")
+
+		case twelvedata.IsInsufficientCreditsError(err):
+			fmt.Println("❌ Insufficient API credits")
+
+		case twelvedata.IsAPIKeyError(err):
+			fmt.Println("❌ API key issue")
+
+		// HTTP-level errors
 		case twelvedata.IsUnauthorizedError(err):
 			fmt.Println("❌ Authentication failed - check your API key")
-			handleUnauthorizedError()
 
 		case twelvedata.IsBadRequestError(err):
 			fmt.Println("❌ Bad request - check your parameters")
-			handleBadRequestError()
 
 		case twelvedata.IsRateLimitError(err):
 			fmt.Println("❌ Rate limit exceeded - wait and retry")
-			handleRateLimitError()
 
 		case twelvedata.IsNotFoundError(err):
 			fmt.Println("❌ Resource not found")
-			handleNotFoundError()
 
 		case twelvedata.IsTimeoutError(err):
 			fmt.Println("❌ Request timeout - check network connection")
-			handleTimeoutError()
 
 		case twelvedata.IsNetworkError(err):
 			fmt.Println("❌ Network error - check connectivity")
-			handleNetworkError()
+
+		// WebSocket-specific errors
+		case twelvedata.IsWSConnectionError(err):
+			fmt.Println("❌ WebSocket connection error")
+
+		case twelvedata.IsWSMessageError(err):
+			fmt.Println("❌ WebSocket message error")
+
+		case twelvedata.IsWSSubscriptionError(err):
+			fmt.Println("❌ WebSocket subscription error")
+
+		// Generic error categories
+		case twelvedata.IsDomainError(err):
+			fmt.Println("❌ Domain error - business logic issue")
+
+		case twelvedata.IsWSError(err):
+			fmt.Println("❌ WebSocket error")
 
 		case twelvedata.IsHTTPError(err):
 			fmt.Println("❌ HTTP error - server responded with error")
-			handleHTTPError()
 
 		default:
 			fmt.Println("❌ Unknown error occurred")
-			handleGenericError()
 		}
 	}
 
@@ -90,60 +113,4 @@ func main() {
 		fmt.Printf("📊 Credits used: %d, remaining: %d\n",
 			credits.GetCreditsUsed(), credits.GetCreditsLeft())
 	}
-}
-
-func handleUnauthorizedError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Verify your API key is correct")
-	fmt.Println("   - Check if your API key has expired")
-	fmt.Println("   - Visit https://twelvedata.com to get a new API key")
-}
-
-func handleBadRequestError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Check your request parameters")
-	fmt.Println("   - Verify required fields are provided")
-	fmt.Println("   - Check parameter formats and values")
-}
-
-func handleRateLimitError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Wait before making another request")
-	fmt.Println("   - Implement exponential backoff")
-	fmt.Println("   - Consider upgrading your plan")
-}
-
-func handleNotFoundError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Check if the symbol/endpoint exists")
-	fmt.Println("   - Verify the URL is correct")
-	fmt.Println("   - Check API documentation")
-}
-
-func handleTimeoutError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Increase request timeout")
-	fmt.Println("   - Check network connectivity")
-	fmt.Println("   - Retry the request")
-}
-
-func handleNetworkError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Check internet connection")
-	fmt.Println("   - Verify firewall settings")
-	fmt.Println("   - Check if proxy is required")
-}
-
-func handleHTTPError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Check server status")
-	fmt.Println("   - Retry after some time")
-	fmt.Println("   - Contact API support if persistent")
-}
-
-func handleGenericError() {
-	fmt.Println("💡 Solutions:")
-	fmt.Println("   - Check error details")
-	fmt.Println("   - Review API documentation")
-	fmt.Println("   - Contact support with error details")
 }
