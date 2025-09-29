@@ -92,9 +92,9 @@ func TestWS_GracefulShutdown_ChannelsClosed(t *testing.T) {
 }
 
 // TestWS_GracefulShutdown_GoroutineLeaks checks for goroutine leaks after closing.
+// Note: This test must NOT run in parallel as it counts goroutines and needs
+// isolation from other tests that may create background workers (e.g., fasthttp cleaners).
 func TestWS_GracefulShutdown_GoroutineLeaks(t *testing.T) {
-	t.Parallel()
-
 	// Get initial goroutine count
 	runtime.GC()
 	initialGoroutines := runtime.NumGoroutine()
@@ -133,7 +133,7 @@ func TestWS_GracefulShutdown_GoroutineLeaks(t *testing.T) {
 	}
 
 	// Give time for goroutines to terminate
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 	runtime.GC()
 
 	// Check final goroutine count
