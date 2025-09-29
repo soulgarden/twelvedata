@@ -245,6 +245,20 @@ func (ws *WS) Close() error {
 		ws.cancel()
 	}
 
+	// Step 5: Close event channels to unblock consumers
+	// This ensures channels are closed even if messageReader never started
+	// or exited abnormally. EventChannel.Close() is idempotent (uses sync.Once)
+	// so it's safe to call even if messageReader's defer already closed them.
+	if ws.priceEvents != nil {
+		ws.priceEvents.Close()
+	}
+	if ws.statusEvents != nil {
+		ws.statusEvents.Close()
+	}
+	if ws.errorEvents != nil {
+		ws.errorEvents.Close()
+	}
+
 	ws.logger.Debug().Msg("WebSocket closed")
 	return closeErr
 }
