@@ -137,6 +137,10 @@ func (e ErrImplError[Err]) Error() string {
 	return e.inner.Error()
 }
 
+func (e ErrImplError[Err]) Unwrap() error {
+	return e.inner
+}
+
 // Helper functions to identify error types.
 func isTimeoutError(err error) bool {
 	// Check for common timeout error patterns

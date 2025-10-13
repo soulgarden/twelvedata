@@ -896,3 +896,121 @@ func getErrorType(err error) string {
 		}
 	}
 }
+
+// TestErrImplErrorUnwrap verifies that ErrImplError properly implements Unwrap() to enable
+// errors.As and errors.Is functionality for wrapped domain-specific errors.
+// This is critical for the limiter to correctly identify InsufficientCreditsError and log at WARN level.
+func TestErrImplErrorUnwrap(t *testing.T) {
+	tests := []struct {
+		name          string
+		innerErr      error
+		expectedCheck func(error) bool
+		checkName     string
+	}{
+		{
+			name: "InsufficientCreditsError wrapped in ErrImplError",
+			innerErr: &InsufficientCreditsError{
+				Message: "You have run out of API credits for the day. 8456 API credits were used, with the current limit being 800",
+			},
+			expectedCheck: IsInsufficientCreditsError,
+			checkName:     "IsInsufficientCreditsError",
+		},
+		{
+			name: "PlanLimitationError wrapped in ErrImplError",
+			innerErr: &PlanLimitationError{
+				Feature: "Real-time data",
+				Message: "Real-time data is not available with your plan",
+			},
+			expectedCheck: IsPlanLimitationError,
+			checkName:     "IsPlanLimitationError",
+		},
+		{
+			name: "SymbolNotFoundError wrapped in ErrImplError",
+			innerErr: &SymbolNotFoundError{
+				Symbol:  "AAPL",
+				Message: "**AAPL** not found: symbol may be delisted",
+			},
+			expectedCheck: IsSymbolNotFoundError,
+			checkName:     "IsSymbolNotFoundError",
+		},
+		{
+			name: "APIKeyError wrapped in ErrImplError",
+			innerErr: &APIKeyError{
+				Type:    "invalid",
+				Message: "Invalid API key provided",
+			},
+			expectedCheck: IsAPIKeyError,
+			checkName:     "IsAPIKeyError",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Wrap the error using NewError (creates ErrImplError)
+			wrappedErr := NewError[error](tt.innerErr, nil)
+
+			// Verify that the wrapper implements error interface
+			if wrappedErr.Error() == "" {
+				t.Errorf("ErrImplError.Error() should not return empty string")
+			}
+
+			// Verify that Unwrap() works correctly using errors.Unwrap()
+			unwrapped := errors.Unwrap(wrappedErr)
+			if unwrapped == nil {
+				t.Errorf("errors.Unwrap(ErrImplError) returned nil, expected %T", tt.innerErr)
+				return
+			}
+
+			// Verify unwrapped error matches original
+			if unwrapped != tt.innerErr {
+				t.Errorf("errors.Unwrap(ErrImplError) = %v, want %v", unwrapped, tt.innerErr)
+			}
+
+			// Verify that errors.As can find the wrapped error through ErrImplError
+			if !tt.expectedCheck(wrappedErr) {
+				t.Errorf("%s() = false for wrapped error, want true", tt.checkName)
+				t.Errorf("This means errors.As cannot unwrap ErrImplError to find the domain error")
+			}
+
+			// Verify error message contains original error message
+			if !strings.Contains(wrappedErr.Error(), tt.innerErr.Error()) {
+				t.Errorf("Wrapped error message %q does not contain original error message %q",
+					wrappedErr.Error(), tt.innerErr.Error())
+			}
+		})
+	}
+}
+
+// TestErrImplErrorUnwrapWithRealAPIError tests the complete flow:
+// ParseDomainError -> NewError wrapper -> IsXXXError detection works through wrapper
+func TestErrImplErrorUnwrapWithRealAPIError(t *testing.T) {
+	apiError := &response.Error{
+		Code:    429,
+		Message: "You have run out of API credits for the day. 8456 API credits were used, with the current limit being 800. Wait for the next day or consider switching to a paid plan.",
+		Status:  "error",
+	}
+
+	domainErr := ParseDomainError(apiError, 429, "https://api.twelvedata.com/usage")
+	if domainErr == nil {
+		t.Fatalf("ParseDomainError() returned nil, expected InsufficientCreditsError")
+	}
+
+	if !IsInsufficientCreditsError(domainErr) {
+		t.Errorf("ParseDomainError() did not create InsufficientCreditsError")
+	}
+
+	wrappedErr := NewError[error](domainErr, nil)
+
+	if !IsInsufficientCreditsError(wrappedErr) {
+		t.Errorf("IsInsufficientCreditsError() = false for ErrImplError-wrapped error, want true")
+	}
+
+	var creditsErr *InsufficientCreditsError
+	if !errors.As(wrappedErr, &creditsErr) {
+		t.Errorf("errors.As() cannot extract InsufficientCreditsError from wrapped error")
+	}
+
+	if creditsErr == nil {
+		t.Errorf("errors.As() extracted nil InsufficientCreditsError")
+	}
+}
