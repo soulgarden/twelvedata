@@ -962,7 +962,7 @@ func TestErrImplErrorUnwrap(t *testing.T) {
 			}
 
 			// Verify unwrapped error matches original
-			if unwrapped != tt.innerErr {
+			if !errors.Is(unwrapped, tt.innerErr) {
 				t.Errorf("errors.Unwrap(ErrImplError) = %v, want %v", unwrapped, tt.innerErr)
 			}
 
@@ -982,7 +982,7 @@ func TestErrImplErrorUnwrap(t *testing.T) {
 }
 
 // TestErrImplErrorUnwrapWithRealAPIError tests the complete flow:
-// ParseDomainError -> NewError wrapper -> IsXXXError detection works through wrapper
+// ParseDomainError -> NewError wrapper -> IsXXXError detection works through wrapper.
 func TestErrImplErrorUnwrapWithRealAPIError(t *testing.T) {
 	apiError := &response.Error{
 		Code:    429,

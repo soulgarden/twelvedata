@@ -93,8 +93,7 @@ type client struct {
 	getBatches *Endpoint[request.GetBatches, response.Batches, response.Credits, error]
 
 	// ETFs
-	getEtfsDirectory  *Endpoint[request.GetEtfs, response.Etfs, response.Credits, error]
-	getEtfs           *Endpoint[request.GetEtfs, response.Etfs, response.Credits, error]
+	getETFsDirectory  *Endpoint[request.GetETFsDirectory, response.ETFsDirectory, response.Credits, error]
 	getETFFullData    *Endpoint[request.GetETFFullData, response.ETFFullData, response.Credits, error]
 	getETFSummary     *Endpoint[request.GetETFSummary, response.ETFWorldSummary, response.Credits, error]
 	getETFPerformance *Endpoint[request.GetETFPerformance, response.ETFPerformance, response.Credits, error]
@@ -210,10 +209,6 @@ func (cli client) GetStatistics(statistics request.GetStatistics) (response.Stat
 
 func (cli client) GetExchanges(req request.GetExchanges) (response.Exchanges, response.Credits, error) {
 	return cli.getExchanges.Call(req)
-}
-
-func (cli client) GetEtfs(req request.GetEtfs) (response.Etfs, response.Credits, error) {
-	return cli.getEtfs.Call(req)
 }
 
 func (cli client) GetQuote(req request.GetQuote) (response.Quote, response.Credits, error) {
@@ -433,8 +428,8 @@ func (cli client) GetTR(req request.GetTR) (response.TR, response.Credits, error
 	return cli.getTR.Call(req)
 }
 
-func (cli client) GetEtfsDirectory(req request.GetEtfs) (response.Etfs, response.Credits, error) {
-	return cli.getEtfsDirectory.Call(req)
+func (cli client) GetETFsDirectory(req request.GetETFsDirectory) (response.ETFsDirectory, response.Credits, error) {
+	return cli.getETFsDirectory.Call(req)
 }
 
 func (cli client) GetETFFullData(req request.GetETFFullData) (response.ETFFullData, response.Credits, error) {
@@ -618,8 +613,7 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getBatches: NewEndpoint[request.GetBatches, response.Batches, response.Credits, error](httpCli, cfg.BaseURL+cfg.Advanced.BatchesURL),
 
 		// ETFs
-		getEtfsDirectory:  NewEndpoint[request.GetEtfs, response.Etfs, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsDirectoryURL),
-		getEtfs:           NewEndpoint[request.GetEtfs, response.Etfs, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsFullDataURL),
+		getETFsDirectory:  NewEndpoint[request.GetETFsDirectory, response.ETFsDirectory, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsDirectoryURL),
 		getETFFullData:    NewEndpoint[request.GetETFFullData, response.ETFFullData, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsFullDataURL),
 		getETFSummary:     NewEndpoint[request.GetETFSummary, response.ETFWorldSummary, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsSummaryURL),
 		getETFPerformance: NewEndpoint[request.GetETFPerformance, response.ETFPerformance, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsPerformanceURL),

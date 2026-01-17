@@ -143,14 +143,14 @@ type Advanced struct {
 // ETFs contains URL configurations for ETF-related endpoints including directory, full data, and performance metrics.
 // nolint: lll
 type ETFs struct {
-	ETFsDirectoryURL   string `default:"/etfs"                   json:"etfs_directory_url"`
+	ETFsDirectoryURL   string `default:"/etfs/list"              json:"etfs_directory_url"`
 	ETFsFullDataURL    string `default:"/etfs/world"             json:"etfs_full_data_url"`
 	ETFsSummaryURL     string `default:"/etfs/world/summary"     json:"etfs_summary_url"`
 	ETFsPerformanceURL string `default:"/etfs/world/performance" json:"etfs_performance_url"`
 	ETFsRiskURL        string `default:"/etfs/world/risk"        json:"etfs_risk_url"`
 	ETFsCompositionURL string `default:"/etfs/world/composition" json:"etfs_composition_url"`
-	ETFsFamiliesURL    string `default:"/etfs/world/families"    json:"etfs_families_url"`
-	ETFsTypesURL       string `default:"/etfs/world/types"       json:"etfs_types_url"`
+	ETFsFamiliesURL    string `default:"/etfs/family"            json:"etfs_families_url"`
+	ETFsTypesURL       string `default:"/etfs/type"              json:"etfs_types_url"`
 }
 
 // MutualFunds contains URL configurations for mutual fund-related endpoints including directory, performance, and ratings.

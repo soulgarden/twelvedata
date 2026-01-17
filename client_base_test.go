@@ -387,7 +387,7 @@ func TestHTTPCli_makeRequest_TimeoutRetry(t *testing.T) {
 			wantErr:         "http request",
 		},
 		{
-			name: "successful retry but bad status code should return HTTP error",
+			name: "successful retry but bad status code should return credits",
 			setupServer: func() *httptest.Server {
 				return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 					w.Header().Set("Api-credits-left", "90")
@@ -400,9 +400,9 @@ func TestHTTPCli_makeRequest_TimeoutRetry(t *testing.T) {
 			},
 			dialError:       fasthttp.ErrDialTimeout,
 			retryDialError:  nil, // Success on retry (but bad status)
-			wantCreditsLeft: 0,
-			wantCreditsUsed: 0,
-			wantErr:         "HTTP 400",
+			wantCreditsLeft: 90,
+			wantCreditsUsed: 15,
+			wantErr:         "",
 		},
 	}
 

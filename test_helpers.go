@@ -23,12 +23,12 @@ func mockServerWithURL(t *testing.T, responseCode int, wantCreditsLeft, wantCred
 			t.Errorf("Expected URL %s, got %s", expectedURL, r.URL.String())
 		}
 
-		if responseCode == http.StatusInternalServerError {
-			cw.WriteHeader(responseCode)
-		}
-
 		cw.Header().Add("Api-credits-left", strconv.FormatInt(wantCreditsLeft, 10))
 		cw.Header().Add("Api-credits-used", strconv.FormatInt(wantCreditsUsed, 10))
+
+		if responseCode != http.StatusOK {
+			cw.WriteHeader(responseCode)
+		}
 
 		_, err := cw.Write([]byte(responseBody))
 		if err != nil {

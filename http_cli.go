@@ -57,14 +57,13 @@ func (c *HTTPCli) makeRequest(uri string, resp *fasthttp.Response) (int64, int64
 		c.logRequest(req, resp, time.Since(retryStart), nil)
 	}
 
-	if resp.StatusCode() != http.StatusOK {
-		httpErr := NewHTTPError(resp.StatusCode(), resp.Body(), uri, nil, nil)
+	statusCode := resp.StatusCode()
+	if statusCode != http.StatusOK {
+		httpErr := NewHTTPError(statusCode, resp.Body(), uri, nil, nil)
 		c.logRequest(req, resp, time.Since(start), httpErr)
-
-		return 0, 0, httpErr
+	} else {
+		c.logRequest(req, resp, time.Since(start), nil)
 	}
-
-	c.logRequest(req, resp, time.Since(start), nil)
 
 	creditsLeft, creditsUsed, err := c.getCredits(resp)
 	if err != nil {

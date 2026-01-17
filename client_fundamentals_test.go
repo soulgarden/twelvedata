@@ -1,6 +1,7 @@
 package twelvedata
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -2596,6 +2597,15 @@ func Test_client_GetLastChange(t *testing.T) {
 		url string
 	}
 
+	invalidEndpointURL := mockServerWithURL(
+		t,
+		http.StatusBadRequest,
+		100,
+		50,
+		`{"code":400,"message":"Invalid endpoint parameter: invalid_endpoint","status":"error"}`,
+		"/last_change/invalid_endpoint?symbol=AAPL",
+	)
+
 	tests := []struct {
 		name        string
 		args        args
@@ -2688,18 +2698,11 @@ func Test_client_GetLastChange(t *testing.T) {
 					Endpoint: "invalid_endpoint",
 					Symbol:   "AAPL",
 				},
-				url: mockServerWithURL(
-					t,
-					http.StatusBadRequest,
-					100,
-					50,
-					`{"code":400,"message":"Invalid endpoint parameter: invalid_endpoint","status":"error"}`,
-					"/last_change/invalid_endpoint?symbol=AAPL",
-				),
+				url: invalidEndpointURL,
 			},
 			want:        response.LastChange{},
 			want1:       response.NewCreditsImpl(100, 50),
-			wantErr:     "error received: code: 400, message: Invalid endpoint parameter: invalid_endpoint, status: error",
+			wantErr:     fmt.Sprintf("HTTP 400 Bad Request: code: 400, message: Invalid endpoint parameter: invalid_endpoint, status: error (URL: %s/last_change/invalid_endpoint?symbol=AAPL)", invalidEndpointURL),
 			expectedURL: "/last_change/invalid_endpoint?symbol=AAPL",
 		},
 	}

@@ -352,7 +352,7 @@ func (ws *WS) messageReader() error {
 			if err != nil {
 				// Check if it's a timeout - continue reading
 				var netErr net.Error
-				if errors.As(err, &netErr) {
+				if errors.As(err, &netErr) && netErr.Timeout() {
 					continue
 				}
 

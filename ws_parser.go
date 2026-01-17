@@ -51,6 +51,7 @@ func newWSMessageParser() *wsMessageParser {
 
 // parseMessage performs single-pass JSON parsing to extract both event type and data.
 func (p *wsMessageParser) parseMessage(message []byte) (response.WSEventType, error) {
+	p.union = wsEventUnion{}
 	if err := json.Unmarshal(message, &p.union); err != nil {
 		return "", fmt.Errorf("failed to parse message: %w", err)
 	}

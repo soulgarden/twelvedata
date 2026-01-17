@@ -64,6 +64,9 @@ func TestWSMessageParser_parseMessage(t *testing.T) {
 				if err == nil {
 					t.Errorf("expected error but got none")
 				}
+				if parser.union.Event != "" {
+					t.Errorf("expected parser to reset on error, got event %q", parser.union.Event)
+				}
 				return
 			}
 

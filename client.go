@@ -96,8 +96,7 @@ type Client interface {
 	GetBatches(request.GetBatches) (response.Batches, response.Credits, error)
 
 	// ETFs
-	GetEtfs(request.GetEtfs) (response.Etfs, response.Credits, error)
-	GetEtfsDirectory(request.GetEtfs) (response.Etfs, response.Credits, error)
+	GetETFsDirectory(request.GetETFsDirectory) (response.ETFsDirectory, response.Credits, error)
 	GetETFFullData(request.GetETFFullData) (response.ETFFullData, response.Credits, error)
 	GetETFSummary(request.GetETFSummary) (response.ETFWorldSummary, response.Credits, error)
 	GetETFPerformance(request.GetETFPerformance) (response.ETFPerformance, response.Credits, error)

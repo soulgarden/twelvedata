@@ -10,30 +10,38 @@ type ETFRisk struct {
 
 // ETFRiskData contains the risk information for an ETF.
 type ETFRiskData struct {
-	Risk ETFRiskInfo `json:"risk"`
+	Risk ETFWorldRisk `json:"risk"`
 }
 
-// ETFRiskInfo contains detailed risk analysis information for an ETF.
-type ETFRiskInfo struct {
-	Symbol            string     `json:"symbol"`
-	Name              string     `json:"name"`
-	Currency          string     `json:"currency"`
-	Exchange          string     `json:"exchange"`
-	Country           string     `json:"country"`
-	Beta              null.Float `json:"beta"`
-	Alpha             null.Float `json:"alpha"`
-	StandardDeviation null.Float `json:"standard_deviation"`
-	SharpeRatio       null.Float `json:"sharpe_ratio"`
-	Volatility        null.Float `json:"volatility"`
-	RSquared          null.Float `json:"r_squared"`
-	TrackingError     null.Float `json:"tracking_error"`
-	InformationRatio  null.Float `json:"information_ratio"`
-	UpsideCapture     null.Float `json:"upside_capture"`
-	DownsideCapture   null.Float `json:"downside_capture"`
-	MaxDrawdown       null.Float `json:"max_drawdown"`
-	ValueAtRisk       null.Float `json:"value_at_risk"`
-	RiskRating        string     `json:"risk_rating"`
-	RiskCategory      string     `json:"risk_category"`
-	VolatilityRating  string     `json:"volatility_rating"`
-	LastUpdated       string     `json:"last_updated"`
+// ETFWorldRisk contains detailed risk analysis information for an ETF.
+type ETFWorldRisk struct {
+	VolatilityMeasures []ETFVolatilityMeasure `json:"volatility_measures"`
+	ValuationMetrics   ETFValuationMetrics    `json:"valuation_metrics"`
+}
+
+// ETFVolatilityMeasure represents volatility and risk metrics for a specific period.
+type ETFVolatilityMeasure struct {
+	Period                   string     `json:"period"`
+	Alpha                    null.Float `json:"alpha"`
+	AlphaCategory            null.Float `json:"alpha_category"`
+	Beta                     null.Float `json:"beta"`
+	BetaCategory             null.Float `json:"beta_category"`
+	MeanAnnualReturn         null.Float `json:"mean_annual_return"`
+	MeanAnnualReturnCategory null.Float `json:"mean_annual_return_category"`
+	RSquared                 null.Float `json:"r_squared"`
+	RSquaredCategory         null.Float `json:"r_squared_category"`
+	Std                      null.Float `json:"std"`
+	StdCategory              null.Float `json:"std_category"`
+	SharpeRatio              null.Float `json:"sharpe_ratio"`
+	SharpeRatioCategory      null.Float `json:"sharpe_ratio_category"`
+	TreynorRatio             null.Float `json:"treynor_ratio"`
+	TreynorRatioCategory     null.Float `json:"treynor_ratio_category"`
+}
+
+// ETFValuationMetrics represents valuation metrics for an ETF.
+type ETFValuationMetrics struct {
+	PriceToEarnings null.Float `json:"price_to_earnings"`
+	PriceToBook     null.Float `json:"price_to_book"`
+	PriceToSales    null.Float `json:"price_to_sales"`
+	PriceToCashflow null.Float `json:"price_to_cashflow"`
 }
