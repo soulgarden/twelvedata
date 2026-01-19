@@ -2,9 +2,14 @@ package response
 
 // Bonds represents the response structure for bonds data from the API.
 type Bonds struct {
-	Data   []*Bond `json:"data"`
-	Count  int     `json:"count"`
-	Status string  `json:"status"`
+	Result BondsResult `json:"result"`
+	Status string      `json:"status"`
+}
+
+// BondsResult contains the bonds list and count.
+type BondsResult struct {
+	Count int     `json:"count"`
+	List  []*Bond `json:"list"`
 }
 
 // Bond represents a single bond instrument with its details and access information.

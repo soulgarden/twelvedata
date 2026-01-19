@@ -8,6 +8,7 @@ type Exchanges struct {
 
 // Exchange represents a single financial exchange with its details and access information.
 type Exchange struct {
+	Title    string `json:"title"`
 	Name     string `json:"name"`
 	Code     string `json:"code"`
 	Country  string `json:"country"`

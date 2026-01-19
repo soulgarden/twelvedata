@@ -16,6 +16,7 @@ type Client interface {
 	GetForexPairs(request.GetForexPairs) (response.ForexPairs, response.Credits, error)
 	GetCryptocurrencies(request.GetCryptocurrencies) (response.Cryptocurrencies, response.Credits, error)
 	GetETFs(request.GetETFs) (response.ETFs, response.Credits, error)
+	GetFunds(request.GetFunds) (response.Funds, response.Credits, error)
 	GetCommodities(request.GetCommodities) (response.Commodities, response.Credits, error)
 	GetBonds(request.GetBonds) (response.Bonds, response.Credits, error)
 
@@ -107,7 +108,6 @@ type Client interface {
 	GetETFTypes(request.GetETFTypes) (response.ETFTypes, response.Credits, error)
 
 	// Mutual Funds
-	GetFunds(request.GetFunds) (response.Funds, response.Credits, error)
 	GetMutualFunds(request.GetMutualFunds) (response.MutualFunds, response.Credits, error)
 	GetMutualFundFullData(request.GetMutualFundFullData) (response.MutualFundFullData, response.Credits, error)
 	GetMutualFundSummary(request.GetMutualFundSummary) (response.MutualFundSummaryResponse, response.Credits, error)

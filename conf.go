@@ -31,6 +31,7 @@ type ReferenceData struct {
 	ForexPairsURL       string `default:"/forex_pairs"      json:"forex_pairs_url"`
 	CryptocurrenciesURL string `default:"/cryptocurrencies" json:"cryptocurrencies_url"`
 	ETFsURL             string `default:"/etfs"             json:"etfs_url"`
+	FundsURL            string `default:"/funds"            json:"funds_url"`
 	CommoditiesURL      string `default:"/commodities"      json:"commodities_url"`
 	BondsURL            string `default:"/bonds"            json:"bonds_url"`
 
@@ -157,7 +158,7 @@ type ETFs struct {
 // MutualFunds contains URL configurations for mutual fund-related endpoints including directory, performance, and ratings.
 // nolint: lll
 type MutualFunds struct {
-	MutualFundsDirectoryURL      string `default:"/funds"                           json:"mutual_funds_directory_url"`
+	MutualFundsDirectoryURL      string `default:"/mutual_funds/list"               json:"mutual_funds_directory_url"`
 	MutualFundsFullDataURL       string `default:"/mutual_funds/world"              json:"mutual_funds_full_data_url"`
 	MutualFundsSummaryURL        string `default:"/mutual_funds/world/summary"      json:"mutual_funds_summary_url"`
 	MutualFundsPerformanceURL    string `default:"/mutual_funds/world/performance"  json:"mutual_funds_performance_url"`

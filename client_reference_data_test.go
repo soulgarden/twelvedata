@@ -37,6 +37,7 @@ func Test_client_GetExchanges(t *testing.T) {
 					`{
 					  "data": [
 					    {
+					      "title": "Shanghai Stock Exchange",
 					      "name": "SSE",
 					      "code": "XSHG",
 					      "country": "China",
@@ -55,6 +56,7 @@ func Test_client_GetExchanges(t *testing.T) {
 			want: response.Exchanges{
 				Data: []response.Exchange{
 					{
+						Title:    "Shanghai Stock Exchange",
 						Name:     "SSE",
 						Code:     "XSHG",
 						Country:  "China",
@@ -70,6 +72,59 @@ func Test_client_GetExchanges(t *testing.T) {
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
 			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+		},
+		{
+			name: "success with format",
+			args: args{
+				req: request.GetExchanges{
+					APIKey:    request.APIKey{APIKey: ""},
+					Name:      "NASDAQ",
+					Format:    "JSON",
+					Delimiter: ";",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					`{
+					  "data": [
+					    {
+					      "title": "NASDAQ/NGS (Global Select Market)",
+					      "name": "NASDAQ",
+					      "code": "XNGS",
+					      "country": "United States",
+					      "timezone": "America/New_York",
+					      "access": {
+					        "global": "Basic",
+					        "plan": "Basic"
+					      }
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					"/?delimiter=%3B&format=JSON&name=NASDAQ",
+				),
+			},
+			want: response.Exchanges{
+				Data: []response.Exchange{
+					{
+						Title:    "NASDAQ/NGS (Global Select Market)",
+						Name:     "NASDAQ",
+						Code:     "XNGS",
+						Country:  "United States",
+						Timezone: "America/New_York",
+						Access: &response.Access{
+							Global: "Basic",
+							Plan:   "Basic",
+						},
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+			expectedURL: "/?delimiter=%3B&format=JSON&name=NASDAQ",
 		},
 		{
 			name: "wrong api key",
@@ -292,6 +347,83 @@ func Test_client_GetStocks(t *testing.T) {
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
 			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+		},
+		{
+			name: "success with identifiers",
+			args: args{
+				req: request.GetStock{
+					APIKey: request.APIKey{
+						APIKey: "",
+					},
+					Symbol:          "AAPL",
+					Figi:            "BBG000B9Y5X2",
+					Isin:            "US0378331005",
+					Cusip:           "037833100",
+					Cik:             "95953",
+					Exchange:        "NASDAQ",
+					MicCode:         "XNGS",
+					Country:         "United States",
+					InstrumentType:  "Common Stock",
+					Format:          "JSON",
+					Delimiter:       ";",
+					ShowPlan:        true,
+					IncludeDelisted: true,
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					`{
+					  "data": [
+					    {
+					      "symbol": "AAPL",
+					      "name": "Apple Inc",
+					      "currency": "USD",
+					      "exchange": "NASDAQ",
+					      "mic_code": "XNGS",
+					      "country": "United States",
+					      "type": "Common Stock",
+					      "figi_code": "BBG000B9Y5X2",
+					      "cfi_code": "ESVUFR",
+					      "isin": "US0378331005",
+					      "cusip": "037833100",
+					      "access": {
+					        "global": "Basic",
+					        "plan": "Basic"
+					      }
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					"/?cik=95953&country=United+States&cusip=037833100&delimiter=%3B&exchange=NASDAQ&figi=BBG000B9Y5X2&format=JSON&include_delisted=true&isin=US0378331005&mic_code=XNGS&show_plan=true&symbol=AAPL&type=Common+Stock",
+				),
+			},
+			want: response.Stocks{
+				Data: []*response.Stock{
+					{
+						Symbol:   "AAPL",
+						Name:     "Apple Inc",
+						Currency: "USD",
+						Exchange: "NASDAQ",
+						MicCode:  "XNGS",
+						Country:  "United States",
+						Type:     "Common Stock",
+						FigiCode: "BBG000B9Y5X2",
+						CfiCode:  "ESVUFR",
+						Isin:     "US0378331005",
+						Cusip:    "037833100",
+						Access: &response.StockAccess{
+							Global: "Basic",
+							Plan:   "Basic",
+						},
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+			expectedURL: "/?cik=95953&country=United+States&cusip=037833100&delimiter=%3B&exchange=NASDAQ&figi=BBG000B9Y5X2&format=JSON&include_delisted=true&isin=US0378331005&mic_code=XNGS&show_plan=true&symbol=AAPL&type=Common+Stock",
 		},
 		{
 			name: "real api response format",
@@ -567,6 +699,420 @@ func Test_client_GetETFs(t *testing.T) {
 					return cli.(client).GetETFs(req)
 				},
 				"GetETFs",
+			)
+		})
+	}
+}
+
+func Test_client_GetFunds(t *testing.T) {
+	type args struct {
+		req request.GetFunds
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.Funds
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetFunds{
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "FXAIX",
+					Figi:       "BBG000BHTMY7",
+					Isin:       "US0378331005",
+					Cusip:      "594918104",
+					Cik:        "95953",
+					Exchange:   "Nasdaq",
+					Country:    "United States",
+					Format:     "JSON",
+					Delimiter:  ";",
+					ShowPlan:   true,
+					Page:       2,
+					OutputSize: 5000,
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					1,
+					`{
+					  "result": {
+					    "count": 1,
+					    "list": [
+					      {
+					        "symbol": "FXAIX",
+					        "name": "Fidelity 500 Index Fund",
+					        "country": "United States",
+					        "currency": "USD",
+					        "exchange": "NASDAQ",
+					        "mic_code": "XNAS",
+					        "type": "Mutual Fund",
+					        "figi_code": "BBG000BHTMY7",
+					        "cfi_code": "CIEUCR",
+					        "isin": "US0378331005",
+					        "cusip": "594918104",
+					        "access": {
+					          "global": "Basic",
+					          "plan": "Basic"
+					        }
+					      }
+					    ]
+					  },
+					  "status": "ok"
+					}`,
+					"/?cik=95953&country=United+States&cusip=594918104&delimiter=%3B&exchange=Nasdaq&figi=BBG000BHTMY7&format=JSON&isin=US0378331005&outputsize=5000&page=2&show_plan=true&symbol=FXAIX",
+				),
+			},
+			want: response.Funds{
+				Result: response.FundsResult{
+					Count: 1,
+					List: []*response.Fund{
+						{
+							Symbol:   "FXAIX",
+							Name:     "Fidelity 500 Index Fund",
+							Country:  "United States",
+							Currency: "USD",
+							Exchange: "NASDAQ",
+							MicCode:  "XNAS",
+							Type:     "Mutual Fund",
+							FigiCode: "BBG000BHTMY7",
+							CfiCode:  "CIEUCR",
+							Isin:     "US0378331005",
+							Cusip:    "594918104",
+							Access: &response.FundAccess{
+								Global: "Basic",
+								Plan:   "Basic",
+							},
+						},
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 1),
+			wantErr:     "",
+			expectedURL: "/?cik=95953&country=United+States&cusip=594918104&delimiter=%3B&exchange=Nasdaq&figi=BBG000BHTMY7&format=JSON&isin=US0378331005&outputsize=5000&page=2&show_plan=true&symbol=FXAIX",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testEndpointCall(
+				t,
+				tt.name,
+				tt.args,
+				tt.want,
+				tt.want1,
+				tt.wantErr,
+				func(httpCli *HTTPCli, url string) interface{} {
+					return client{
+						getFunds: NewEndpoint[request.GetFunds, response.Funds, response.Credits, error](httpCli, url),
+					}
+				},
+				func(cli interface{}, req request.GetFunds) (response.Funds, response.Credits, error) {
+					return cli.(client).GetFunds(req)
+				},
+				"GetFunds",
+			)
+		})
+	}
+}
+
+func Test_client_GetBonds(t *testing.T) {
+	type args struct {
+		req request.GetBonds
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.Bonds
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetBonds{
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "US2Y",
+					Exchange:   "NYSE",
+					Country:    "United States",
+					Format:     "JSON",
+					Delimiter:  ";",
+					ShowPlan:   true,
+					Page:       3,
+					OutputSize: 5000,
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					1,
+					`{
+					  "result": {
+					    "count": 1,
+					    "list": [
+					      {
+					        "symbol": "US2Y",
+					        "name": "US Treasury Yield 2 Years",
+					        "country": "United States",
+					        "currency": "USD",
+					        "exchange": "NYSE",
+					        "mic_code": "XNYS",
+					        "type": "Bond",
+					        "access": {
+					          "global": "Basic",
+					          "plan": "Basic"
+					        }
+					      }
+					    ]
+					  },
+					  "status": "ok"
+					}`,
+					"/?country=United+States&delimiter=%3B&exchange=NYSE&format=JSON&outputsize=5000&page=3&show_plan=true&symbol=US2Y",
+				),
+			},
+			want: response.Bonds{
+				Result: response.BondsResult{
+					Count: 1,
+					List: []*response.Bond{
+						{
+							Symbol:   "US2Y",
+							Name:     "US Treasury Yield 2 Years",
+							Country:  "United States",
+							Currency: "USD",
+							Exchange: "NYSE",
+							MicCode:  "XNYS",
+							Type:     "Bond",
+							Access: &response.BondAccess{
+								Global: "Basic",
+								Plan:   "Basic",
+							},
+						},
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 1),
+			wantErr:     "",
+			expectedURL: "/?country=United+States&delimiter=%3B&exchange=NYSE&format=JSON&outputsize=5000&page=3&show_plan=true&symbol=US2Y",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testEndpointCall(
+				t,
+				tt.name,
+				tt.args,
+				tt.want,
+				tt.want1,
+				tt.wantErr,
+				func(httpCli *HTTPCli, url string) interface{} {
+					return client{
+						getBonds: NewEndpoint[request.GetBonds, response.Bonds, response.Credits, error](httpCli, url),
+					}
+				},
+				func(cli interface{}, req request.GetBonds) (response.Bonds, response.Credits, error) {
+					return cli.(client).GetBonds(req)
+				},
+				"GetBonds",
+			)
+		})
+	}
+}
+
+func Test_client_GetCrossListings(t *testing.T) {
+	type args struct {
+		req request.GetCrossListings
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.CrossListings
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetCrossListings{
+					APIKey:   request.APIKey{APIKey: ""},
+					Symbol:   "AAPL",
+					Exchange: "NASDAQ",
+					MicCode:  "XNGS",
+					Country:  "United States",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					40,
+					`{
+					  "result": {
+					    "count": 2,
+					    "list": [
+					      {
+					        "exchange": "NASDAQ",
+					        "mic_code": "XNGS",
+					        "name": "Apple Inc",
+					        "symbol": "AAPL"
+					      },
+					      {
+					        "exchange": "BVS",
+					        "mic_code": "XSGO",
+					        "name": "Apple Inc",
+					        "symbol": "AAPLCL"
+					      }
+					    ]
+					  },
+					  "status": "ok"
+					}`,
+					"/?country=United+States&exchange=NASDAQ&mic_code=XNGS&symbol=AAPL",
+				),
+			},
+			want: response.CrossListings{
+				Result: response.CrossListingsResult{
+					Count: 2,
+					List: []*response.CrossListing{
+						{
+							Symbol:   "AAPL",
+							Name:     "Apple Inc",
+							Exchange: "NASDAQ",
+							MicCode:  "XNGS",
+						},
+						{
+							Symbol:   "AAPLCL",
+							Name:     "Apple Inc",
+							Exchange: "BVS",
+							MicCode:  "XSGO",
+						},
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 40),
+			wantErr:     "",
+			expectedURL: "/?country=United+States&exchange=NASDAQ&mic_code=XNGS&symbol=AAPL",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testEndpointCall(
+				t,
+				tt.name,
+				tt.args,
+				tt.want,
+				tt.want1,
+				tt.wantErr,
+				func(httpCli *HTTPCli, url string) interface{} {
+					return client{
+						getCrossListings: NewEndpoint[request.GetCrossListings, response.CrossListings, response.Credits, error](httpCli, url),
+					}
+				},
+				func(cli interface{}, req request.GetCrossListings) (response.CrossListings, response.Credits, error) {
+					return cli.(client).GetCrossListings(req)
+				},
+				"GetCrossListings",
+			)
+		})
+	}
+}
+
+func Test_client_GetTechnicalIndicators(t *testing.T) {
+	type args struct {
+		req request.GetTechnicalIndicators
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.TechnicalIndicators
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetTechnicalIndicators{
+					APIKey: request.APIKey{APIKey: ""},
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					1,
+					`{
+					  "data": {
+					    "rsi": {
+					      "enable": true,
+					      "full_name": "Relative Strength Index",
+					      "description": "Momentum oscillator",
+					      "type": "Momentum Indicators",
+					      "overlay": false,
+					      "parameters": {},
+					      "output_values": {},
+					      "tinting_details": {}
+					    }
+					  },
+					  "status": "ok"
+					}`,
+					"/",
+				),
+			},
+			want: response.TechnicalIndicators{
+				Data: map[string]*response.TechnicalIndicator{
+					"rsi": {
+						Enable:         true,
+						FullName:       "Relative Strength Index",
+						Description:    "Momentum oscillator",
+						Type:           "Momentum Indicators",
+						Overlay:        false,
+						Parameters:     map[string]interface{}{},
+						OutputValues:   map[string]interface{}{},
+						TintingDetails: map[string]interface{}{},
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 1),
+			wantErr:     "",
+			expectedURL: "/",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testEndpointCall(
+				t,
+				tt.name,
+				tt.args,
+				tt.want,
+				tt.want1,
+				tt.wantErr,
+				func(httpCli *HTTPCli, url string) interface{} {
+					return client{
+						getTechnicalIndicators: NewEndpoint[request.GetTechnicalIndicators, response.TechnicalIndicators, response.Credits, error](httpCli, url),
+					}
+				},
+				func(cli interface{}, req request.GetTechnicalIndicators) (response.TechnicalIndicators, response.Credits, error) {
+					return cli.(client).GetTechnicalIndicators(req)
+				},
+				"GetTechnicalIndicators",
 			)
 		})
 	}

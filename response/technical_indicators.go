@@ -1,7 +1,10 @@
 package response
 
-// TechnicalIndicators represents a map of technical indicators by name.
-type TechnicalIndicators map[string]*TechnicalIndicator
+// TechnicalIndicators represents the response structure for technical indicators list data.
+type TechnicalIndicators struct {
+	Data   map[string]*TechnicalIndicator `json:"data"`
+	Status string                         `json:"status"`
+}
 
 // TechnicalIndicator represents a single technical indicator with its configuration and details.
 type TechnicalIndicator struct {

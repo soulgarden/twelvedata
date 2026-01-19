@@ -13,6 +13,7 @@ type client struct {
 	getForexPairs       *Endpoint[request.GetForexPairs, response.ForexPairs, response.Credits, error]
 	getCryptocurrencies *Endpoint[request.GetCryptocurrencies, response.Cryptocurrencies, response.Credits, error]
 	getETFs             *Endpoint[request.GetETFs, response.ETFs, response.Credits, error]
+	getFunds            *Endpoint[request.GetFunds, response.Funds, response.Credits, error]
 	getCommodities      *Endpoint[request.GetCommodities, response.Commodities, response.Credits, error]
 	getBonds            *Endpoint[request.GetBonds, response.Bonds, response.Credits, error]
 
@@ -104,7 +105,6 @@ type client struct {
 	getETFTypes       *Endpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error]
 
 	// Mutual Funds
-	getFunds                    *Endpoint[request.GetFunds, response.Funds, response.Credits, error]
 	getMutualFunds              *Endpoint[request.GetMutualFunds, response.MutualFunds, response.Credits, error]
 	getMutualFundFullData       *Endpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error]
 	getMutualFundSummary        *Endpoint[request.GetMutualFundSummary, response.MutualFundSummaryResponse, response.Credits, error]
@@ -538,6 +538,7 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getForexPairs:       NewEndpoint[request.GetForexPairs, response.ForexPairs, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.ForexPairsURL),
 		getCryptocurrencies: NewEndpoint[request.GetCryptocurrencies, response.Cryptocurrencies, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.CryptocurrenciesURL),
 		getETFs:             NewEndpoint[request.GetETFs, response.ETFs, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.ETFsURL),
+		getFunds:            NewEndpoint[request.GetFunds, response.Funds, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.FundsURL),
 		getCommodities:      NewEndpoint[request.GetCommodities, response.Commodities, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.CommoditiesURL),
 		getBonds:            NewEndpoint[request.GetBonds, response.Bonds, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.BondsURL),
 
@@ -629,7 +630,6 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getETFTypes:       NewEndpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsTypesURL),
 
 		// Mutual Funds
-		getFunds:                    NewEndpoint[request.GetFunds, response.Funds, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsDirectoryURL),
 		getMutualFunds:              NewEndpoint[request.GetMutualFunds, response.MutualFunds, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsDirectoryURL),
 		getMutualFundFullData:       NewEndpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsFullDataURL),
 		getMutualFundSummary:        NewEndpoint[request.GetMutualFundSummary, response.MutualFundSummaryResponse, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSummaryURL),

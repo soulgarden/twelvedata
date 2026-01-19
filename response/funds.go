@@ -2,9 +2,14 @@ package response
 
 // Funds represents the response structure for funds data.
 type Funds struct {
-	Data   []*Fund `json:"data"`
-	Count  int     `json:"count"`
-	Status string  `json:"status"`
+	Result FundsResult `json:"result"`
+	Status string      `json:"status"`
+}
+
+// FundsResult contains the funds list and count.
+type FundsResult struct {
+	Count int     `json:"count"`
+	List  []*Fund `json:"list"`
 }
 
 // Fund represents a single investment fund with its details and access information.
@@ -17,6 +22,7 @@ type Fund struct {
 	MicCode  string      `json:"mic_code"`
 	Type     string      `json:"type"`
 	FigiCode string      `json:"figi_code"`
+	CfiCode  string      `json:"cfi_code"`
 	Isin     string      `json:"isin"`
 	Cusip    string      `json:"cusip"`
 	Access   *FundAccess `json:"access"`
