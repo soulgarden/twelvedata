@@ -24,6 +24,8 @@ const (
 	ForexPairs = 1
 	// Cryptocurrencies represents the API credit cost for cryptocurrencies catalog requests.
 	Cryptocurrencies = 1
+	// ETFs represents the API credit cost for ETFs catalog requests.
+	ETFs = 1
 	// ETFsDirectory represents the API credit cost for ETFs directory requests.
 	ETFsDirectory = 1
 	// Funds represents the API credit cost for funds catalog requests.

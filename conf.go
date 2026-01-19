@@ -30,6 +30,7 @@ type ReferenceData struct {
 	StocksURL           string `default:"/stocks"           json:"stocks_url"`
 	ForexPairsURL       string `default:"/forex_pairs"      json:"forex_pairs_url"`
 	CryptocurrenciesURL string `default:"/cryptocurrencies" json:"cryptocurrencies_url"`
+	ETFsURL             string `default:"/etfs"             json:"etfs_url"`
 	CommoditiesURL      string `default:"/commodities"      json:"commodities_url"`
 	BondsURL            string `default:"/bonds"            json:"bonds_url"`
 

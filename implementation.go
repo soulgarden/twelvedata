@@ -12,6 +12,7 @@ type client struct {
 	getStocks           *Endpoint[request.GetStock, response.Stocks, response.Credits, error]
 	getForexPairs       *Endpoint[request.GetForexPairs, response.ForexPairs, response.Credits, error]
 	getCryptocurrencies *Endpoint[request.GetCryptocurrencies, response.Cryptocurrencies, response.Credits, error]
+	getETFs             *Endpoint[request.GetETFs, response.ETFs, response.Credits, error]
 	getCommodities      *Endpoint[request.GetCommodities, response.Commodities, response.Credits, error]
 	getBonds            *Endpoint[request.GetBonds, response.Bonds, response.Credits, error]
 
@@ -297,6 +298,10 @@ func (cli client) GetCryptocurrencies(req request.GetCryptocurrencies) (response
 	return cli.getCryptocurrencies.Call(req)
 }
 
+func (cli client) GetETFs(req request.GetETFs) (response.ETFs, response.Credits, error) {
+	return cli.getETFs.Call(req)
+}
+
 func (cli client) GetFunds(req request.GetFunds) (response.Funds, response.Credits, error) {
 	return cli.getFunds.Call(req)
 }
@@ -532,6 +537,7 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getStocks:           NewEndpoint[request.GetStock, response.Stocks, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.StocksURL),
 		getForexPairs:       NewEndpoint[request.GetForexPairs, response.ForexPairs, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.ForexPairsURL),
 		getCryptocurrencies: NewEndpoint[request.GetCryptocurrencies, response.Cryptocurrencies, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.CryptocurrenciesURL),
+		getETFs:             NewEndpoint[request.GetETFs, response.ETFs, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.ETFsURL),
 		getCommodities:      NewEndpoint[request.GetCommodities, response.Commodities, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.CommoditiesURL),
 		getBonds:            NewEndpoint[request.GetBonds, response.Bonds, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.BondsURL),
 

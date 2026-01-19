@@ -15,6 +15,7 @@ type Client interface {
 	GetStocks(request.GetStock) (response.Stocks, response.Credits, error)
 	GetForexPairs(request.GetForexPairs) (response.ForexPairs, response.Credits, error)
 	GetCryptocurrencies(request.GetCryptocurrencies) (response.Cryptocurrencies, response.Credits, error)
+	GetETFs(request.GetETFs) (response.ETFs, response.Credits, error)
 	GetCommodities(request.GetCommodities) (response.Commodities, response.Credits, error)
 	GetBonds(request.GetBonds) (response.Bonds, response.Credits, error)
 

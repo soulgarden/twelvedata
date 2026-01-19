@@ -1,6 +1,7 @@
 package twelvedata
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -424,6 +425,148 @@ func Test_client_GetStocks(t *testing.T) {
 					return cli.(client).GetStocks(req)
 				},
 				"GetStocks",
+			)
+		})
+	}
+}
+
+func Test_client_GetETFs(t *testing.T) {
+	type args struct {
+		req request.GetETFs
+		url string
+	}
+
+	missingAPIKeyURL := mockServerWithURL(
+		t,
+		http.StatusUnauthorized,
+		100,
+		1,
+		`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
+		"/?symbol=SPY",
+	)
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.ETFs
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetETFs{
+					APIKey:          request.APIKey{APIKey: ""},
+					Symbol:          "SPY",
+					FIGI:            "BBG000BDTF76",
+					ISIN:            "US0378331005",
+					CUSIP:           "037833100",
+					CIK:             "95953",
+					Exchange:        "NYSE",
+					MicCode:         "ARCX",
+					Country:         "United States",
+					Format:          "JSON",
+					Delimiter:       ";",
+					ShowPlan:        true,
+					IncludeDelisted: true,
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					1,
+					`{
+						"data": [
+							{
+								"symbol": "SPY",
+								"name": "SPDR S&P 500 ETF Trust",
+								"currency": "USD",
+								"exchange": "NYSE",
+								"mic_code": "ARCX",
+								"country": "United States",
+								"figi_code": "BBG000BDTF76",
+								"cfi_code": "CECILU",
+								"isin": "US78462F1030",
+								"cusip": "037833100",
+								"access": {
+									"global": "Basic",
+									"plan": "Basic"
+								}
+							}
+						],
+						"status": "ok"
+					}`,
+					"/?cik=95953&country=United+States&cusip=037833100&delimiter=%3B&exchange=NYSE&figi=BBG000BDTF76&format=JSON&include_delisted=true&isin=US0378331005&mic_code=ARCX&show_plan=true&symbol=SPY",
+				),
+			},
+			want: response.ETFs{
+				Data: []*response.ETF{
+					{
+						Symbol:   "SPY",
+						Name:     "SPDR S&P 500 ETF Trust",
+						Currency: "USD",
+						Exchange: "NYSE",
+						MicCode:  "ARCX",
+						Country:  "United States",
+						FigiCode: "BBG000BDTF76",
+						CfiCode:  "CECILU",
+						Isin:     "US78462F1030",
+						Cusip:    "037833100",
+						Access: &response.ETFAccess{
+							Global: "Basic",
+							Plan:   "Basic",
+						},
+					},
+				},
+				Status: "ok",
+			},
+			want1:       response.NewCreditsImpl(100, 1),
+			wantErr:     "",
+			expectedURL: "/?cik=95953&country=United+States&cusip=037833100&delimiter=%3B&exchange=NYSE&figi=BBG000BDTF76&format=JSON&include_delisted=true&isin=US0378331005&mic_code=ARCX&show_plan=true&symbol=SPY",
+		},
+		{
+			name: "missing api key",
+			args: args{
+				req: request.GetETFs{
+					APIKey: request.APIKey{APIKey: ""},
+					Symbol: "SPY",
+				},
+				url: missingAPIKeyURL,
+			},
+			want:  response.ETFs{},
+			want1: response.NewCreditsImpl(100, 1),
+			wantErr: fmt.Sprintf(
+				"HTTP 401 Unauthorized: %s (URL: %s?symbol=SPY)",
+				response.Error{
+					Code:    401,
+					Message: "**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer",
+					Status:  "error",
+				}.Error(),
+				missingAPIKeyURL,
+			),
+			expectedURL: "/?symbol=SPY",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testEndpointCall(
+				t,
+				tt.name,
+				tt.args,
+				tt.want,
+				tt.want1,
+				tt.wantErr,
+				func(httpCli *HTTPCli, url string) interface{} {
+					return client{
+						getETFs: NewEndpoint[request.GetETFs, response.ETFs, response.Credits, error](httpCli, url),
+					}
+				},
+				func(cli interface{}, req request.GetETFs) (response.ETFs, response.Credits, error) {
+					return cli.(client).GetETFs(req)
+				},
+				"GetETFs",
 			)
 		})
 	}
