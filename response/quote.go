@@ -29,13 +29,13 @@ type Quote struct {
 	AverageVolume         string             `json:"average_volume"`
 	Rolling1DChange       string             `json:"rolling_1d_change"`
 	Rolling7DChange       string             `json:"rolling_7d_change"`
-	RollingPeriodChange   string             `json:"rolling_period_change"`
+	RollingChange         string             `json:"rolling_change"`
 	IsMarketOpen          bool               `json:"is_market_open"`
 	FiftyTwoWeek          *QuoteFiftyTwoWeek `json:"fifty_two_week"`
 	ExtendedChange        string             `json:"extended_change"`
 	ExtendedPercentChange string             `json:"extended_percent_change"`
 	ExtendedPrice         string             `json:"extended_price"`
-	ExtendedTimestamp     null.Int           `json:"extended_timestamp"`
+	ExtendedTimestamp     null.String        `json:"extended_timestamp"`
 }
 
 // QuoteFiftyTwoWeek represents 52-week high/low data for a quote.

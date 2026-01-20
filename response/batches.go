@@ -48,12 +48,12 @@ type BatchResponseData struct {
 	AverageVolume         null.String `json:"average_volume,omitempty"`
 	Rolling1DChange       null.String `json:"rolling_1d_change,omitempty"`
 	Rolling7DChange       null.String `json:"rolling_7d_change,omitempty"`
-	RollingPeriodChange   null.String `json:"rolling_period_change,omitempty"`
+	RollingChange         null.String `json:"rolling_change,omitempty"`
 	IsMarketOpen          null.Bool   `json:"is_market_open,omitempty"`
 	ExtendedChange        null.String `json:"extended_change,omitempty"`
 	ExtendedPercentChange null.String `json:"extended_percent_change,omitempty"`
 	ExtendedPrice         null.String `json:"extended_price,omitempty"`
-	ExtendedTimestamp     null.Int    `json:"extended_timestamp,omitempty"`
+	ExtendedTimestamp     null.String `json:"extended_timestamp,omitempty"`
 
 	// Error response fields - these will be populated for failed requests
 	Code    null.Int    `json:"code,omitempty"`

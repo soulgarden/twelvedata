@@ -13,6 +13,9 @@ type GetTimeSeriesCross struct {
 	QuoteExchange string `schema:"quote_exchange,omitempty"`
 	QuoteMicCode  string `schema:"quote_mic_code,omitempty"`
 	OutputSize    int    `schema:"outputsize,omitempty"`
+	Format        string `schema:"format,omitempty"`
+	Delimiter     string `schema:"delimiter,omitempty"`
+	PrePost       bool   `schema:"prepost,omitempty"`
 	StartDate     string `schema:"start_date,omitempty"`
 	EndDate       string `schema:"end_date,omitempty"`
 	Adjust        bool   `schema:"adjust,omitempty"`
