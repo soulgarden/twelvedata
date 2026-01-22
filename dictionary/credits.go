@@ -86,10 +86,16 @@ const (
 	Statistics = 50
 	// IncomeStatement represents the API credit cost for income statement requests.
 	IncomeStatement = 100
+	// IncomeStatementConsolidated represents the API credit cost for consolidated income statement requests.
+	IncomeStatementConsolidated = 100
 	// BalanceSheet represents the API credit cost for balance sheet requests.
 	BalanceSheet = 100
+	// BalanceSheetConsolidated represents the API credit cost for consolidated balance sheet requests.
+	BalanceSheetConsolidated = 100
 	// CashFlow represents the API credit cost for cash flow statement requests.
 	CashFlow = 100
+	// CashFlowConsolidated represents the API credit cost for consolidated cash flow statement requests.
+	CashFlowConsolidated = 100
 	// InsiderTransactions represents the API credit cost for insider transactions requests.
 	InsiderTransactions = 200
 	// OptionsExpiration represents the API credit cost for options expiration requests.

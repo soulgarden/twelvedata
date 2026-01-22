@@ -16,6 +16,7 @@ type LastChangePagination struct {
 type LastChangeData struct {
 	Symbol      string `json:"symbol"`
 	Exchange    string `json:"exchange"`
+	MicCode     string `json:"mic_code"`
 	Country     string `json:"country"`
 	Endpoint    string `json:"endpoint"`
 	LastChange  string `json:"last_change"`

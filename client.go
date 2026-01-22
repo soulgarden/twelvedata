@@ -57,8 +57,11 @@ type Client interface {
 	GetEarningsCalendar(request.GetEarningsCalendar) (response.Earnings, response.Credits, error)
 	GetIPOCalendar(request.GetIPOCalendar) (response.IPOCalendar, response.Credits, error)
 	GetIncomeStatement(request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error)
+	GetIncomeStatementConsolidated(request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error)
 	GetBalanceSheet(request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error)
+	GetBalanceSheetConsolidated(request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error)
 	GetCashFlow(request.GetCashFlow) (response.CashFlows, response.Credits, error)
+	GetCashFlowConsolidated(request.GetCashFlow) (response.CashFlows, response.Credits, error)
 	GetMarketCap(request.GetMarketCap) (response.MarketCap, response.Credits, error)
 	GetLastChange(request.GetLastChange) (response.LastChange, response.Credits, error)
 

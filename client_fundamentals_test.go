@@ -28,7 +28,18 @@ func Test_client_GetBalanceSheet(t *testing.T) {
 			name: "success",
 			args: args{
 				req: request.GetBalanceSheet{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "AAPL",
+					Figi:       "BBG000B9XRY4",
+					Isin:       "US0378331005",
+					Cusip:      "037833100",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					Period:     "quarterly",
+					StartDate:  "2024-01-01",
+					EndDate:    "2024-01-31",
+					OutputSize: 2,
 				},
 				url: mockServerWithURL(
 					t,
@@ -115,7 +126,7 @@ func Test_client_GetBalanceSheet(t *testing.T) {
 					    }
 					  ]
 					}`,
-					"/",
+					"/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want: response.BalanceSheets{
@@ -200,13 +211,24 @@ func Test_client_GetBalanceSheet(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 		},
 		{
 			name: "wrong api key",
 			args: args{
 				req: request.GetBalanceSheet{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "AAPL",
+					Figi:       "BBG000B9XRY4",
+					Isin:       "US0378331005",
+					Cusip:      "037833100",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					Period:     "quarterly",
+					StartDate:  "2024-01-01",
+					EndDate:    "2024-01-31",
+					OutputSize: 2,
 				},
 				url: mockServerWithURL(
 					t,
@@ -214,7 +236,7 @@ func Test_client_GetBalanceSheet(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want:  response.BalanceSheets{},
@@ -222,7 +244,7 @@ func Test_client_GetBalanceSheet(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 		},
 	}
 	for _, tt := range tests {
@@ -266,7 +288,18 @@ func Test_client_GetCashFlow(t *testing.T) {
 			name: "success",
 			args: args{
 				req: request.GetCashFlow{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "AAPL",
+					Figi:       "BBG000B9XRY4",
+					Isin:       "US0378331005",
+					Cusip:      "037833100",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					Period:     "quarterly",
+					StartDate:  "2024-01-01",
+					EndDate:    "2024-01-31",
+					OutputSize: 2,
 				},
 				url: mockServerWithURL(
 					t,
@@ -324,7 +357,7 @@ func Test_client_GetCashFlow(t *testing.T) {
 					    }
 					  ]
 					}`,
-					"/",
+					"/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want: response.CashFlows{
@@ -380,13 +413,24 @@ func Test_client_GetCashFlow(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 		},
 		{
 			name: "wrong api key",
 			args: args{
 				req: request.GetCashFlow{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "AAPL",
+					Figi:       "BBG000B9XRY4",
+					Isin:       "US0378331005",
+					Cusip:      "037833100",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					Period:     "quarterly",
+					StartDate:  "2024-01-01",
+					EndDate:    "2024-01-31",
+					OutputSize: 2,
 				},
 				url: mockServerWithURL(
 					t,
@@ -394,7 +438,7 @@ func Test_client_GetCashFlow(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want:  response.CashFlows{},
@@ -402,7 +446,7 @@ func Test_client_GetCashFlow(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 		},
 	}
 	for _, tt := range tests {
@@ -446,7 +490,18 @@ func Test_client_GetDividends(t *testing.T) {
 			name: "success",
 			args: args{
 				req: request.GetDividends{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:    request.APIKey{APIKey: ""},
+					Symbol:    "AAPL",
+					Figi:      "BBG000B9XRY4",
+					Isin:      "US0378331005",
+					Cusip:     "037833100",
+					Exchange:  "NASDAQ",
+					MicCode:   "XNAS",
+					Country:   "US",
+					Range:     "1y",
+					StartDate: "2024-01-01",
+					EndDate:   "2024-01-31",
+					Adjust:    true,
 				},
 				url: mockServerWithURL(
 					t,
@@ -469,7 +524,7 @@ func Test_client_GetDividends(t *testing.T) {
 					    }
 					  ]
 					}`,
-					"/",
+					"/?adjust=true&country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&range=1y&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want: response.Dividends{
@@ -490,13 +545,24 @@ func Test_client_GetDividends(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?adjust=true&country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&range=1y&start_date=2024-01-01&symbol=AAPL",
 		},
 		{
 			name: "wrong api key",
 			args: args{
 				req: request.GetDividends{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:    request.APIKey{APIKey: ""},
+					Symbol:    "AAPL",
+					Figi:      "BBG000B9XRY4",
+					Isin:      "US0378331005",
+					Cusip:     "037833100",
+					Exchange:  "NASDAQ",
+					MicCode:   "XNAS",
+					Country:   "US",
+					Range:     "1y",
+					StartDate: "2024-01-01",
+					EndDate:   "2024-01-31",
+					Adjust:    true,
 				},
 				url: mockServerWithURL(
 					t,
@@ -504,13 +570,13 @@ func Test_client_GetDividends(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?adjust=true&country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&range=1y&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want:        response.Dividends{},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "error received: code: 401, message: **apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?adjust=true&country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&range=1y&start_date=2024-01-01&symbol=AAPL",
 		},
 	}
 	for _, tt := range tests {
@@ -996,6 +1062,8 @@ func Test_client_GetDividendsCalendar(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
+					StartDate: "2024-01-01",
+					EndDate:   "2024-01-31",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1003,7 +1071,7 @@ func Test_client_GetDividendsCalendar(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?end_date=2024-01-31&start_date=2024-01-01",
 				),
 			},
 			want:  response.DividendsCalendar(nil),
@@ -1055,7 +1123,15 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 			name: "success",
 			args: args{
 				req: request.GetEarningsCalendar{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:        request.APIKey{APIKey: ""},
+					Exchange:      "NASDAQ",
+					MicCode:       "XNAS",
+					Country:       "US",
+					Format:        "json",
+					Delimiter:     ",",
+					DecimalPlaces: 2,
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-01-31",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1082,7 +1158,7 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 					  },
 					  "status": "ok"
 					}`,
-					"/",
+					"/?country=US&delimiter=%2C&dp=2&end_date=2024-01-31&exchange=NASDAQ&format=json&mic_code=XNAS&start_date=2024-01-01",
 				),
 			},
 			want: response.Earnings{
@@ -1107,13 +1183,21 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&delimiter=%2C&dp=2&end_date=2024-01-31&exchange=NASDAQ&format=json&mic_code=XNAS&start_date=2024-01-01",
 		},
 		{
 			name: "wrong api key",
 			args: args{
 				req: request.GetEarningsCalendar{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:        request.APIKey{APIKey: ""},
+					Exchange:      "NASDAQ",
+					MicCode:       "XNAS",
+					Country:       "US",
+					Format:        "json",
+					Delimiter:     ",",
+					DecimalPlaces: 2,
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-01-31",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1121,7 +1205,7 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?country=US&delimiter=%2C&dp=2&end_date=2024-01-31&exchange=NASDAQ&format=json&mic_code=XNAS&start_date=2024-01-01",
 				),
 			},
 			want:  response.Earnings{},
@@ -1129,7 +1213,7 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&delimiter=%2C&dp=2&end_date=2024-01-31&exchange=NASDAQ&format=json&mic_code=XNAS&start_date=2024-01-01",
 		},
 	}
 
@@ -1174,7 +1258,18 @@ func Test_client_GetIncomeStatement(t *testing.T) {
 			name: "success",
 			args: args{
 				req: request.GetIncomeStatement{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "AAPL",
+					Figi:       "BBG000B9XRY4",
+					Isin:       "US0378331005",
+					Cusip:      "037833100",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					Period:     "quarterly",
+					StartDate:  "2024-01-01",
+					EndDate:    "2024-01-31",
+					OutputSize: 2,
 				},
 				url: mockServerWithURL(
 					t,
@@ -1224,7 +1319,7 @@ func Test_client_GetIncomeStatement(t *testing.T) {
 					    }
 					  ]
 					}`,
-					"/",
+					"/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want: response.IncomeStatements{
@@ -1272,13 +1367,24 @@ func Test_client_GetIncomeStatement(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 		},
 		{
 			name: "wrong api key",
 			args: args{
 				req: request.GetIncomeStatement{
-					APIKey: request.APIKey{APIKey: ""},
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "AAPL",
+					Figi:       "BBG000B9XRY4",
+					Isin:       "US0378331005",
+					Cusip:      "037833100",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					Period:     "quarterly",
+					StartDate:  "2024-01-01",
+					EndDate:    "2024-01-31",
+					OutputSize: 2,
 				},
 				url: mockServerWithURL(
 					t,
@@ -1286,7 +1392,7 @@ func Test_client_GetIncomeStatement(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want:  response.IncomeStatements{},
@@ -1294,7 +1400,7 @@ func Test_client_GetIncomeStatement(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&end_date=2024-01-31&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL",
 		},
 	}
 	for _, tt := range tests {
@@ -1456,6 +1562,173 @@ func Test_client_GetLogo(t *testing.T) {
 	}
 }
 
+func runConsolidatedStatementTest[Req any, Resp any](
+	t *testing.T,
+	req Req,
+	responseBody string,
+	want Resp,
+	expectedURL string,
+	createClient func(*HTTPCli, string) interface{},
+	callMethod func(interface{}, Req) (Resp, response.Credits, error),
+	methodName string,
+) {
+	t.Helper()
+
+	args := struct {
+		req Req
+		url string
+	}{
+		req: req,
+		url: mockServerWithURL(t, http.StatusOK, 100, 100, responseBody, expectedURL),
+	}
+
+	testEndpointCall(
+		t,
+		methodName,
+		args,
+		want,
+		response.NewCreditsImpl(100, 100),
+		"",
+		createClient,
+		callMethod,
+		methodName,
+	)
+}
+
+func Test_client_GetConsolidatedStatements(t *testing.T) {
+	t.Run("IncomeStatement", func(t *testing.T) {
+		runConsolidatedStatementTest(
+			t,
+			request.GetIncomeStatement{
+				APIKey: request.APIKey{APIKey: ""},
+				Symbol: "AAPL",
+			},
+			`{
+			  "meta": {
+			    "symbol": "AAPL",
+			    "name": "Apple Inc",
+			    "currency": "USD",
+			    "exchange": "NASDAQ",
+			    "mic_code": "XNAS",
+			    "exchange_timezone": "America/New_York",
+			    "period": "Quarterly"
+			  },
+			  "income_statement": []
+			}`,
+			response.IncomeStatements{
+				Meta: response.IncomeStatementsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
+					ExchangeTimezone: "America/New_York",
+					Period:           "Quarterly",
+				},
+				IncomeStatement: []response.IncomeStatement{},
+			},
+			"/income_statement/consolidated?symbol=AAPL",
+			func(httpCli *HTTPCli, url string) interface{} {
+				return client{
+					getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, url+"/income_statement/consolidated"),
+				}
+			},
+			func(cli interface{}, req request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error) {
+				return cli.(client).GetIncomeStatementConsolidated(req)
+			},
+			"GetIncomeStatementConsolidated",
+		)
+	})
+
+	t.Run("BalanceSheet", func(t *testing.T) {
+		runConsolidatedStatementTest(
+			t,
+			request.GetBalanceSheet{
+				APIKey: request.APIKey{APIKey: ""},
+				Symbol: "AAPL",
+			},
+			`{
+			  "meta": {
+			    "symbol": "AAPL",
+			    "name": "Apple Inc",
+			    "currency": "USD",
+			    "exchange": "NASDAQ",
+			    "mic_code": "XNAS",
+			    "exchange_timezone": "America/New_York",
+			    "period": "Quarterly"
+			  },
+			  "balance_sheet": []
+			}`,
+			response.BalanceSheets{
+				Meta: response.BalanceSheetsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
+					ExchangeTimezone: "America/New_York",
+					Period:           "Quarterly",
+				},
+				BalanceSheet: []response.BalanceSheet{},
+			},
+			"/balance_sheet/consolidated?symbol=AAPL",
+			func(httpCli *HTTPCli, url string) interface{} {
+				return client{
+					getBalanceSheetConsolidated: NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, url+"/balance_sheet/consolidated"),
+				}
+			},
+			func(cli interface{}, req request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error) {
+				return cli.(client).GetBalanceSheetConsolidated(req)
+			},
+			"GetBalanceSheetConsolidated",
+		)
+	})
+
+	t.Run("CashFlow", func(t *testing.T) {
+		runConsolidatedStatementTest(
+			t,
+			request.GetCashFlow{
+				APIKey: request.APIKey{APIKey: ""},
+				Symbol: "AAPL",
+			},
+			`{
+			  "meta": {
+			    "symbol": "AAPL",
+			    "name": "Apple Inc",
+			    "currency": "USD",
+			    "exchange": "NASDAQ",
+			    "mic_code": "XNAS",
+			    "exchange_timezone": "America/New_York",
+			    "period": "Quarterly"
+			  },
+			  "cash_flow": []
+			}`,
+			response.CashFlows{
+				Meta: response.CashFlowsMeta{
+					Symbol:           "AAPL",
+					Name:             "Apple Inc",
+					Currency:         "USD",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNAS",
+					ExchangeTimezone: "America/New_York",
+					Period:           "Quarterly",
+				},
+				CashFlow: []response.CashFlow{},
+			},
+			"/cash_flow/consolidated?symbol=AAPL",
+			func(httpCli *HTTPCli, url string) interface{} {
+				return client{
+					getCashFlowConsolidated: NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, url+"/cash_flow/consolidated"),
+				}
+			},
+			func(cli interface{}, req request.GetCashFlow) (response.CashFlows, response.Credits, error) {
+				return cli.(client).GetCashFlowConsolidated(req)
+			},
+			"GetCashFlowConsolidated",
+		)
+	})
+}
+
 func Test_client_GetProfile(t *testing.T) {
 	type args struct {
 		req request.GetProfile
@@ -1477,6 +1750,13 @@ func Test_client_GetProfile(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
+					Symbol:   "AAPL",
+					Figi:     "BBG000B9XRY4",
+					Isin:     "US0378331005",
+					Cusip:    "037833100",
+					Exchange: "NASDAQ",
+					MicCode:  "XNAS",
+					Country:  "US",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1503,7 +1783,7 @@ func Test_client_GetProfile(t *testing.T) {
 					  "country": "US",
 					  "phone": "408-996-1010"
 					}`,
-					"/",
+					"/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 				),
 			},
 			want: response.Profile{
@@ -1528,7 +1808,7 @@ func Test_client_GetProfile(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 		},
 		{
 			name: "wrong api key",
@@ -1537,6 +1817,13 @@ func Test_client_GetProfile(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
+					Symbol:   "AAPL",
+					Figi:     "BBG000B9XRY4",
+					Isin:     "US0378331005",
+					Cusip:    "037833100",
+					Exchange: "NASDAQ",
+					MicCode:  "XNAS",
+					Country:  "US",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1544,7 +1831,7 @@ func Test_client_GetProfile(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 				),
 			},
 			want:  response.Profile{},
@@ -1552,7 +1839,7 @@ func Test_client_GetProfile(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 		},
 	}
 	for _, tt := range tests {
@@ -1599,6 +1886,13 @@ func Test_client_GetStatistics(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
+					Symbol:   "AAPL",
+					Figi:     "BBG000B9XRY4",
+					Isin:     "US0378331005",
+					Cusip:    "037833100",
+					Exchange: "NASDAQ",
+					MicCode:  "XNAS",
+					Country:  "US",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1692,7 +1986,7 @@ func Test_client_GetStatistics(t *testing.T) {
 					    }
 					  }
 					}`,
-					"/",
+					"/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 				),
 			},
 			want: response.Statistics{
@@ -1784,7 +2078,7 @@ func Test_client_GetStatistics(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 		},
 		{
 			name: "wrong api key",
@@ -1793,6 +2087,13 @@ func Test_client_GetStatistics(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
+					Symbol:   "AAPL",
+					Figi:     "BBG000B9XRY4",
+					Isin:     "US0378331005",
+					Cusip:    "037833100",
+					Exchange: "NASDAQ",
+					MicCode:  "XNAS",
+					Country:  "US",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1800,7 +2101,7 @@ func Test_client_GetStatistics(t *testing.T) {
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					"/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 				),
 			},
 			want:  response.Statistics{},
@@ -1808,7 +2109,7 @@ func Test_client_GetStatistics(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?country=US&cusip=037833100&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&symbol=AAPL",
 		},
 	}
 
@@ -1855,7 +2156,21 @@ func Test_client_GetEarnings(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
-					Symbol: "AAPL",
+					Symbol:        "AAPL",
+					Figi:          "BBG000B9XRY4",
+					Isin:          "US0378331005",
+					Cusip:         "037833100",
+					Exchange:      "NASDAQ",
+					MicCode:       "XNAS",
+					Country:       "US",
+					Type:          "actual",
+					Period:        "quarterly",
+					OutputSize:    2,
+					Format:        "json",
+					Delimiter:     ",",
+					DecimalPlaces: 2,
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-12-31",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1891,7 +2206,7 @@ func Test_client_GetEarnings(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/?symbol=AAPL",
+					"/?country=US&cusip=037833100&delimiter=%2C&dp=2&end_date=2024-12-31&exchange=NASDAQ&figi=BBG000B9XRY4&format=json&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL&type=actual",
 				),
 			},
 			want: response.EarningsData{
@@ -1925,7 +2240,7 @@ func Test_client_GetEarnings(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 20),
 			wantErr:     "",
-			expectedURL: "/?symbol=AAPL",
+			expectedURL: "/?country=US&cusip=037833100&delimiter=%2C&dp=2&end_date=2024-12-31&exchange=NASDAQ&figi=BBG000B9XRY4&format=json&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL&type=actual",
 		},
 		{
 			name: "success with multiple parameters",
@@ -2056,14 +2371,15 @@ func Test_client_GetIPOCalendar(t *testing.T) {
 		expectedURL string
 	}{
 		{
-			name: "success with date range and pagination",
+			name: "success with date range",
 			args: args{
 				req: request.GetIPOCalendar{
-					APIKey:     request.APIKey{APIKey: ""},
-					StartDate:  "2023-01-01",
-					EndDate:    "2023-01-31",
-					OutputSize: 10,
-					Page:       1,
+					APIKey:    request.APIKey{APIKey: ""},
+					Exchange:  "NASDAQ",
+					MicCode:   "XNAS",
+					Country:   "US",
+					StartDate: "2023-01-01",
+					EndDate:   "2023-01-31",
 				},
 				url: mockServerWithURL(
 					t,
@@ -2084,7 +2400,7 @@ func Test_client_GetIPOCalendar(t *testing.T) {
 					    "date": "2023-01-20"
 					  }
 					]`,
-					"/?end_date=2023-01-31&outputsize=10&page=1&start_date=2023-01-01",
+					"/?country=US&end_date=2023-01-31&exchange=NASDAQ&mic_code=XNAS&start_date=2023-01-01",
 				),
 			},
 			want: response.IPOCalendar{
@@ -2103,7 +2419,7 @@ func Test_client_GetIPOCalendar(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 40),
 			wantErr:     "",
-			expectedURL: "/?end_date=2023-01-31&outputsize=10&page=1&start_date=2023-01-01",
+			expectedURL: "/?country=US&end_date=2023-01-31&exchange=NASDAQ&mic_code=XNAS&start_date=2023-01-01",
 		},
 		{
 			name: "success with minimal parameters",
@@ -2432,7 +2748,17 @@ func Test_client_GetMarketCap(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
-					Symbol: "AAPL",
+					Symbol:     "AAPL",
+					Figi:       "BBG000B9XRY4",
+					Isin:       "US0378331005",
+					Cusip:      "037833100",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					StartDate:  "2025-01-01",
+					EndDate:    "2025-01-10",
+					Page:       2,
+					OutputSize: 5,
 				},
 				url: mockServerWithURL(
 					t,
@@ -2463,7 +2789,7 @@ func Test_client_GetMarketCap(t *testing.T) {
 						}
 					  ]
 					}`,
-					"/?symbol=AAPL",
+					"/?country=US&cusip=037833100&end_date=2025-01-10&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=5&page=2&start_date=2025-01-01&symbol=AAPL",
 				),
 			},
 			want: response.MarketCap{
@@ -2492,7 +2818,7 @@ func Test_client_GetMarketCap(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 5),
 			wantErr:     "",
-			expectedURL: "/?symbol=AAPL",
+			expectedURL: "/?country=US&cusip=037833100&end_date=2025-01-10&exchange=NASDAQ&figi=BBG000B9XRY4&isin=US0378331005&mic_code=XNAS&outputsize=5&page=2&start_date=2025-01-01&symbol=AAPL",
 		},
 		{
 			name: "success with additional parameters",
@@ -2503,9 +2829,10 @@ func Test_client_GetMarketCap(t *testing.T) {
 					},
 					Symbol:     "AAPL",
 					Exchange:   "NASDAQ",
-					OutputSize: "5",
+					OutputSize: 5,
 					StartDate:  "2025-01-01",
 					EndDate:    "2025-01-10",
+					Page:       1,
 				},
 				url: mockServerWithURL(
 					t,
@@ -2523,7 +2850,7 @@ func Test_client_GetMarketCap(t *testing.T) {
 					  },
 					  "market_cap": []
 					}`,
-					"/?end_date=2025-01-10&exchange=NASDAQ&outputsize=5&start_date=2025-01-01&symbol=AAPL",
+					"/?end_date=2025-01-10&exchange=NASDAQ&outputsize=5&page=1&start_date=2025-01-01&symbol=AAPL",
 				),
 			},
 			want: response.MarketCap{
@@ -2539,7 +2866,7 @@ func Test_client_GetMarketCap(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 5),
 			wantErr:     "",
-			expectedURL: "/?end_date=2025-01-10&exchange=NASDAQ&outputsize=5&start_date=2025-01-01&symbol=AAPL",
+			expectedURL: "/?end_date=2025-01-10&exchange=NASDAQ&outputsize=5&page=1&start_date=2025-01-01&symbol=AAPL",
 		},
 		{
 			name: "symbol not found error",
@@ -2621,10 +2948,12 @@ func Test_client_GetLastChange(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
-					Endpoint: "time_series",
-					Symbol:   "AAPL",
-					Page:     1,
-					PerPage:  30,
+					Endpoint:   "time_series",
+					Symbol:     "AAPL",
+					MicCode:    "XNAS",
+					StartDate:  "2024-01-01",
+					Page:       1,
+					OutputSize: 30,
 				},
 				url: mockServerWithURL(
 					t,
@@ -2632,7 +2961,7 @@ func Test_client_GetLastChange(t *testing.T) {
 					100,
 					50,
 					`{"pagination":{"current_page":1,"per_page":30},"data":[]}`,
-					"/last_change/time_series?page=1&per_page=30&symbol=AAPL",
+					"/last_change/time_series?mic_code=XNAS&outputsize=30&page=1&start_date=2024-01-01&symbol=AAPL",
 				),
 			},
 			want: response.LastChange{
@@ -2644,7 +2973,7 @@ func Test_client_GetLastChange(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 50),
 			wantErr:     "",
-			expectedURL: "/last_change/time_series?page=1&per_page=30&symbol=AAPL",
+			expectedURL: "/last_change/time_series?mic_code=XNAS&outputsize=30&page=1&start_date=2024-01-01&symbol=AAPL",
 		},
 		{
 			name: "success with quote endpoint",
@@ -2653,17 +2982,21 @@ func Test_client_GetLastChange(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "",
 					},
-					Endpoint: "quote",
-					Symbol:   "MSFT",
-					Exchange: "NASDAQ",
+					Endpoint:   "quote",
+					Symbol:     "MSFT",
+					Exchange:   "NASDAQ",
+					MicCode:    "XNAS",
+					Country:    "US",
+					Page:       1,
+					OutputSize: 30,
 				},
 				url: mockServerWithURL(
 					t,
 					http.StatusOK,
 					90,
 					50,
-					`{"pagination":{"current_page":1,"per_page":30},"data":[{"symbol":"MSFT","exchange":"NASDAQ","country":"United States","endpoint":"quote","last_change":"2025-08-21T10:30:00Z","change_type":"update","description":"Quote data updated","timestamp":"2025-08-21T10:30:00Z"}]}`,
-					"/last_change/quote?exchange=NASDAQ&symbol=MSFT",
+					`{"pagination":{"current_page":1,"per_page":30},"data":[{"symbol":"MSFT","exchange":"NASDAQ","mic_code":"XNAS","country":"United States","endpoint":"quote","last_change":"2025-08-21T10:30:00Z","change_type":"update","description":"Quote data updated","timestamp":"2025-08-21T10:30:00Z"}]}`,
+					"/last_change/quote?country=US&exchange=NASDAQ&mic_code=XNAS&outputsize=30&page=1&symbol=MSFT",
 				),
 			},
 			want: response.LastChange{
@@ -2675,6 +3008,7 @@ func Test_client_GetLastChange(t *testing.T) {
 					{
 						Symbol:      "MSFT",
 						Exchange:    "NASDAQ",
+						MicCode:     "XNAS",
 						Country:     "United States",
 						Endpoint:    "quote",
 						LastChange:  "2025-08-21T10:30:00Z",
@@ -2686,7 +3020,7 @@ func Test_client_GetLastChange(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(90, 50),
 			wantErr:     "",
-			expectedURL: "/last_change/quote?exchange=NASDAQ&symbol=MSFT",
+			expectedURL: "/last_change/quote?country=US&exchange=NASDAQ&mic_code=XNAS&outputsize=30&page=1&symbol=MSFT",
 		},
 		{
 			name: "error - invalid endpoint parameter",

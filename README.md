@@ -55,8 +55,11 @@
 * IPO calendar          ✅
 * Statistics            ✅
 * Income statement      ✅
+* Income statement consolidated ✅ **New**
 * Balance sheet         ✅
+* Balance sheet consolidated ✅ **New**
 * Cash flow             ✅
+* Cash flow consolidated ✅ **New**
 * Insider transactions  ✅
 * Key executives        ✅ **Useful**
 * Market Capitalization ✅ **New**

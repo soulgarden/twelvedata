@@ -69,22 +69,25 @@ type CoreData struct {
 // company profiles, financial statements, dividends, splits, and other corporate data.
 // nolint: lll
 type Fundamentals struct {
-	LogoURL              string `default:"/logo"                    json:"logo_url"`
-	EarningsCalendarURL  string `default:"/earnings_calendar"       json:"earnings_calendar_url"`
-	IPOCalendarURL       string `default:"/ipo_calendar"            json:"ipo_calendar_url"`
-	ProfileURL           string `default:"/profile"                 json:"profile_url"`
-	KeyExecutivesURL     string `default:"/key_executives"          json:"key_executives_url"`
-	IncomeStatementURL   string `default:"/income_statement"        json:"income_statement_url"`
-	BalanceSheetURL      string `default:"/balance_sheet"           json:"balance_sheet_url"`
-	CashFlowURL          string `default:"/cash_flow"               json:"cash_flow_url"`
-	DividendsURL         string `default:"/dividends"               json:"dividends_url"`
-	DividendsCalendarURL string `default:"/dividends_calendar"      json:"dividends_calendar_url"`
-	EarningsURL          string `default:"/earnings"                json:"earnings_url"`
-	SplitsURL            string `default:"/splits"                  json:"splits_url"`
-	SplitsCalendarURL    string `default:"/splits_calendar"         json:"splits_calendar_url"`
-	StatisticsURL        string `default:"/statistics"              json:"statistics_url"`
-	MarketCapURL         string `default:"/market_cap"              json:"market_cap_url"`
-	LastChangeURL        string `default:"/last_change/{endpoint}"  json:"last_change_url"`
+	LogoURL                        string `default:"/logo"                    json:"logo_url"`
+	EarningsCalendarURL            string `default:"/earnings_calendar"       json:"earnings_calendar_url"`
+	IPOCalendarURL                 string `default:"/ipo_calendar"            json:"ipo_calendar_url"`
+	ProfileURL                     string `default:"/profile"                 json:"profile_url"`
+	KeyExecutivesURL               string `default:"/key_executives"          json:"key_executives_url"`
+	IncomeStatementURL             string `default:"/income_statement"        json:"income_statement_url"`
+	IncomeStatementConsolidatedURL string `default:"/income_statement/consolidated" json:"income_statement_consolidated_url"`
+	BalanceSheetURL                string `default:"/balance_sheet"           json:"balance_sheet_url"`
+	BalanceSheetConsolidatedURL    string `default:"/balance_sheet/consolidated" json:"balance_sheet_consolidated_url"`
+	CashFlowURL                    string `default:"/cash_flow"               json:"cash_flow_url"`
+	CashFlowConsolidatedURL        string `default:"/cash_flow/consolidated" json:"cash_flow_consolidated_url"`
+	DividendsURL                   string `default:"/dividends"               json:"dividends_url"`
+	DividendsCalendarURL           string `default:"/dividends_calendar"      json:"dividends_calendar_url"`
+	EarningsURL                    string `default:"/earnings"                json:"earnings_url"`
+	SplitsURL                      string `default:"/splits"                  json:"splits_url"`
+	SplitsCalendarURL              string `default:"/splits_calendar"         json:"splits_calendar_url"`
+	StatisticsURL                  string `default:"/statistics"              json:"statistics_url"`
+	MarketCapURL                   string `default:"/market_cap"              json:"market_cap_url"`
+	LastChangeURL                  string `default:"/last_change/{endpoint}"  json:"last_change_url"`
 }
 
 // WebSocket contains URL configurations for WebSocket endpoints used for real-time data streaming.

@@ -42,22 +42,25 @@ type client struct {
 	getMarketMovers    *Endpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error]
 
 	// Fundamentals
-	getLogo              *Endpoint[request.GetLogo, response.Logo, response.Credits, error]
-	getProfile           *Endpoint[request.GetProfile, response.Profile, response.Credits, error]
-	getKeyExecutives     *Endpoint[request.GetKeyExecutives, response.KeyExecutives, response.Credits, error]
-	getDividends         *Endpoint[request.GetDividends, response.Dividends, response.Credits, error]
-	getDividendsCalendar *Endpoint[request.GetDividendsCalendar, response.DividendsCalendar, response.Credits, error]
-	getEarnings          *Endpoint[request.GetEarnings, response.EarningsData, response.Credits, error]
-	getSplits            *Endpoint[request.GetSplits, response.Splits, response.Credits, error]
-	getSplitsCalendar    *Endpoint[request.GetSplitsCalendar, response.SplitsCalendar, response.Credits, error]
-	getStatistics        *Endpoint[request.GetStatistics, response.Statistics, response.Credits, error]
-	getEarningsCalendar  *Endpoint[request.GetEarningsCalendar, response.Earnings, response.Credits, error]
-	getIPOCalendar       *Endpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error]
-	getIncomeStatement   *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
-	getBalanceSheet      *Endpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error]
-	getCashFlow          *Endpoint[request.GetCashFlow, response.CashFlows, response.Credits, error]
-	getMarketCap         *Endpoint[request.GetMarketCap, response.MarketCap, response.Credits, error]
-	getLastChange        *Endpoint[request.GetLastChange, response.LastChange, response.Credits, error]
+	getLogo                        *Endpoint[request.GetLogo, response.Logo, response.Credits, error]
+	getProfile                     *Endpoint[request.GetProfile, response.Profile, response.Credits, error]
+	getKeyExecutives               *Endpoint[request.GetKeyExecutives, response.KeyExecutives, response.Credits, error]
+	getDividends                   *Endpoint[request.GetDividends, response.Dividends, response.Credits, error]
+	getDividendsCalendar           *Endpoint[request.GetDividendsCalendar, response.DividendsCalendar, response.Credits, error]
+	getEarnings                    *Endpoint[request.GetEarnings, response.EarningsData, response.Credits, error]
+	getSplits                      *Endpoint[request.GetSplits, response.Splits, response.Credits, error]
+	getSplitsCalendar              *Endpoint[request.GetSplitsCalendar, response.SplitsCalendar, response.Credits, error]
+	getStatistics                  *Endpoint[request.GetStatistics, response.Statistics, response.Credits, error]
+	getEarningsCalendar            *Endpoint[request.GetEarningsCalendar, response.Earnings, response.Credits, error]
+	getIPOCalendar                 *Endpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error]
+	getIncomeStatement             *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
+	getIncomeStatementConsolidated *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
+	getBalanceSheet                *Endpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error]
+	getBalanceSheetConsolidated    *Endpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error]
+	getCashFlow                    *Endpoint[request.GetCashFlow, response.CashFlows, response.Credits, error]
+	getCashFlowConsolidated        *Endpoint[request.GetCashFlow, response.CashFlows, response.Credits, error]
+	getMarketCap                   *Endpoint[request.GetMarketCap, response.MarketCap, response.Credits, error]
+	getLastChange                  *Endpoint[request.GetLastChange, response.LastChange, response.Credits, error]
 
 	// Technical Indicators
 	getBBands   *Endpoint[request.GetBBands, response.BBands, response.Credits, error]
@@ -254,12 +257,24 @@ func (cli client) GetIncomeStatement(req request.GetIncomeStatement) (response.I
 	return cli.getIncomeStatement.Call(req)
 }
 
+func (cli client) GetIncomeStatementConsolidated(req request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error) {
+	return cli.getIncomeStatementConsolidated.Call(req)
+}
+
 func (cli client) GetBalanceSheet(req request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error) {
 	return cli.getBalanceSheet.Call(req)
 }
 
+func (cli client) GetBalanceSheetConsolidated(req request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error) {
+	return cli.getBalanceSheetConsolidated.Call(req)
+}
+
 func (cli client) GetCashFlow(req request.GetCashFlow) (response.CashFlows, response.Credits, error) {
 	return cli.getCashFlow.Call(req)
+}
+
+func (cli client) GetCashFlowConsolidated(req request.GetCashFlow) (response.CashFlows, response.Credits, error) {
+	return cli.getCashFlowConsolidated.Call(req)
 }
 
 func (cli client) GetMarketCap(req request.GetMarketCap) (response.MarketCap, response.Credits, error) {
@@ -567,22 +582,25 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getMarketMovers:    NewEndpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.MarketMoversURL),
 
 		// Fundamentals
-		getLogo:              NewEndpoint[request.GetLogo, response.Logo, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.LogoURL),
-		getProfile:           NewEndpoint[request.GetProfile, response.Profile, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.ProfileURL),
-		getKeyExecutives:     NewEndpoint[request.GetKeyExecutives, response.KeyExecutives, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.KeyExecutivesURL),
-		getDividends:         NewEndpoint[request.GetDividends, response.Dividends, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.DividendsURL),
-		getDividendsCalendar: NewEndpoint[request.GetDividendsCalendar, response.DividendsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.DividendsCalendarURL),
-		getEarnings:          NewEndpoint[request.GetEarnings, response.EarningsData, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsURL),
-		getSplits:            NewEndpoint[request.GetSplits, response.Splits, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.SplitsURL),
-		getSplitsCalendar:    NewEndpoint[request.GetSplitsCalendar, response.SplitsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.SplitsCalendarURL),
-		getStatistics:        NewEndpoint[request.GetStatistics, response.Statistics, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.StatisticsURL),
-		getEarningsCalendar:  NewEndpoint[request.GetEarningsCalendar, response.Earnings, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsCalendarURL),
-		getIPOCalendar:       NewEndpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IPOCalendarURL),
-		getIncomeStatement:   NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementURL),
-		getBalanceSheet:      NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetURL),
-		getCashFlow:          NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowURL),
-		getMarketCap:         NewEndpoint[request.GetMarketCap, response.MarketCap, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.MarketCapURL),
-		getLastChange:        NewEndpoint[request.GetLastChange, response.LastChange, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.LastChangeURL),
+		getLogo:                        NewEndpoint[request.GetLogo, response.Logo, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.LogoURL),
+		getProfile:                     NewEndpoint[request.GetProfile, response.Profile, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.ProfileURL),
+		getKeyExecutives:               NewEndpoint[request.GetKeyExecutives, response.KeyExecutives, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.KeyExecutivesURL),
+		getDividends:                   NewEndpoint[request.GetDividends, response.Dividends, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.DividendsURL),
+		getDividendsCalendar:           NewEndpoint[request.GetDividendsCalendar, response.DividendsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.DividendsCalendarURL),
+		getEarnings:                    NewEndpoint[request.GetEarnings, response.EarningsData, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsURL),
+		getSplits:                      NewEndpoint[request.GetSplits, response.Splits, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.SplitsURL),
+		getSplitsCalendar:              NewEndpoint[request.GetSplitsCalendar, response.SplitsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.SplitsCalendarURL),
+		getStatistics:                  NewEndpoint[request.GetStatistics, response.Statistics, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.StatisticsURL),
+		getEarningsCalendar:            NewEndpoint[request.GetEarningsCalendar, response.Earnings, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsCalendarURL),
+		getIPOCalendar:                 NewEndpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IPOCalendarURL),
+		getIncomeStatement:             NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementURL),
+		getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementConsolidatedURL),
+		getBalanceSheet:                NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetURL),
+		getBalanceSheetConsolidated:    NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetConsolidatedURL),
+		getCashFlow:                    NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowURL),
+		getCashFlowConsolidated:        NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowConsolidatedURL),
+		getMarketCap:                   NewEndpoint[request.GetMarketCap, response.MarketCap, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.MarketCapURL),
+		getLastChange:                  NewEndpoint[request.GetLastChange, response.LastChange, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.LastChangeURL),
 
 		// Technical Indicators
 		getBBands:   NewEndpoint[request.GetBBands, response.BBands, response.Credits, error](httpCli, cfg.BaseURL+cfg.TechnicalIndicators.BbandsURL),
