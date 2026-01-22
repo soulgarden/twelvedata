@@ -14,6 +14,17 @@ func Test_client_GetExchangeRate(t *testing.T) {
 		url string
 	}
 
+	exchangeRateReq := request.GetExchangeRate{
+		APIKey:        request.APIKey{APIKey: ""},
+		Symbol:        "EUR/USD",
+		Date:          "2006-01-02",
+		Format:        "JSON",
+		Delimiter:     ";",
+		DecimalPlaces: 5,
+		TimeZone:      "UTC",
+	}
+	exchangeRateURL := "/?date=2006-01-02&delimiter=%3B&dp=5&format=JSON&symbol=EUR%2FUSD&timezone=UTC"
+
 	tests := []struct {
 		name        string
 		args        args
@@ -25,9 +36,7 @@ func Test_client_GetExchangeRate(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				req: request.GetExchangeRate{
-					APIKey: request.APIKey{APIKey: ""},
-				},
+				req: exchangeRateReq,
 				url: mockServerWithURL(
 					t,
 					http.StatusOK,
@@ -38,7 +47,7 @@ func Test_client_GetExchangeRate(t *testing.T) {
 					    "rate": 105.12,
 					    "timestamp": 1602714051
 					}`,
-					"/",
+					exchangeRateURL,
 				),
 			},
 			want: response.ExchangeRate{
@@ -48,21 +57,19 @@ func Test_client_GetExchangeRate(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?amount=100&symbol=EUR%2FUSD",
+			expectedURL: exchangeRateURL,
 		},
 		{
 			name: "wrong api key",
 			args: args{
-				req: request.GetExchangeRate{
-					APIKey: request.APIKey{APIKey: ""},
-				},
+				req: exchangeRateReq,
 				url: mockServerWithURL(
 					t,
 					http.StatusOK,
 					100,
 					100,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/",
+					exchangeRateURL,
 				),
 			},
 			want:  response.ExchangeRate{},
@@ -70,7 +77,7 @@ func Test_client_GetExchangeRate(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?amount=100&symbol=EUR%2FUSD",
+			expectedURL: exchangeRateURL,
 		},
 	}
 	for _, tt := range tests {
@@ -102,6 +109,18 @@ func Test_client_GetCurrencyConversion(t *testing.T) {
 		url string
 	}
 
+	currencyConversionReq := request.GetCurrencyConversion{
+		APIKey:        request.APIKey{APIKey: ""},
+		Symbol:        "EUR/USD",
+		Amount:        "100",
+		Date:          "2006-01-02",
+		Format:        "JSON",
+		Delimiter:     ";",
+		DecimalPlaces: 5,
+		TimeZone:      "UTC",
+	}
+	currencyConversionURL := "/?amount=100&date=2006-01-02&delimiter=%3B&dp=5&format=JSON&symbol=EUR%2FUSD&timezone=UTC"
+
 	tests := []struct {
 		name        string
 		args        args
@@ -113,11 +132,7 @@ func Test_client_GetCurrencyConversion(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				req: request.GetCurrencyConversion{
-					APIKey: request.APIKey{APIKey: ""},
-					Symbol: "EUR/USD",
-					Amount: "100",
-				},
+				req: currencyConversionReq,
 				url: mockServerWithURL(
 					t,
 					http.StatusOK,
@@ -129,7 +144,7 @@ func Test_client_GetCurrencyConversion(t *testing.T) {
 						"amount": 116.009,
 						"timestamp": 1755861240
 					}`,
-					"/?amount=100&symbol=EUR%2FUSD",
+					currencyConversionURL,
 				),
 			},
 			want: response.CurrencyConversion{
@@ -140,23 +155,19 @@ func Test_client_GetCurrencyConversion(t *testing.T) {
 			},
 			want1:       response.NewCreditsImpl(100, 1),
 			wantErr:     "",
-			expectedURL: "/?amount=100&symbol=EUR%2FUSD",
+			expectedURL: currencyConversionURL,
 		},
 		{
 			name: "wrong api key",
 			args: args{
-				req: request.GetCurrencyConversion{
-					APIKey: request.APIKey{APIKey: ""},
-					Symbol: "EUR/USD",
-					Amount: "100",
-				},
+				req: currencyConversionReq,
 				url: mockServerWithURL(
 					t,
 					http.StatusOK,
 					100,
 					1,
 					`{"code":401,"message":"**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer","status":"error"}`,
-					"/?amount=100&symbol=EUR%2FUSD",
+					currencyConversionURL,
 				),
 			},
 			want:  response.CurrencyConversion{},
@@ -164,7 +175,7 @@ func Test_client_GetCurrencyConversion(t *testing.T) {
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
 				"If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?amount=100&symbol=EUR%2FUSD",
+			expectedURL: currencyConversionURL,
 		},
 	}
 	for _, tt := range tests {

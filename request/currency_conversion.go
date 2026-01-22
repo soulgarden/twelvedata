@@ -6,6 +6,8 @@ type GetCurrencyConversion struct {
 	Symbol        string `schema:"symbol,omitempty"`
 	Amount        string `schema:"amount,omitempty"`
 	Date          string `schema:"date,omitempty"`
-	TimeZone      string `schema:"time_zone,omitempty"`
+	Format        string `schema:"format,omitempty"`
+	Delimiter     string `schema:"delimiter,omitempty"`
 	DecimalPlaces int    `schema:"dp,omitempty"`
+	TimeZone      string `schema:"timezone,omitempty"`
 }

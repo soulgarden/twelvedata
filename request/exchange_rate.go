@@ -5,6 +5,8 @@ type GetExchangeRate struct {
 	APIKey
 	Symbol        string `schema:"symbol,omitempty"`
 	Date          string `schema:"date,omitempty"`
-	TimeZone      string `schema:"time_zone,omitempty"`
+	Format        string `schema:"format,omitempty"`
+	Delimiter     string `schema:"delimiter,omitempty"`
 	DecimalPlaces int    `schema:"dp,omitempty"`
+	TimeZone      string `schema:"timezone,omitempty"`
 }

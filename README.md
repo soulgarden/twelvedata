@@ -68,7 +68,7 @@
 ## Currencies
 
 * Exchange rate         ✅
-* Currency conversion   ✅
+* Currency conversion   ✅ **Useful**
 
 ## WebSocket
 
