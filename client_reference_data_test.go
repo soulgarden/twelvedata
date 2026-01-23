@@ -1066,7 +1066,7 @@ func Test_client_GetTechnicalIndicators(t *testing.T) {
 					      "overlay": false,
 					      "parameters": {},
 					      "output_values": {},
-					      "tinting_details": {}
+					      "tinting": {}
 					    }
 					  },
 					  "status": "ok"
@@ -1077,14 +1077,14 @@ func Test_client_GetTechnicalIndicators(t *testing.T) {
 			want: response.TechnicalIndicators{
 				Data: map[string]*response.TechnicalIndicator{
 					"rsi": {
-						Enable:         true,
-						FullName:       "Relative Strength Index",
-						Description:    "Momentum oscillator",
-						Type:           "Momentum Indicators",
-						Overlay:        false,
-						Parameters:     map[string]interface{}{},
-						OutputValues:   map[string]interface{}{},
-						TintingDetails: map[string]interface{}{},
+						Enable:       true,
+						FullName:     "Relative Strength Index",
+						Description:  "Momentum oscillator",
+						Type:         "Momentum Indicators",
+						Overlay:      false,
+						Parameters:   map[string]interface{}{},
+						OutputValues: map[string]interface{}{},
+						Tinting:      map[string]interface{}{},
 					},
 				},
 				Status: "ok",

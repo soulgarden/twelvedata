@@ -108,14 +108,14 @@ type client struct {
 	getETFTypes       *Endpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error]
 
 	// Mutual Funds
-	getMutualFunds              *Endpoint[request.GetMutualFunds, response.MutualFunds, response.Credits, error]
+	getMutualFundsDirectory     *Endpoint[request.GetMutualFundsDirectory, response.MutualFundsDirectory, response.Credits, error]
 	getMutualFundFullData       *Endpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error]
-	getMutualFundSummary        *Endpoint[request.GetMutualFundSummary, response.MutualFundSummaryResponse, response.Credits, error]
+	getMutualFundSummary        *Endpoint[request.GetMutualFundSummary, response.MutualFundSummary, response.Credits, error]
 	getMutualFundPerformance    *Endpoint[request.GetMutualFundPerformance, response.MutualFundPerformance, response.Credits, error]
-	getMutualFundRisk           *Endpoint[request.GetMutualFundRisk, response.MutualFundRiskResponse, response.Credits, error]
-	getMutualFundRatings        *Endpoint[request.GetMutualFundRatings, response.MutualFundRatingsResponse, response.Credits, error]
+	getMutualFundRisk           *Endpoint[request.GetMutualFundRisk, response.MutualFundRisk, response.Credits, error]
+	getMutualFundRatings        *Endpoint[request.GetMutualFundRatings, response.MutualFundRatings, response.Credits, error]
 	getMutualFundComposition    *Endpoint[request.GetMutualFundComposition, response.MutualFundComposition, response.Credits, error]
-	getMutualFundPurchaseInfo   *Endpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfoResponse, response.Credits, error]
+	getMutualFundPurchaseInfo   *Endpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfo, response.Credits, error]
 	getMutualFundSustainability *Endpoint[request.GetMutualFundSustainability, response.MutualFundSustainability, response.Credits, error]
 	getMutualFundFamilies       *Endpoint[request.GetMutualFundFamilies, response.MutualFundFamilies, response.Credits, error]
 	getMutualFundTypes          *Endpoint[request.GetMutualFundTypes, response.MutualFundTypes, response.Credits, error]
@@ -168,23 +168,35 @@ func (cli client) GetKeyExecutives(req request.GetKeyExecutives) (response.KeyEx
 func (cli client) GetInsiderTransactions(req request.GetInsiderTransactions) (response.InsiderTransactions, response.Credits, error) {
 	return cli.getInsiderTransactions.Call(req)
 }
+
 func (cli client) GetEDGARFillings(req request.GetEDGARFillings) (response.EDGARFillings, response.Credits, error) {
 	return cli.getEDGARFillings.Call(req)
 }
+
 func (cli client) GetInstitutionalHolders(req request.GetInstitutionalHolders) (response.InstitutionalHolders, response.Credits, error) {
 	return cli.getInstitutionalHolders.Call(req)
 }
+
 func (cli client) GetFundHolders(req request.GetFundHolders) (response.FundHolders, response.Credits, error) {
 	return cli.getFundHolders.Call(req)
 }
+
 func (cli client) GetDirectHolders(req request.GetDirectHolders) (response.DirectHolders, response.Credits, error) {
 	return cli.getDirectHolders.Call(req)
 }
+
 func (cli client) GetTaxInformation(req request.GetTaxInformation) (response.TaxInformation, response.Credits, error) {
 	return cli.getTaxInformation.Call(req)
 }
+
 func (cli client) GetSanctionedEntities(req request.GetSanctionedEntities) (response.SanctionedEntities, response.Credits, error) {
-	return cli.getSanctionedEntities.Call(req)
+	url := strings.Replace(cli.getSanctionedEntities.URL, "{source}", req.Source, 1)
+	sanctionsEndpoint := NewEndpoint[request.GetSanctionedEntities, response.SanctionedEntities, response.Credits, error](
+		cli.getSanctionedEntities.httpCli,
+		url,
+	)
+
+	return sanctionsEndpoint.Call(req)
 }
 
 func (cli client) GetDividends(req request.GetDividends) (response.Dividends, response.Credits, error) {
@@ -476,8 +488,8 @@ func (cli client) GetETFTypes(req request.GetETFTypes) (response.ETFTypes, respo
 	return cli.getETFTypes.Call(req)
 }
 
-func (cli client) GetMutualFunds(req request.GetMutualFunds) (response.MutualFunds, response.Credits, error) {
-	return cli.getMutualFunds.Call(req)
+func (cli client) GetMutualFundsDirectory(req request.GetMutualFundsDirectory) (response.MutualFundsDirectory, response.Credits, error) {
+	return cli.getMutualFundsDirectory.Call(req)
 }
 
 func (cli client) GetMutualFundFullData(req request.GetMutualFundFullData) (response.MutualFundFullData, response.Credits, error) {
@@ -491,16 +503,16 @@ func (cli client) GetMutualFundPerformance(req request.GetMutualFundPerformance)
 func (cli client) GetMutualFundComposition(req request.GetMutualFundComposition) (response.MutualFundComposition, response.Credits, error) {
 	return cli.getMutualFundComposition.Call(req)
 }
-func (cli client) GetMutualFundSummary(req request.GetMutualFundSummary) (response.MutualFundSummaryResponse, response.Credits, error) {
+func (cli client) GetMutualFundSummary(req request.GetMutualFundSummary) (response.MutualFundSummary, response.Credits, error) {
 	return cli.getMutualFundSummary.Call(req)
 }
-func (cli client) GetMutualFundRisk(req request.GetMutualFundRisk) (response.MutualFundRiskResponse, response.Credits, error) {
+func (cli client) GetMutualFundRisk(req request.GetMutualFundRisk) (response.MutualFundRisk, response.Credits, error) {
 	return cli.getMutualFundRisk.Call(req)
 }
-func (cli client) GetMutualFundRatings(req request.GetMutualFundRatings) (response.MutualFundRatingsResponse, response.Credits, error) {
+func (cli client) GetMutualFundRatings(req request.GetMutualFundRatings) (response.MutualFundRatings, response.Credits, error) {
 	return cli.getMutualFundRatings.Call(req)
 }
-func (cli client) GetMutualFundPurchaseInfo(req request.GetMutualFundPurchaseInfo) (response.MutualFundPurchaseInfoResponse, response.Credits, error) {
+func (cli client) GetMutualFundPurchaseInfo(req request.GetMutualFundPurchaseInfo) (response.MutualFundPurchaseInfo, response.Credits, error) {
 	return cli.getMutualFundPurchaseInfo.Call(req)
 }
 func (cli client) GetMutualFundSustainability(req request.GetMutualFundSustainability) (response.MutualFundSustainability, response.Credits, error) {
@@ -648,14 +660,14 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getETFTypes:       NewEndpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsTypesURL),
 
 		// Mutual Funds
-		getMutualFunds:              NewEndpoint[request.GetMutualFunds, response.MutualFunds, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsDirectoryURL),
+		getMutualFundsDirectory:     NewEndpoint[request.GetMutualFundsDirectory, response.MutualFundsDirectory, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsDirectoryURL),
 		getMutualFundFullData:       NewEndpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsFullDataURL),
-		getMutualFundSummary:        NewEndpoint[request.GetMutualFundSummary, response.MutualFundSummaryResponse, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSummaryURL),
+		getMutualFundSummary:        NewEndpoint[request.GetMutualFundSummary, response.MutualFundSummary, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSummaryURL),
 		getMutualFundPerformance:    NewEndpoint[request.GetMutualFundPerformance, response.MutualFundPerformance, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsPerformanceURL),
-		getMutualFundRisk:           NewEndpoint[request.GetMutualFundRisk, response.MutualFundRiskResponse, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRiskURL),
-		getMutualFundRatings:        NewEndpoint[request.GetMutualFundRatings, response.MutualFundRatingsResponse, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRatingsURL),
+		getMutualFundRisk:           NewEndpoint[request.GetMutualFundRisk, response.MutualFundRisk, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRiskURL),
+		getMutualFundRatings:        NewEndpoint[request.GetMutualFundRatings, response.MutualFundRatings, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRatingsURL),
 		getMutualFundComposition:    NewEndpoint[request.GetMutualFundComposition, response.MutualFundComposition, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsCompositionURL),
-		getMutualFundPurchaseInfo:   NewEndpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfoResponse, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsPurchaseInfoURL),
+		getMutualFundPurchaseInfo:   NewEndpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfo, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsPurchaseInfoURL),
 		getMutualFundSustainability: NewEndpoint[request.GetMutualFundSustainability, response.MutualFundSustainability, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSustainabilityURL),
 		getMutualFundFamilies:       NewEndpoint[request.GetMutualFundFamilies, response.MutualFundFamilies, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsFamiliesURL),
 		getMutualFundTypes:          NewEndpoint[request.GetMutualFundTypes, response.MutualFundTypes, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsTypesURL),

@@ -3,11 +3,53 @@ package twelvedata
 
 import (
 	"net/http"
+	"net/url"
 	"testing"
 
+	"github.com/guregu/null/v6"
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
 )
+
+func buildExpectedURL(path string, params url.Values) string {
+	if len(params) == 0 {
+		return path
+	}
+	return path + "?" + params.Encode()
+}
+
+func technicalIndicatorParams(extra url.Values) url.Values {
+	params := url.Values{
+		"adjust":         []string{"splits"},
+		"country":        []string{"United States"},
+		"cusip":          []string{"037833100"},
+		"date":           []string{"2024-01-02"},
+		"delimiter":      []string{"comma"},
+		"dp":             []string{"4"},
+		"end_date":       []string{"2024-02-01"},
+		"exchange":       []string{"NASDAQ"},
+		"figi":           []string{"BBG000B9XRY4"},
+		"format":         []string{"json"},
+		"include_ohlc":   []string{"true"},
+		"interval":       []string{"1day"},
+		"isin":           []string{"US0378331005"},
+		"mic_code":       []string{"XNGS"},
+		"order":          []string{"asc"},
+		"outputsize":     []string{"120"},
+		"prepost":        []string{"true"},
+		"previous_close": []string{"true"},
+		"start_date":     []string{"2024-01-01"},
+		"symbol":         []string{"AAPL"},
+		"timezone":       []string{"America/New_York"},
+		"type":           []string{"stock"},
+	}
+
+	for key, values := range extra {
+		params[key] = values
+	}
+
+	return params
+}
 
 func Test_client_GetBBands(t *testing.T) {
 	tests := []TechnicalIndicatorTestCase[request.GetBBands, response.BBands]{
@@ -15,9 +57,33 @@ func Test_client_GetBBands(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetBBands]{
 				req: request.GetBBands{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:             request.APIKey{APIKey: ""},
+					Symbol:             "AAPL",
+					FIGI:               "BBG000B9XRY4",
+					ISIN:               "US0378331005",
+					CUSIP:              "037833100",
+					Interval:           "1day",
+					Exchange:           "NASDAQ",
+					MICCode:            "XNGS",
+					Country:            "United States",
+					MAType:             "SMA",
+					StandardDeviations: 2.5,
+					SeriesType:         "close",
+					TimePeriod:         20,
+					Type:               "stock",
+					OutputSize:         120,
+					Format:             "json",
+					Delimiter:          "comma",
+					Prepost:            true,
+					DP:                 4,
+					Order:              "asc",
+					IncludeOHLC:        true,
+					Timezone:           "America/New_York",
+					Date:               "2024-01-02",
+					StartDate:          "2024-01-01",
+					EndDate:            "2024-02-01",
+					PreviousClose:      true,
+					Adjust:             "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -51,7 +117,15 @@ func Test_client_GetBBands(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/bbands?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/bbands",
+						technicalIndicatorParams(url.Values{
+							"ma_type":     []string{"SMA"},
+							"sd":          []string{"2.500000"},
+							"series_type": []string{"close"},
+							"time_period": []string{"20"},
+						}),
+					),
 				),
 			},
 			want: response.BBands{
@@ -108,9 +182,31 @@ func Test_client_GetSMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetSMA]{
 				req: request.GetSMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    9,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -140,7 +236,13 @@ func Test_client_GetSMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/sma?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/sma",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"9"},
+						}),
+					),
 				),
 			},
 			want: response.SMA{
@@ -193,9 +295,31 @@ func Test_client_GetEMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetEMA]{
 				req: request.GetEMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    9,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -225,7 +349,13 @@ func Test_client_GetEMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/ema?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/ema",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"9"},
+						}),
+					),
 				),
 			},
 			want: response.EMA{
@@ -278,9 +408,33 @@ func Test_client_GetMACD(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetMACD]{
 				req: request.GetMACD{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					FastPeriod:    12,
+					SlowPeriod:    26,
+					SignalPeriod:  9,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -314,7 +468,15 @@ func Test_client_GetMACD(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/macd?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/macd",
+						technicalIndicatorParams(url.Values{
+							"fast_period":   []string{"12"},
+							"series_type":   []string{"close"},
+							"signal_period": []string{"9"},
+							"slow_period":   []string{"26"},
+						}),
+					),
 				),
 			},
 			want: response.MACD{
@@ -371,9 +533,31 @@ func Test_client_GetRSI(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetRSI]{
 				req: request.GetRSI{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    14,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -403,7 +587,13 @@ func Test_client_GetRSI(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/rsi?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/rsi",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"14"},
+						}),
+					),
 				),
 			},
 			want: response.RSI{
@@ -456,9 +646,30 @@ func Test_client_GetATR(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetATR]{
 				req: request.GetATR{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					TimePeriod:    14,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -487,7 +698,12 @@ func Test_client_GetATR(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/atr?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/atr",
+						technicalIndicatorParams(url.Values{
+							"time_period": []string{"14"},
+						}),
+					),
 				),
 			},
 			want: response.ATR{
@@ -539,9 +755,30 @@ func Test_client_GetCCI(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetCCI]{
 				req: request.GetCCI{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					TimePeriod:    20,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -570,7 +807,12 @@ func Test_client_GetCCI(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/cci?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/cci",
+						technicalIndicatorParams(url.Values{
+							"time_period": []string{"20"},
+						}),
+					),
 				),
 			},
 			want: response.CCI{
@@ -622,9 +864,31 @@ func Test_client_GetDEMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetDEMA]{
 				req: request.GetDEMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    9,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -654,7 +918,13 @@ func Test_client_GetDEMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/dema?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/dema",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"9"},
+						}),
+					),
 				),
 			},
 			want: response.DEMA{
@@ -707,9 +977,31 @@ func Test_client_GetKAMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetKAMA]{
 				req: request.GetKAMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    10,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -739,7 +1031,13 @@ func Test_client_GetKAMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/kama?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/kama",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"10"},
+						}),
+					),
 				),
 			},
 			want: response.KAMA{
@@ -792,9 +1090,32 @@ func Test_client_GetMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetMA]{
 				req: request.GetMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    9,
+					MAType:        "SMA",
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -825,7 +1146,14 @@ func Test_client_GetMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/ma?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/ma",
+						technicalIndicatorParams(url.Values{
+							"ma_type":     []string{"SMA"},
+							"series_type": []string{"close"},
+							"time_period": []string{"9"},
+						}),
+					),
 				),
 			},
 			want: response.MA{
@@ -879,9 +1207,31 @@ func Test_client_GetSAR(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetSAR]{
 				req: request.GetSAR{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					Acceleration:  0.02,
+					Maximum:       0.2,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -911,7 +1261,13 @@ func Test_client_GetSAR(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/sar?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/sar",
+						technicalIndicatorParams(url.Values{
+							"acceleration": []string{"0.020000"},
+							"maximum":      []string{"0.200000"},
+						}),
+					),
 				),
 			},
 			want: response.SAR{
@@ -964,9 +1320,31 @@ func Test_client_GetTEMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetTEMA]{
 				req: request.GetTEMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    10,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -996,7 +1374,13 @@ func Test_client_GetTEMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/tema?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/tema",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"10"},
+						}),
+					),
 				),
 			},
 			want: response.TEMA{
@@ -1049,9 +1433,31 @@ func Test_client_GetTRMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetTRMA]{
 				req: request.GetTRMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    14,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1081,7 +1487,13 @@ func Test_client_GetTRMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/trma?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/trima",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"14"},
+						}),
+					),
 				),
 			},
 			want: response.TRMA{
@@ -1115,7 +1527,7 @@ func Test_client_GetTRMA(t *testing.T) {
 	runTechnicalIndicatorTest(
 		t,
 		tests,
-		"/trma",
+		"/trima",
 		"GetTRMA",
 		func(httpCli *HTTPCli, url string) interface{} {
 			return client{
@@ -1134,9 +1546,31 @@ func Test_client_GetVWAP(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetVWAP]{
 				req: request.GetVWAP{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:             request.APIKey{APIKey: ""},
+					Symbol:             "AAPL",
+					FIGI:               "BBG000B9XRY4",
+					ISIN:               "US0378331005",
+					CUSIP:              "037833100",
+					Interval:           "1day",
+					Exchange:           "NASDAQ",
+					MICCode:            "XNGS",
+					Country:            "United States",
+					StandardDeviations: 2.5,
+					SDTimePeriod:       14,
+					Type:               "stock",
+					OutputSize:         120,
+					Format:             "json",
+					Delimiter:          "comma",
+					Prepost:            true,
+					DP:                 4,
+					Order:              "asc",
+					IncludeOHLC:        true,
+					Timezone:           "America/New_York",
+					Date:               "2024-01-02",
+					StartDate:          "2024-01-01",
+					EndDate:            "2024-02-01",
+					PreviousClose:      true,
+					Adjust:             "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1153,18 +1587,28 @@ func Test_client_GetVWAP(t *testing.T) {
 					    "mic_code": "XNGS",
 					    "type": "Common Stock",
 					    "indicator": {
-					      "name": "VWAP - Volume Weighted Average Price"
+					      "name": "VWAP - Volume Weighted Average Price",
+					      "sd_time_period": 14,
+					      "sd": 2.5
 					    }
 					  },
 					  "values": [
 					    {
 					      "datetime": "2025-08-21",
-					      "vwap": "220.12345"
+					      "vwap_lower": "219.12345",
+					      "vwap": "220.12345",
+					      "vwap_upper": "221.12345"
 					    }
 					  ],
 					  "status": "ok"
 					}`,
-					"/vwap?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/vwap",
+						technicalIndicatorParams(url.Values{
+							"sd":             []string{"2.500000"},
+							"sd_time_period": []string{"14"},
+						}),
+					),
 				),
 			},
 			want: response.VWAP{
@@ -1177,13 +1621,17 @@ func Test_client_GetVWAP(t *testing.T) {
 					MicCode:          "XNGS",
 					Type:             "Common Stock",
 					Indicator: response.VWAPIndicator{
-						Name: "VWAP - Volume Weighted Average Price",
+						Name:         "VWAP - Volume Weighted Average Price",
+						SDTimePeriod: null.IntFrom(14),
+						SD:           response.FloatStringFrom(2.5),
 					},
 				},
 				Values: []response.VWAPValue{
 					{
-						Datetime: "2025-08-21",
-						VWAP:     "220.12345",
+						Datetime:  "2025-08-21",
+						VWAPLower: response.FloatStringFrom(219.12345),
+						VWAP:      response.FloatStringFrom(220.12345),
+						VWAPUpper: response.FloatStringFrom(221.12345),
 					},
 				},
 				Status: "ok",
@@ -1215,9 +1663,31 @@ func Test_client_GetWMA(t *testing.T) {
 			name: "success with demo API response",
 			args: TechnicalIndicatorTestArgs[request.GetWMA]{
 				req: request.GetWMA{
-					APIKey:   request.APIKey{APIKey: ""},
-					Symbol:   "AAPL",
-					Interval: "1day",
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    9,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
 				},
 				url: mockServerWithURL(
 					t,
@@ -1247,7 +1717,13 @@ func Test_client_GetWMA(t *testing.T) {
 					  ],
 					  "status": "ok"
 					}`,
-					"/wma?interval=1day&symbol=AAPL",
+					buildExpectedURL(
+						"/wma",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"9"},
+						}),
+					),
 				),
 			},
 			want: response.WMA{
@@ -1290,6 +1766,1118 @@ func Test_client_GetWMA(t *testing.T) {
 		},
 		func(cli interface{}, req request.GetWMA) (response.WMA, response.Credits, error) {
 			return cli.(client).GetWMA(req)
+		},
+	)
+}
+
+func Test_client_GetADX(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetADX, response.ADX]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetADX]{
+				req: request.GetADX{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					TimePeriod:    14,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "ADX - Average Directional Index",
+					      "time_period": 14
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "adx": "25.1234"
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/adx",
+						technicalIndicatorParams(url.Values{
+							"time_period": []string{"14"},
+						}),
+					),
+				),
+			},
+			want: response.ADX{
+				Meta: response.ADXMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.ADXIndicator{
+						Name:       "ADX - Average Directional Index",
+						TimePeriod: 14,
+					},
+				},
+				Values: []response.ADXData{
+					{
+						Datetime: "2025-08-21",
+						ADX:      "25.1234",
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/adx",
+		"GetADX",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getADX: NewEndpoint[request.GetADX, response.ADX, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetADX) (response.ADX, response.Credits, error) {
+			return cli.(client).GetADX(req)
+		},
+	)
+}
+
+func Test_client_GetStoch(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetStoch, response.Stoch]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetStoch]{
+				req: request.GetStoch{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					FastKPeriod:   14,
+					SlowKPeriod:   3,
+					SlowDPeriod:   3,
+					SlowKMAType:   "SMA",
+					SlowDMAType:   "SMA",
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "STOCH - Stochastic Oscillator",
+					      "fast_k_period": 14,
+					      "slow_k_period": 3,
+					      "slow_d_period": 3,
+					      "slow_kma_type": "SMA",
+					      "slow_dma_type": "SMA"
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "slow_k": "78.1234",
+					      "slow_d": "75.9876"
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/stoch",
+						technicalIndicatorParams(url.Values{
+							"fast_k_period": []string{"14"},
+							"slow_d_period": []string{"3"},
+							"slow_dma_type": []string{"SMA"},
+							"slow_k_period": []string{"3"},
+							"slow_kma_type": []string{"SMA"},
+						}),
+					),
+				),
+			},
+			want: response.Stoch{
+				Meta: response.StochMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.StochIndicator{
+						Name:        "STOCH - Stochastic Oscillator",
+						FastKPeriod: 14,
+						SlowKPeriod: 3,
+						SlowDPeriod: 3,
+						SlowKMAType: "SMA",
+						SlowDMAType: "SMA",
+					},
+				},
+				Values: []response.StochData{
+					{
+						Datetime: "2025-08-21",
+						SlowK:    "78.1234",
+						SlowD:    "75.9876",
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/stoch",
+		"GetStoch",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getStoch: NewEndpoint[request.GetStoch, response.Stoch, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetStoch) (response.Stoch, response.Credits, error) {
+			return cli.(client).GetStoch(req)
+		},
+	)
+}
+
+func Test_client_GetPercentB(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetPercentB, response.PercentB]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetPercentB]{
+				req: request.GetPercentB{
+					APIKey:             request.APIKey{APIKey: ""},
+					Symbol:             "AAPL",
+					FIGI:               "BBG000B9XRY4",
+					ISIN:               "US0378331005",
+					CUSIP:              "037833100",
+					Interval:           "1day",
+					Exchange:           "NASDAQ",
+					MICCode:            "XNGS",
+					Country:            "United States",
+					SeriesType:         "close",
+					TimePeriod:         20,
+					StandardDeviations: 2.5,
+					MAType:             "SMA",
+					Type:               "stock",
+					OutputSize:         120,
+					Format:             "json",
+					Delimiter:          "comma",
+					Prepost:            true,
+					DP:                 4,
+					Order:              "asc",
+					IncludeOHLC:        true,
+					Timezone:           "America/New_York",
+					Date:               "2024-01-02",
+					StartDate:          "2024-01-01",
+					EndDate:            "2024-02-01",
+					PreviousClose:      true,
+					Adjust:             "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "%B - Bollinger Bands %B",
+					      "series_type": "close",
+					      "time_period": 20,
+					      "sd": 2,
+					      "ma_type": "SMA"
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "percent_b": "0.42"
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/percent_b",
+						technicalIndicatorParams(url.Values{
+							"ma_type":     []string{"SMA"},
+							"sd":          []string{"2.500000"},
+							"series_type": []string{"close"},
+							"time_period": []string{"20"},
+						}),
+					),
+				),
+			},
+			want: response.PercentB{
+				Meta: response.PercentBMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.PercentBIndicator{
+						Name:       "%B - Bollinger Bands %B",
+						SeriesType: "close",
+						TimePeriod: 20,
+						SD:         2,
+						MAType:     "SMA",
+					},
+				},
+				Values: []response.PercentBData{
+					{
+						Datetime: "2025-08-21",
+						PercentB: "0.42",
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/percent_b",
+		"GetPercentB",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getPercentB: NewEndpoint[request.GetPercentB, response.PercentB, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetPercentB) (response.PercentB, response.Credits, error) {
+			return cli.(client).GetPercentB(req)
+		},
+	)
+}
+
+func Test_client_GetWillR(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetWillR, response.WillR]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetWillR]{
+				req: request.GetWillR{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					TimePeriod:    14,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "WILLR - Williams %R",
+					      "time_period": 14
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "williams_r": -35.5
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/willr",
+						technicalIndicatorParams(url.Values{
+							"time_period": []string{"14"},
+						}),
+					),
+				),
+			},
+			want: response.WillR{
+				Meta: response.WillRMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.WillRIndicator{
+						Name:       "WILLR - Williams %R",
+						TimePeriod: 14,
+					},
+				},
+				Values: []response.WillRValue{
+					{
+						Datetime:  "2025-08-21",
+						WilliamsR: null.FloatFrom(-35.5),
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/willr",
+		"GetWillR",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getWillR: NewEndpoint[request.GetWillR, response.WillR, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetWillR) (response.WillR, response.Credits, error) {
+			return cli.(client).GetWillR(req)
+		},
+	)
+}
+
+func Test_client_GetROC(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetROC, response.ROC]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetROC]{
+				req: request.GetROC{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    10,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "ROC - Rate of Change",
+					      "series_type": "close",
+					      "time_period": 10
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "roc": 1.23
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/roc",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"10"},
+						}),
+					),
+				),
+			},
+			want: response.ROC{
+				Meta: response.ROCMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.ROCIndicator{
+						Name:       "ROC - Rate of Change",
+						SeriesType: "close",
+						TimePeriod: 10,
+					},
+				},
+				Values: []response.ROCValue{
+					{
+						Datetime: "2025-08-21",
+						ROC:      null.FloatFrom(1.23),
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/roc",
+		"GetROC",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getROC: NewEndpoint[request.GetROC, response.ROC, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetROC) (response.ROC, response.Credits, error) {
+			return cli.(client).GetROC(req)
+		},
+	)
+}
+
+func Test_client_GetMOM(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetMOM, response.MOM]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetMOM]{
+				req: request.GetMOM{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					TimePeriod:    10,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "MOM - Momentum",
+					      "series_type": "close",
+					      "time_period": 10
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "mom": 2.34
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/mom",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+							"time_period": []string{"10"},
+						}),
+					),
+				),
+			},
+			want: response.MOM{
+				Meta: response.MOMMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.MOMIndicator{
+						Name:       "MOM - Momentum",
+						SeriesType: "close",
+						TimePeriod: 10,
+					},
+				},
+				Values: []response.MOMValue{
+					{
+						Datetime: "2025-08-21",
+						MOM:      null.FloatFrom(2.34),
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/mom",
+		"GetMOM",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getMOM: NewEndpoint[request.GetMOM, response.MOM, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetMOM) (response.MOM, response.Credits, error) {
+			return cli.(client).GetMOM(req)
+		},
+	)
+}
+
+func Test_client_GetOBV(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetOBV, response.OBV]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetOBV]{
+				req: request.GetOBV{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					SeriesType:    "close",
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "OBV - On Balance Volume",
+					      "series_type": "close"
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "obv": "123456.78"
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/obv",
+						technicalIndicatorParams(url.Values{
+							"series_type": []string{"close"},
+						}),
+					),
+				),
+			},
+			want: response.OBV{
+				Meta: response.OBVMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.OBVIndicator{
+						Name:       "OBV - On Balance Volume",
+						SeriesType: "close",
+					},
+				},
+				Values: []response.OBVValue{
+					{
+						Datetime: "2025-08-21",
+						OBV:      response.FloatStringFrom(123456.78),
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/obv",
+		"GetOBV",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getOBV: NewEndpoint[request.GetOBV, response.OBV, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetOBV) (response.OBV, response.Credits, error) {
+			return cli.(client).GetOBV(req)
+		},
+	)
+}
+
+func Test_client_GetAD(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetAD, response.AD]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetAD]{
+				req: request.GetAD{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "AD - Accumulation/Distribution"
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "ad": 98765.43
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL("/ad", technicalIndicatorParams(url.Values{})),
+				),
+			},
+			want: response.AD{
+				Meta: response.ADMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.ADIndicator{
+						Name: "AD - Accumulation/Distribution",
+					},
+				},
+				Values: []response.ADValue{
+					{
+						Datetime: "2025-08-21",
+						AD:       null.FloatFrom(98765.43),
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/ad",
+		"GetAD",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getAD: NewEndpoint[request.GetAD, response.AD, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetAD) (response.AD, response.Credits, error) {
+			return cli.(client).GetAD(req)
+		},
+	)
+}
+
+func Test_client_GetNATR(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetNATR, response.NATR]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetNATR]{
+				req: request.GetNATR{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					TimePeriod:    14,
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "NATR - Normalized Average True Range",
+					      "time_period": 14
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "natr": 1.2345
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL(
+						"/natr",
+						technicalIndicatorParams(url.Values{
+							"time_period": []string{"14"},
+						}),
+					),
+				),
+			},
+			want: response.NATR{
+				Meta: response.NATRMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.NATRIndicator{
+						Name:       "NATR - Normalized Average True Range",
+						TimePeriod: 14,
+					},
+				},
+				Values: []response.NATRValue{
+					{
+						Datetime: "2025-08-21",
+						NATR:     null.FloatFrom(1.2345),
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/natr",
+		"GetNATR",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getNATR: NewEndpoint[request.GetNATR, response.NATR, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetNATR) (response.NATR, response.Credits, error) {
+			return cli.(client).GetNATR(req)
+		},
+	)
+}
+
+func Test_client_GetTR(t *testing.T) {
+	tests := []TechnicalIndicatorTestCase[request.GetTR, response.TR]{
+		{
+			name: "success with demo API response",
+			args: TechnicalIndicatorTestArgs[request.GetTR]{
+				req: request.GetTR{
+					APIKey:        request.APIKey{APIKey: ""},
+					Symbol:        "AAPL",
+					FIGI:          "BBG000B9XRY4",
+					ISIN:          "US0378331005",
+					CUSIP:         "037833100",
+					Interval:      "1day",
+					Exchange:      "NASDAQ",
+					MICCode:       "XNGS",
+					Country:       "United States",
+					Type:          "stock",
+					OutputSize:    120,
+					Format:        "json",
+					Delimiter:     "comma",
+					Prepost:       true,
+					DP:            4,
+					Order:         "asc",
+					IncludeOHLC:   true,
+					Timezone:      "America/New_York",
+					Date:          "2024-01-02",
+					StartDate:     "2024-01-01",
+					EndDate:       "2024-02-01",
+					PreviousClose: true,
+					Adjust:        "splits",
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					10,
+					`{
+					  "meta": {
+					    "symbol": "AAPL",
+					    "interval": "1day",
+					    "currency": "USD",
+					    "exchange_timezone": "America/New_York",
+					    "exchange": "NASDAQ",
+					    "mic_code": "XNGS",
+					    "type": "Common Stock",
+					    "indicator": {
+					      "name": "TR - True Range"
+					    }
+					  },
+					  "values": [
+					    {
+					      "datetime": "2025-08-21",
+					      "tr": 5.6789
+					    }
+					  ],
+					  "status": "ok"
+					}`,
+					buildExpectedURL("/trange", technicalIndicatorParams(url.Values{})),
+				),
+			},
+			want: response.TR{
+				Meta: response.TRMeta{
+					Symbol:           "AAPL",
+					Interval:         "1day",
+					Currency:         "USD",
+					ExchangeTimezone: "America/New_York",
+					Exchange:         "NASDAQ",
+					MicCode:          "XNGS",
+					Type:             "Common Stock",
+					Indicator: response.TRIndicator{
+						Name: "TR - True Range",
+					},
+				},
+				Values: []response.TRValue{
+					{
+						Datetime: "2025-08-21",
+						TR:       null.FloatFrom(5.6789),
+					},
+				},
+				Status: "ok",
+			},
+			want1:   response.NewCreditsImpl(100, 10),
+			wantErr: "",
+		},
+	}
+
+	runTechnicalIndicatorTest(
+		t,
+		tests,
+		"/trange",
+		"GetTR",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getTR: NewEndpoint[request.GetTR, response.TR, response.Credits, error](httpCli, url),
+			}
+		},
+		func(cli interface{}, req request.GetTR) (response.TR, response.Credits, error) {
+			return cli.(client).GetTR(req)
 		},
 	)
 }

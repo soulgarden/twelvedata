@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // VWAP represents the Volume Weighted Average Price technical indicator response data.
 type VWAP struct {
 	Meta   VWAPMeta    `json:"meta"`
@@ -21,11 +23,15 @@ type VWAPMeta struct {
 
 // VWAPIndicator contains metadata about the Volume Weighted Average Price indicator configuration.
 type VWAPIndicator struct {
-	Name string `json:"name"`
+	Name         string      `json:"name"`
+	SDTimePeriod null.Int    `json:"sd_time_period"`
+	SD           FloatString `json:"sd"`
 }
 
 // VWAPValue represents a single data point in the Volume Weighted Average Price technical indicator response.
 type VWAPValue struct {
-	Datetime string `json:"datetime"`
-	VWAP     string `json:"vwap"`
+	Datetime  string      `json:"datetime"`
+	VWAPLower FloatString `json:"vwap_lower"`
+	VWAP      FloatString `json:"vwap"`
+	VWAPUpper FloatString `json:"vwap_upper"`
 }

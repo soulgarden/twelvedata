@@ -1,7 +1,5 @@
 package response
 
-import "github.com/guregu/null/v6"
-
 // OBV represents the response structure for the On Balance Volume technical indicator endpoint.
 type OBV struct {
 	Meta   OBVMeta    `json:"meta"`
@@ -23,11 +21,12 @@ type OBVMeta struct {
 
 // OBVIndicator contains metadata about the On Balance Volume indicator configuration.
 type OBVIndicator struct {
-	Name string `json:"name"`
+	Name       string `json:"name"`
+	SeriesType string `json:"series_type"`
 }
 
 // OBVValue represents individual On Balance Volume data points.
 type OBVValue struct {
-	Datetime string     `json:"datetime"`
-	OBV      null.Float `json:"obv"`
+	Datetime string      `json:"datetime"`
+	OBV      FloatString `json:"obv"`
 }

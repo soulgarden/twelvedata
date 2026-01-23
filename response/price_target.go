@@ -4,29 +4,17 @@ import "github.com/guregu/null/v6"
 
 // PriceTarget represents analyst price target data.
 type PriceTarget struct {
-	Symbol      string               `json:"symbol"`
-	Exchange    string               `json:"exchange"`
-	Current     PriceTargetCurrent   `json:"current"`
-	History     []PriceTargetHistory `json:"history"`
-	LastUpdated string               `json:"last_updated"`
+	Meta        AnalysisMeta    `json:"meta"`
+	PriceTarget PriceTargetData `json:"price_target"`
+	Status      string          `json:"status"`
 }
 
-// PriceTargetCurrent represents current price target information.
-type PriceTargetCurrent struct {
-	Mean         null.Float `json:"mean"`
-	Median       null.Float `json:"median"`
-	High         null.Float `json:"high"`
-	Low          null.Float `json:"low"`
-	StandardDev  null.Float `json:"standard_deviation"`
-	AnalystCount int        `json:"analyst_count"`
-	Currency     string     `json:"currency"`
-}
-
-// PriceTargetHistory represents historical price target data.
-type PriceTargetHistory struct {
-	Date         string     `json:"date"`
-	Mean         null.Float `json:"mean"`
-	High         null.Float `json:"high"`
-	Low          null.Float `json:"low"`
-	AnalystCount int        `json:"analyst_count"`
+// PriceTargetData represents price target information.
+type PriceTargetData struct {
+	High     null.Float `json:"high"`
+	Median   null.Float `json:"median"`
+	Low      null.Float `json:"low"`
+	Average  null.Float `json:"average"`
+	Current  null.Float `json:"current"`
+	Currency string     `json:"currency"`
 }

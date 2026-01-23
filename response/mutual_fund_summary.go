@@ -2,8 +2,8 @@ package response
 
 import "github.com/guregu/null/v6"
 
-// MutualFundSummaryResponse represents the response structure for Mutual Fund Summary data.
-type MutualFundSummaryResponse struct {
+// MutualFundSummary represents the response structure for mutual fund summary data.
+type MutualFundSummary struct {
 	MutualFund MutualFundSummaryData `json:"mutual_fund"`
 	Status     string                `json:"status"`
 }
@@ -15,22 +15,25 @@ type MutualFundSummaryData struct {
 
 // MutualFundSummaryInfo contains detailed summary information for a mutual fund.
 type MutualFundSummaryInfo struct {
-	Symbol        string      `json:"symbol"`
-	Name          string      `json:"name"`
-	Currency      string      `json:"currency"`
-	Exchange      string      `json:"exchange"`
-	Country       string      `json:"country"`
-	AssetClass    string      `json:"asset_class"`
-	Category      string      `json:"category"`
-	FundFamily    string      `json:"fund_family"`
-	NetAssets     null.Float  `json:"net_assets"`
-	ExpenseRatio  null.Float  `json:"expense_ratio"`
-	InceptionDate null.String `json:"inception_date"`
-	LastUpdated   null.String `json:"last_updated"`
-	YTDReturn     null.Float  `json:"ytd_return"`
-	Yield         null.Float  `json:"yield"`
-	NAV           null.Float  `json:"nav"`
-	LastPrice     null.Float  `json:"last_price"`
-	TurnoverRate  null.Float  `json:"turnover_rate"`
-	Overview      string      `json:"overview"`
+	Symbol                  string              `json:"symbol"`
+	Name                    string              `json:"name"`
+	FundFamily              string              `json:"fund_family"`
+	FundType                string              `json:"fund_type"`
+	Currency                string              `json:"currency"`
+	ShareClassInceptionDate string              `json:"share_class_inception_date"`
+	YTDReturn               null.Float          `json:"ytd_return"`
+	ExpenseRatioNet         null.Float          `json:"expense_ratio_net"`
+	Yield                   null.Float          `json:"yield"`
+	NAV                     null.Float          `json:"nav"`
+	MinInvestment           null.Int            `json:"min_investment"`
+	TurnoverRate            null.Float          `json:"turnover_rate"`
+	NetAssets               null.Int            `json:"net_assets"`
+	Overview                string              `json:"overview"`
+	People                  []MutualFundManager `json:"people"`
+}
+
+// MutualFundManager represents a mutual fund manager.
+type MutualFundManager struct {
+	Name        string `json:"name"`
+	TenureSince string `json:"tenure_since"`
 }

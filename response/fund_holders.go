@@ -20,7 +20,7 @@ type FundHoldersMeta struct {
 
 // FundHolder represents a single mutual fund holder record.
 type FundHolder struct {
-	FundName     string     `json:"fund_name"`
+	EntityName   string     `json:"entity_name"`
 	DateReported string     `json:"date_reported"`
 	Shares       int64      `json:"shares"`
 	Value        int64      `json:"value"`

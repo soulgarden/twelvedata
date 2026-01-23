@@ -241,17 +241,11 @@ const (
 
 	// EDGARFillings represents the API credit cost for EDGAR filings requests.
 	// Regulatory.
-	EDGARFillings = 500
-	// InsiderTransaction represents the API credit cost for insider transaction requests.
-	InsiderTransaction = 200
-	// RegulatoryInstitutionalHolders represents the API credit cost for regulatory institutional holders requests.
-	RegulatoryInstitutionalHolders = 1500
-	// RegulatoryFundHolders represents the API credit cost for regulatory fund holders requests.
-	RegulatoryFundHolders = 1500
+	EDGARFillings = 50
 	// DirectHolders represents the API credit cost for direct holders requests.
 	DirectHolders = 1500
 	// TaxInformation represents the API credit cost for tax information requests.
-	TaxInformation = 100
+	TaxInformation = 50
 	// SanctionedEntities represents the API credit cost for sanctioned entities requests.
 	SanctionedEntities = 50
 

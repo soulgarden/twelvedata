@@ -170,8 +170,8 @@ type MutualFunds struct {
 	MutualFundsCompositionURL    string `default:"/mutual_funds/world/composition"  json:"mutual_funds_composition_url"`
 	MutualFundsPurchaseInfoURL   string `default:"/mutual_funds/world/purchase_info" json:"mutual_funds_purchase_info_url"`
 	MutualFundsSustainabilityURL string `default:"/mutual_funds/world/sustainability" json:"mutual_funds_sustainability_url"`
-	MutualFundsFamiliesURL       string `default:"/mutual_funds/world/families"     json:"mutual_funds_families_url"`
-	MutualFundsTypesURL          string `default:"/mutual_funds/world/types"        json:"mutual_funds_types_url"`
+	MutualFundsFamiliesURL       string `default:"/mutual_funds/family"             json:"mutual_funds_families_url"`
+	MutualFundsTypesURL          string `default:"/mutual_funds/type"               json:"mutual_funds_types_url"`
 }
 
 // Analysis contains URL configurations for analysis endpoints including earnings estimates, recommendations, and price targets.
@@ -184,8 +184,8 @@ type Analysis struct {
 	GrowthEstimatesURL          string `default:"/growth_estimates"             json:"growth_estimates_url"`
 	RecommendationsURL          string `default:"/recommendations"              json:"recommendations_url"`
 	PriceTargetURL              string `default:"/price_target"                 json:"price_target_url"`
-	AnalystRatingsSnapshotURL   string `default:"/analyst_ratings_snapshot"     json:"analyst_ratings_snapshot_url"`
-	AnalystRatingsUSEquitiesURL string `default:"/analyst_ratings_us_equities"  json:"analyst_ratings_us_equities_url"`
+	AnalystRatingsSnapshotURL   string `default:"/analyst_ratings/light"        json:"analyst_ratings_snapshot_url"`
+	AnalystRatingsUSEquitiesURL string `default:"/analyst_ratings/us_equities"  json:"analyst_ratings_us_equities_url"`
 }
 
 // Regulatory contains URL configurations for regulatory and compliance endpoints including filings and ownership data.
@@ -196,6 +196,6 @@ type Regulatory struct {
 	InstitutionalHoldersURL string `default:"/institutional_holders" json:"institutional_holders_url"`
 	FundHoldersURL          string `default:"/fund_holders"          json:"fund_holders_url"`
 	DirectHoldersURL        string `default:"/direct_holders"        json:"direct_holders_url"`
-	TaxInformationURL       string `default:"/tax_information"       json:"tax_information_url"`
-	SanctionedEntitiesURL   string `default:"/sanctioned_entities"   json:"sanctioned_entities_url"`
+	TaxInformationURL       string `default:"/tax_info"            json:"tax_information_url"`
+	SanctionedEntitiesURL   string `default:"/sanctions/{source}"  json:"sanctioned_entities_url"`
 }

@@ -20,10 +20,9 @@ type DirectHoldersMeta struct {
 
 // DirectHolder represents a single direct holder record.
 type DirectHolder struct {
-	HolderName   string      `json:"holder_name"`
-	DateReported string      `json:"date_reported"`
-	Shares       int64       `json:"shares"`
-	Value        null.Int    `json:"value"`
-	PercentHeld  null.Float  `json:"percent_held"`
-	HolderType   null.String `json:"holder_type"`
+	EntityName   string     `json:"entity_name"`
+	DateReported string     `json:"date_reported"`
+	Shares       int64      `json:"shares"`
+	Value        int64      `json:"value"`
+	PercentHeld  null.Float `json:"percent_held"`
 }
