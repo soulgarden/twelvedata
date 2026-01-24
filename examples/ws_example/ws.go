@@ -161,8 +161,17 @@ func consumePriceEvents(ctx context.Context, wsCli *twelvedata.WS, wg *sync.Wait
 				logger.Debug().Msg("price events channel closed")
 				return
 			}
-			fmt.Printf("🔥 Price Event: %s @ $%.4f (%s) [%d]\n",
-				event.Symbol, event.Price, event.Exchange, event.Timestamp)
+			price := "n/a"
+			if event.Price.Valid {
+				price = fmt.Sprintf("%.4f", event.Price.Float64)
+			}
+			timestamp := "n/a"
+			if event.Timestamp.Valid {
+				timestamp = fmt.Sprintf("%d", event.Timestamp.Int64)
+			}
+
+			fmt.Printf("🔥 Price Event: %s @ $%s (%s) [%s]\n",
+				event.Symbol, price, event.Exchange, timestamp)
 
 			// Show additional fields for forex/crypto if available
 			if event.Bid.Valid || event.Ask.Valid {

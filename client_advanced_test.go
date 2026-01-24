@@ -1,6 +1,7 @@
 package twelvedata
 
 import (
+	"encoding/json"
 	"net/http"
 	"testing"
 
@@ -28,55 +29,30 @@ func Test_client_GetUsage(t *testing.T) {
 			args: args{
 				req: request.GetUsage{
 					APIKey: request.APIKey{
-						APIKey: "",
+						APIKey: "demo",
 					},
+					Format:    "CSV",
+					Delimiter: ";",
+					TimeZone:  "America/New_York",
 				},
 				url: mockServerWithURL(
 					t,
 					http.StatusOK,
 					100,
 					100,
-					`{"timestamp":"2025-02-02 18:02:32","current_usage":1,"plan_limit":610}`,
-					"/",
+					`{"timestamp":"2025-05-07 11:10:12","current_usage":4003,"plan_limit":20000,"plan_category":"enterprise"}`,
+					"/?apikey=demo&delimiter=%3B&format=CSV&timezone=America%2FNew_York",
 				),
 			},
 			wantUsage: response.Usage{
-				TimeStamp:    "2025-02-02 18:02:32",
-				CurrentUsage: null.IntFrom(1),
-				PlanLimit:    null.IntFrom(610),
+				TimeStamp:    "2025-05-07 11:10:12",
+				CurrentUsage: null.IntFrom(4003),
+				PlanLimit:    null.IntFrom(20000),
+				PlanCategory: "enterprise",
 			},
 			wantCredits: response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
-		},
-		{
-			name: "real api response format",
-			args: args{
-				req: request.GetUsage{
-					APIKey: request.APIKey{
-						APIKey: "",
-					},
-				},
-				url: mockServerWithURL(
-					t,
-					http.StatusOK,
-					100,
-					100,
-					`{"timestamp":"2025-08-19 19:22:24","current_usage":2,"plan_limit":8,"daily_usage":10,"plan_daily_limit":800,"plan_category":"basic"}`,
-					"/",
-				),
-			},
-			wantUsage: response.Usage{
-				TimeStamp:      "2025-08-19 19:22:24",
-				CurrentUsage:   null.IntFrom(2),
-				PlanLimit:      null.IntFrom(8),
-				DailyUsage:     null.IntFrom(10),
-				PlanDailyLimit: null.IntFrom(800),
-				PlanCategory:   "basic",
-			},
-			wantCredits: response.NewCreditsImpl(100, 100),
-			wantErr:     "",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/?apikey=demo&delimiter=%3B&format=CSV&timezone=America%2FNew_York",
 		},
 		{
 			name: "wrong api key",
@@ -99,10 +75,11 @@ func Test_client_GetUsage(t *testing.T) {
 				TimeStamp:    "",
 				CurrentUsage: null.Int{},
 				PlanLimit:    null.Int{},
+				PlanCategory: "",
 			},
 			wantCredits: response.NewCreditsImpl(100, 100),
 			wantErr:     "error received: code: 401, message: **apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer, status: error",
-			expectedURL: "/?end_date=2024-01-31&start_date=2024-01-01",
+			expectedURL: "/",
 		},
 	}
 
@@ -124,6 +101,92 @@ func Test_client_GetUsage(t *testing.T) {
 					return cli.(client).GetUsage(req)
 				},
 				"GetUsage",
+			)
+		})
+	}
+}
+
+func Test_client_GetBatches(t *testing.T) {
+	type args struct {
+		req request.GetBatches
+		url string
+	}
+
+	requests := map[string]request.BatchRequest{
+		"req_1": {URL: "/time_series?symbol=AAPL&interval=1min&apikey=demo&outputsize=2"},
+		"req_2": {URL: "/exchange_rate?symbol=USD/JPY&apikey=demo"},
+	}
+
+	responseBody := `{"code":200,"status":"success","data":{"req_1":{"status":"success","response":{"foo":"bar"}},"req_2":{"status":"success","response":{"rate":149.25999,"symbol":"USD/JPY","timestamp":1740160260}}}}`
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.Batches
+		wantCredits response.Credits
+		wantErr     string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetBatches{
+					APIKey:   request.APIKey{APIKey: "demo"},
+					Requests: requests,
+				},
+				url: mockServerWithRequest(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					responseBody,
+					expectedRequest{
+						Method: "POST",
+						URL:    "/batch",
+						Headers: map[string]string{
+							"Authorization": "apikey demo",
+							"Content-Type":  "application/json",
+						},
+						Body: requests,
+					},
+				),
+			},
+			want: response.Batches{
+				Code:   null.IntFrom(200),
+				Status: "success",
+				Data: map[string]response.BatchResponse{
+					"req_1": {
+						Status:   "success",
+						Response: json.RawMessage(`{"foo":"bar"}`),
+					},
+					"req_2": {
+						Status:   "success",
+						Response: json.RawMessage(`{"rate":149.25999,"symbol":"USD/JPY","timestamp":1740160260}`),
+					},
+				},
+			},
+			wantCredits: response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testEndpointCall(
+				t,
+				tt.name,
+				tt.args,
+				tt.want,
+				tt.wantCredits,
+				tt.wantErr,
+				func(httpCli *HTTPCli, url string) interface{} {
+					return client{
+						getBatches: NewEndpoint[request.GetBatches, response.Batches, response.Credits, error](httpCli, url+"/batch"),
+					}
+				},
+				func(cli interface{}, req request.GetBatches) (response.Batches, response.Credits, error) {
+					return cli.(client).GetBatches(req)
+				},
+				"GetBatches",
 			)
 		})
 	}

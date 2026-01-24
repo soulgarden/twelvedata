@@ -23,9 +23,9 @@ type ROCMeta struct {
 
 // ROCIndicator contains metadata about the Rate of Change indicator configuration.
 type ROCIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // ROCValue represents individual Rate of Change data points.

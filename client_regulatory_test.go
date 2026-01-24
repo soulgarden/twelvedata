@@ -84,12 +84,12 @@ func Test_client_GetEDGARFillings(t *testing.T) {
 				},
 				Values: []response.EDGARFilling{
 					{
-						Cik:     1711463,
-						FiledAt: 1726617600,
+						Cik:     null.IntFrom(1711463),
+						FiledAt: null.IntFrom(1726617600),
 						Files: []response.EDGARFillingFile{
 							{
 								Name: "primary_doc.html",
-								Size: 2980,
+								Size: null.IntFrom(2980),
 								Type: "144",
 								URL:  "https://www.sec.gov/Archives/edgar/data/1711463/000197185724000581/primary_doc.xml",
 							},
@@ -198,8 +198,8 @@ func Test_client_GetInsiderTransactions(t *testing.T) {
 						Position:     "General Counsel",
 						DateReported: "2021-05-03",
 						IsDirect:     true,
-						Shares:       17000,
-						Value:        2257631,
+						Shares:       null.IntFrom(17000),
+						Value:        null.IntFrom(2257631),
 						Description:  "Sale at price 132.57 - 133.93 per share.",
 					},
 				},
@@ -299,8 +299,8 @@ func Test_client_GetInstitutionalHolders(t *testing.T) {
 					{
 						EntityName:   "Vanguard Group Inc",
 						DateReported: "2025-09-30",
-						Shares:       1399427162,
-						Value:        388536977757,
+						Shares:       null.IntFrom(1399427162),
+						Value:        null.IntFrom(388536977757),
 						PercentHeld:  null.FloatFrom(0.0947),
 					},
 				},
@@ -400,8 +400,8 @@ func Test_client_GetFundHolders(t *testing.T) {
 					{
 						EntityName:   "VANGUARD INDEX FUNDS-Vanguard Total Stock Market Index Fund",
 						DateReported: "2025-09-30",
-						Shares:       467135722,
-						Value:        129695568698,
+						Shares:       null.IntFrom(467135722),
+						Value:        null.IntFrom(129695568698),
 						PercentHeld:  null.FloatFrom(0.031600002),
 					},
 				},
@@ -501,8 +501,8 @@ func Test_client_GetDirectHolders(t *testing.T) {
 					{
 						EntityName:   "Public Investment Fund (Investment Company)",
 						DateReported: "2025-03-13",
-						Shares:       53600000,
-						Value:        43148000000,
+						Shares:       null.IntFrom(53600000),
+						Value:        null.IntFrom(43148000000),
 						PercentHeld:  null.FloatFrom(0),
 					},
 				},
@@ -693,7 +693,7 @@ func Test_client_GetSanctionedEntities(t *testing.T) {
 						},
 					},
 				},
-				Count:  143,
+				Count:  null.IntFrom(143),
 				Status: "ok",
 			},
 			want1:   response.NewCreditsImpl(100, 100),

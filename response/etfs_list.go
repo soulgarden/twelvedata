@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // ETFsDirectory represents the response structure for ETFs directory data.
 type ETFsDirectory struct {
 	Result ETFsDirectoryResult `json:"result"`
@@ -8,7 +10,7 @@ type ETFsDirectory struct {
 
 // ETFsDirectoryResult contains the ETFs directory list and count.
 type ETFsDirectoryResult struct {
-	Count int                `json:"count"`
+	Count null.Int           `json:"count"`
 	List  []ETFsDirectoryETF `json:"list"`
 }
 

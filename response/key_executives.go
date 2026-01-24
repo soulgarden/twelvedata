@@ -25,7 +25,7 @@ type KeyExecutivesMeta struct {
 type KeyExecutive struct {
 	Name     string   `json:"name"`
 	Title    string   `json:"title"`
-	Age      int      `json:"age"`
-	YearBorn int      `json:"year_born"`
+	Age      null.Int `json:"age"`
+	YearBorn null.Int `json:"year_born"`
 	Pay      null.Int `json:"pay"`
 }

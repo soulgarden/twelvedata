@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // LastChange represents the response from Last Changes endpoint /last_change/{endpoint}.
 type LastChange struct {
 	Pagination LastChangePagination `json:"pagination"`
@@ -8,8 +10,8 @@ type LastChange struct {
 
 // LastChangePagination contains pagination information for Last Changes response.
 type LastChangePagination struct {
-	CurrentPage int `json:"current_page"`
-	PerPage     int `json:"per_page"`
+	CurrentPage null.Int `json:"current_page"`
+	PerPage     null.Int `json:"per_page"`
 }
 
 // LastChangeData represents individual change record in the Last Changes response.

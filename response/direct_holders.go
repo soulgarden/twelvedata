@@ -22,7 +22,7 @@ type DirectHoldersMeta struct {
 type DirectHolder struct {
 	EntityName   string     `json:"entity_name"`
 	DateReported string     `json:"date_reported"`
-	Shares       int64      `json:"shares"`
-	Value        int64      `json:"value"`
+	Shares       null.Int   `json:"shares"`
+	Value        null.Int   `json:"value"`
 	PercentHeld  null.Float `json:"percent_held"`
 }

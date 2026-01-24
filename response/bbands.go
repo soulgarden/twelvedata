@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // BBands represents the response structure for the Bollinger Bands technical indicator endpoint.
 type BBands struct {
 	Meta   BBandsMeta   `json:"meta"`
@@ -21,11 +23,11 @@ type BBandsMeta struct {
 
 // BbandsIndicator contains metadata about the Bollinger Bands indicator configuration.
 type BbandsIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
-	SD         int    `json:"sd"`
-	MAType     string `json:"ma_type"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
+	SD         null.Int `json:"sd"`
+	MAType     string   `json:"ma_type"`
 }
 
 // BbandsData represents individual Bollinger Bands data points.

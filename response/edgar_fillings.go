@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // EDGARFillings represents the response structure for EDGAR filings data.
 type EDGARFillings struct {
 	Meta   EDGARFillingsMeta `json:"meta"`
@@ -16,8 +18,8 @@ type EDGARFillingsMeta struct {
 
 // EDGARFilling represents a single EDGAR filing record.
 type EDGARFilling struct {
-	Cik       int64              `json:"cik"`
-	FiledAt   int64              `json:"filed_at"`
+	Cik       null.Int           `json:"cik"`
+	FiledAt   null.Int           `json:"filed_at"`
 	Files     []EDGARFillingFile `json:"files"`
 	FilingURL string             `json:"filing_url"`
 	FormType  string             `json:"form_type"`
@@ -26,8 +28,8 @@ type EDGARFilling struct {
 
 // EDGARFillingFile represents a single EDGAR filing file.
 type EDGARFillingFile struct {
-	Name string `json:"name"`
-	Size int64  `json:"size"`
-	Type string `json:"type"`
-	URL  string `json:"url"`
+	Name string   `json:"name"`
+	Size null.Int `json:"size"`
+	Type string   `json:"type"`
+	URL  string   `json:"url"`
 }

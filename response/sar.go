@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // SAR represents the Parabolic SAR technical indicator response data.
 type SAR struct {
 	Meta   SARMeta    `json:"meta"`
@@ -21,9 +23,9 @@ type SARMeta struct {
 
 // SARIndicator contains metadata about the Parabolic SAR indicator configuration.
 type SARIndicator struct {
-	Name         string  `json:"name"`
-	Acceleration float64 `json:"acceleration"`
-	Maximum      float64 `json:"maximum"`
+	Name         string     `json:"name"`
+	Acceleration null.Float `json:"acceleration"`
+	Maximum      null.Float `json:"maximum"`
 }
 
 // SARValue represents a single data point in the Parabolic SAR technical indicator response.

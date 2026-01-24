@@ -23,8 +23,8 @@ type NATRMeta struct {
 
 // NATRIndicator contains metadata about the Normalized Average True Range indicator configuration.
 type NATRIndicator struct {
-	Name       string `json:"name"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // NATRValue represents individual Normalized Average True Range data points.

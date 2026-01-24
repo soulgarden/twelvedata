@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // TRMA represents the Triangular Moving Average technical indicator response data.
 type TRMA struct {
 	Meta   TRMAMeta    `json:"meta"`
@@ -21,9 +23,9 @@ type TRMAMeta struct {
 
 // TRMAIndicator contains metadata about the Triangular Moving Average indicator configuration.
 type TRMAIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // TRMAValue represents a single data point in the Triangular Moving Average technical indicator response.

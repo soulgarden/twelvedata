@@ -28,8 +28,8 @@ type WSPriceEvent struct {
 	Exchange  string      `json:"exchange"`
 	MicCode   string      `json:"mic_code,omitempty"`
 	Type      string      `json:"type"`
-	Timestamp int64       `json:"timestamp"`
-	Price     float64     `json:"price"`
+	Timestamp null.Int    `json:"timestamp"`
+	Price     null.Float  `json:"price"`
 
 	// Stock-specific fields
 	DayVolume null.Int `json:"day_volume,omitempty"`

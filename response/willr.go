@@ -23,8 +23,8 @@ type WillRMeta struct {
 
 // WillRIndicator contains metadata about the Williams %R indicator configuration.
 type WillRIndicator struct {
-	Name       string `json:"name"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // WillRValue represents individual Williams %R data points.

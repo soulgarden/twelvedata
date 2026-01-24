@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/guregu/null/v6"
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
 )
@@ -52,8 +53,8 @@ func Test_client_GetExchangeRate(t *testing.T) {
 			},
 			want: response.ExchangeRate{
 				Symbol:    "USD/JPY",
-				Rate:      105.12,
-				Timestamp: 1602714051,
+				Rate:      null.FloatFrom(105.12),
+				Timestamp: null.IntFrom(1602714051),
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",
@@ -149,9 +150,9 @@ func Test_client_GetCurrencyConversion(t *testing.T) {
 			},
 			want: response.CurrencyConversion{
 				Symbol:    "EUR/USD",
-				Rate:      1.16009,
-				Amount:    116.009,
-				Timestamp: 1755861240,
+				Rate:      null.FloatFrom(1.16009),
+				Amount:    null.FloatFrom(116.009),
+				Timestamp: null.IntFrom(1755861240),
 			},
 			want1:       response.NewCreditsImpl(100, 1),
 			wantErr:     "",

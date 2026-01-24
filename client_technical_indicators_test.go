@@ -140,8 +140,8 @@ func Test_client_GetBBands(t *testing.T) {
 					Indicator: response.BbandsIndicator{
 						Name:       "BBANDS - Bollinger Bands®",
 						SeriesType: "close",
-						TimePeriod: 20,
-						SD:         2,
+						TimePeriod: null.IntFrom(20),
+						SD:         null.IntFrom(2),
 						MAType:     "SMA",
 					},
 				},
@@ -257,7 +257,7 @@ func Test_client_GetSMA(t *testing.T) {
 					Indicator: response.SMAIndicator{
 						Name:       "SMA - Simple Moving Average",
 						SeriesType: "close",
-						TimePeriod: 9,
+						TimePeriod: null.IntFrom(9),
 					},
 				},
 				Values: []response.SMAData{
@@ -370,7 +370,7 @@ func Test_client_GetEMA(t *testing.T) {
 					Indicator: response.EMAIndicator{
 						Name:       "EMA - Exponential Moving Average",
 						SeriesType: "close",
-						TimePeriod: 9,
+						TimePeriod: null.IntFrom(9),
 					},
 				},
 				Values: []response.EMAData{
@@ -491,9 +491,9 @@ func Test_client_GetMACD(t *testing.T) {
 					Indicator: response.MACDIndicator{
 						Name:         "MACD - Moving Average Convergence/Divergence",
 						SeriesType:   "close",
-						FastPeriod:   12,
-						SlowPeriod:   26,
-						SignalPeriod: 9,
+						FastPeriod:   null.IntFrom(12),
+						SlowPeriod:   null.IntFrom(26),
+						SignalPeriod: null.IntFrom(9),
 					},
 				},
 				Values: []response.MACDData{
@@ -608,7 +608,7 @@ func Test_client_GetRSI(t *testing.T) {
 					Indicator: response.RSIIndicator{
 						Name:       "RSI - Relative Strength Index",
 						SeriesType: "close",
-						TimePeriod: 14,
+						TimePeriod: null.IntFrom(14),
 					},
 				},
 				Values: []response.RSIData{
@@ -717,7 +717,7 @@ func Test_client_GetATR(t *testing.T) {
 					Type:             "Common Stock",
 					Indicator: response.ATRIndicator{
 						Name:       "ATR - Average True Range",
-						TimePeriod: 14,
+						TimePeriod: null.IntFrom(14),
 					},
 				},
 				Values: []response.ATRValue{
@@ -826,7 +826,7 @@ func Test_client_GetCCI(t *testing.T) {
 					Type:             "Common Stock",
 					Indicator: response.CCIIndicator{
 						Name:       "CCI - Commodity Channel Index",
-						TimePeriod: 20,
+						TimePeriod: null.IntFrom(20),
 					},
 				},
 				Values: []response.CCIValue{
@@ -939,7 +939,7 @@ func Test_client_GetDEMA(t *testing.T) {
 					Indicator: response.DEMAIndicator{
 						Name:       "DEMA - Double Exponential Moving Average",
 						SeriesType: "close",
-						TimePeriod: 9,
+						TimePeriod: null.IntFrom(9),
 					},
 				},
 				Values: []response.DEMAValue{
@@ -1052,7 +1052,7 @@ func Test_client_GetKAMA(t *testing.T) {
 					Indicator: response.KAMAIndicator{
 						Name:       "KAMA - Kaufman Adaptive Moving Average",
 						SeriesType: "close",
-						TimePeriod: 10,
+						TimePeriod: null.IntFrom(10),
 					},
 				},
 				Values: []response.KAMAValue{
@@ -1168,7 +1168,7 @@ func Test_client_GetMA(t *testing.T) {
 					Indicator: response.MAIndicator{
 						Name:       "MA - Moving Average",
 						SeriesType: "close",
-						TimePeriod: 9,
+						TimePeriod: null.IntFrom(9),
 						MAType:     "SMA",
 					},
 				},
@@ -1281,8 +1281,8 @@ func Test_client_GetSAR(t *testing.T) {
 					Type:             "Common Stock",
 					Indicator: response.SARIndicator{
 						Name:         "SAR - Parabolic SAR",
-						Acceleration: 0.02,
-						Maximum:      0.2,
+						Acceleration: null.FloatFrom(0.02),
+						Maximum:      null.FloatFrom(0.2),
 					},
 				},
 				Values: []response.SARValue{
@@ -1395,7 +1395,7 @@ func Test_client_GetTEMA(t *testing.T) {
 					Indicator: response.TEMAIndicator{
 						Name:       "TEMA - Triple Exponential Moving Average",
 						SeriesType: "close",
-						TimePeriod: 9,
+						TimePeriod: null.IntFrom(9),
 					},
 				},
 				Values: []response.TEMAValue{
@@ -1508,7 +1508,7 @@ func Test_client_GetTRMA(t *testing.T) {
 					Indicator: response.TRMAIndicator{
 						Name:       "TRMA - Triangular Moving Average",
 						SeriesType: "close",
-						TimePeriod: 14,
+						TimePeriod: null.IntFrom(14),
 					},
 				},
 				Values: []response.TRMAValue{
@@ -1738,7 +1738,7 @@ func Test_client_GetWMA(t *testing.T) {
 					Indicator: response.WMAIndicator{
 						Name:       "WMA - Weighted Moving Average",
 						SeriesType: "close",
-						TimePeriod: 9,
+						TimePeriod: null.IntFrom(9),
 					},
 				},
 				Values: []response.WMAValue{
@@ -1847,7 +1847,7 @@ func Test_client_GetADX(t *testing.T) {
 					Type:             "Common Stock",
 					Indicator: response.ADXIndicator{
 						Name:       "ADX - Average Directional Index",
-						TimePeriod: 14,
+						TimePeriod: null.IntFrom(14),
 					},
 				},
 				Values: []response.ADXData{
@@ -1969,9 +1969,9 @@ func Test_client_GetStoch(t *testing.T) {
 					Type:             "Common Stock",
 					Indicator: response.StochIndicator{
 						Name:        "STOCH - Stochastic Oscillator",
-						FastKPeriod: 14,
-						SlowKPeriod: 3,
-						SlowDPeriod: 3,
+						FastKPeriod: null.IntFrom(14),
+						SlowKPeriod: null.IntFrom(3),
+						SlowDPeriod: null.IntFrom(3),
 						SlowKMAType: "SMA",
 						SlowDMAType: "SMA",
 					},
@@ -2093,8 +2093,8 @@ func Test_client_GetPercentB(t *testing.T) {
 					Indicator: response.PercentBIndicator{
 						Name:       "%B - Bollinger Bands %B",
 						SeriesType: "close",
-						TimePeriod: 20,
-						SD:         2,
+						TimePeriod: null.IntFrom(20),
+						SD:         null.IntFrom(2),
 						MAType:     "SMA",
 					},
 				},
@@ -2204,7 +2204,7 @@ func Test_client_GetWillR(t *testing.T) {
 					Type:             "Common Stock",
 					Indicator: response.WillRIndicator{
 						Name:       "WILLR - Williams %R",
-						TimePeriod: 14,
+						TimePeriod: null.IntFrom(14),
 					},
 				},
 				Values: []response.WillRValue{
@@ -2317,7 +2317,7 @@ func Test_client_GetROC(t *testing.T) {
 					Indicator: response.ROCIndicator{
 						Name:       "ROC - Rate of Change",
 						SeriesType: "close",
-						TimePeriod: 10,
+						TimePeriod: null.IntFrom(10),
 					},
 				},
 				Values: []response.ROCValue{
@@ -2430,7 +2430,7 @@ func Test_client_GetMOM(t *testing.T) {
 					Indicator: response.MOMIndicator{
 						Name:       "MOM - Momentum",
 						SeriesType: "close",
-						TimePeriod: 10,
+						TimePeriod: null.IntFrom(10),
 					},
 				},
 				Values: []response.MOMValue{
@@ -2749,7 +2749,7 @@ func Test_client_GetNATR(t *testing.T) {
 					Type:             "Common Stock",
 					Indicator: response.NATRIndicator{
 						Name:       "NATR - Normalized Average True Range",
-						TimePeriod: 14,
+						TimePeriod: null.IntFrom(14),
 					},
 				},
 				Values: []response.NATRValue{

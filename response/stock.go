@@ -1,9 +1,11 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // Stocks represents the response structure for stock data.
 type Stocks struct {
 	Data   []*Stock `json:"data"`
-	Count  int      `json:"count"`
+	Count  null.Int `json:"count"`
 	Status string   `json:"status"`
 }
 

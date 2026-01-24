@@ -218,8 +218,8 @@ func TestWS_ConnectAndSubscribe(t *testing.T) {
 
 			select {
 			case priceEvent := <-ws.ConsumePriceEvents():
-				if priceEvent.Price != tt.expectedPrice {
-					t.Errorf("Expected price %f, got %f", tt.expectedPrice, priceEvent.Price)
+				if !priceEvent.Price.Valid || priceEvent.Price.Float64 != tt.expectedPrice {
+					t.Errorf("Expected price %f, got %f", tt.expectedPrice, priceEvent.Price.Float64)
 				}
 				if priceEvent.Symbol != "AAPL" {
 					t.Errorf("Expected symbol AAPL, got %s", priceEvent.Symbol)

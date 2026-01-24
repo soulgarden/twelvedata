@@ -16,8 +16,8 @@ type Quote struct {
 	MicCode               string             `json:"mic_code"`
 	Currency              string             `json:"currency"`
 	Datetime              string             `json:"datetime"`
-	Timestamp             int                `json:"timestamp"`
-	LastQuoteAt           int                `json:"last_quote_at"`
+	Timestamp             null.Int           `json:"timestamp"`
+	LastQuoteAt           null.Int           `json:"last_quote_at"`
 	Open                  string             `json:"open"`
 	High                  string             `json:"high"`
 	Low                   string             `json:"low"`
@@ -51,7 +51,7 @@ type QuoteFiftyTwoWeek struct {
 
 // QuoteError represents an error that occurred while fetching quote data.
 type QuoteError struct {
-	Code    int             `json:"code"`
+	Code    null.Int        `json:"code"`
 	Message string          `json:"message"`
 	Status  string          `json:"status"`
 	Meta    *QuoteErrorMeta `json:"meta"`

@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // CCI represents the Commodity Channel Index technical indicator response data.
 type CCI struct {
 	Meta   CCIMeta    `json:"meta"`
@@ -21,8 +23,8 @@ type CCIMeta struct {
 
 // CCIIndicator contains metadata about the Commodity Channel Index indicator configuration.
 type CCIIndicator struct {
-	Name       string `json:"name"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // CCIValue represents a single data point in the Commodity Channel Index technical indicator response.

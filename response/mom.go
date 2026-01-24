@@ -23,9 +23,9 @@ type MOMMeta struct {
 
 // MOMIndicator contains metadata about the Momentum indicator configuration.
 type MOMIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // MOMValue represents individual Momentum data points.

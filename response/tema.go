@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // TEMA represents the Triple Exponential Moving Average technical indicator response data.
 type TEMA struct {
 	Meta   TEMAMeta    `json:"meta"`
@@ -21,9 +23,9 @@ type TEMAMeta struct {
 
 // TEMAIndicator contains metadata about the Triple Exponential Moving Average indicator configuration.
 type TEMAIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // TEMAValue represents a single data point in the Triple Exponential Moving Average technical indicator response.

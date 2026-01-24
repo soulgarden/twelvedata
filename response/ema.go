@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // EMA represents the response structure for the Exponential Moving Average technical indicator endpoint.
 type EMA struct {
 	Meta   EMAMeta   `json:"meta"`
@@ -21,9 +23,9 @@ type EMAMeta struct {
 
 // EMAIndicator contains metadata about the Exponential Moving Average indicator configuration.
 type EMAIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // EMAData represents individual Exponential Moving Average data points.

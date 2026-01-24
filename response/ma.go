@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // MA represents the Moving Average technical indicator response data.
 type MA struct {
 	Meta   MAMeta    `json:"meta"`
@@ -21,10 +23,10 @@ type MAMeta struct {
 
 // MAIndicator contains metadata about the Moving Average indicator configuration.
 type MAIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
-	MAType     string `json:"ma_type"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
+	MAType     string   `json:"ma_type"`
 }
 
 // MAValue represents a single data point in the Moving Average technical indicator response.

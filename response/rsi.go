@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // RSI represents the response structure for Relative Strength Index technical indicator.
 type RSI struct {
 	Meta   RSIMeta   `json:"meta"`
@@ -21,9 +23,9 @@ type RSIMeta struct {
 
 // RSIIndicator contains RSI indicator configuration.
 type RSIIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // RSIData represents individual RSI data points.

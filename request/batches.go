@@ -1,11 +1,13 @@
 package request
 
+import "net/url"
+
 // GetBatches represents request parameters for batch operations.
 // The batch endpoint accepts a JSON POST request with multiple API calls.
 type GetBatches struct {
 	APIKey
-	// Requests is a map of request IDs to batch request items
-	Requests map[string]BatchRequest `json:",inline"`
+	// Requests is a map of request IDs to batch request items.
+	Requests map[string]BatchRequest
 }
 
 // BatchRequest represents a single request within a batch operation.
@@ -14,17 +16,32 @@ type BatchRequest struct {
 	URL string `json:"url"`
 }
 
-// NewBatchRequest creates a new batch request with the given request map.
-func NewBatchRequest(requests map[string]BatchRequest) GetBatches {
-	return GetBatches{
-		Requests: requests,
+// Method returns the HTTP method for batch requests.
+func (b GetBatches) Method() string {
+	return "POST"
+}
+
+// Headers returns the headers required for batch requests.
+func (b GetBatches) Headers() map[string]string {
+	if b.APIKey.APIKey == "" {
+		return nil
+	}
+
+	return map[string]string{
+		"Authorization": "apikey " + b.APIKey.APIKey,
 	}
 }
 
-// AddRequest adds a new request to the batch with the given ID and URL.
-func (b *GetBatches) AddRequest(id, url string) {
+// Body returns the JSON body for batch requests.
+func (b GetBatches) Body() (any, string, error) {
 	if b.Requests == nil {
-		b.Requests = make(map[string]BatchRequest)
+		return map[string]BatchRequest{}, "application/json", nil
 	}
-	b.Requests[id] = BatchRequest{URL: url}
+
+	return b.Requests, "application/json", nil
+}
+
+// Query returns an empty query set because batch requests use JSON body.
+func (b GetBatches) Query() (url.Values, error) {
+	return url.Values{}, nil
 }

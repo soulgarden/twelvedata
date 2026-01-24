@@ -25,6 +25,7 @@ var analysisMeta = response.AnalysisMeta{
 	Type:             "Common Stock",
 }
 
+//nolint:dupl
 func Test_client_GetEarningsEstimate(t *testing.T) {
 	type args struct {
 		req request.GetEarningsEstimate
@@ -90,7 +91,7 @@ func Test_client_GetEarningsEstimate(t *testing.T) {
 					{
 						Date:             "2022-09-30",
 						Period:           "current_quarter",
-						NumberOfAnalysts: 27,
+						NumberOfAnalysts: null.IntFrom(27),
 						AvgEstimate:      null.FloatFrom(1.26),
 						LowEstimate:      null.FloatFrom(1.13),
 						HighEstimate:     null.FloatFrom(1.35),
@@ -221,7 +222,7 @@ func Test_client_GetRevenueEstimate(t *testing.T) {
 					{
 						Date:             "2022-09-30",
 						Period:           "current_quarter",
-						NumberOfAnalysts: 24,
+						NumberOfAnalysts: null.IntFrom(24),
 						AvgEstimate:      null.FloatFrom(88631500000),
 						LowEstimate:      null.FloatFrom(85144300000),
 						HighEstimate:     null.FloatFrom(92794900000),
@@ -287,6 +288,7 @@ func Test_client_GetRevenueEstimate(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func Test_client_GetEPSTrend(t *testing.T) {
 	type args struct {
 		req request.GetEPSTrend
@@ -480,10 +482,10 @@ func Test_client_GetEPSRevisions(t *testing.T) {
 					{
 						Date:          "2022-09-30",
 						Period:        "current_quarter",
-						UpLastWeek:    1,
-						UpLastMonth:   5,
-						DownLastWeek:  0,
-						DownLastMonth: 0,
+						UpLastWeek:    null.IntFrom(1),
+						UpLastMonth:   null.IntFrom(5),
+						DownLastWeek:  null.IntFrom(0),
+						DownLastMonth: null.IntFrom(0),
 					},
 				},
 				Status: "ok",
@@ -749,32 +751,32 @@ func Test_client_GetRecommendations(t *testing.T) {
 				Meta: analysisMeta,
 				Trends: response.RecommendationTrends{
 					CurrentMonth: response.RecommendationTrend{
-						StrongBuy:  13,
-						Buy:        20,
-						Hold:       8,
-						Sell:       0,
-						StrongSell: 0,
+						StrongBuy:  null.IntFrom(13),
+						Buy:        null.IntFrom(20),
+						Hold:       null.IntFrom(8),
+						Sell:       null.IntFrom(0),
+						StrongSell: null.IntFrom(0),
 					},
 					PreviousMonth: response.RecommendationTrend{
-						StrongBuy:  13,
-						Buy:        20,
-						Hold:       8,
-						Sell:       0,
-						StrongSell: 0,
+						StrongBuy:  null.IntFrom(13),
+						Buy:        null.IntFrom(20),
+						Hold:       null.IntFrom(8),
+						Sell:       null.IntFrom(0),
+						StrongSell: null.IntFrom(0),
 					},
 					TwoMonthsAgo: response.RecommendationTrend{
-						StrongBuy:  13,
-						Buy:        20,
-						Hold:       8,
-						Sell:       0,
-						StrongSell: 0,
+						StrongBuy:  null.IntFrom(13),
+						Buy:        null.IntFrom(20),
+						Hold:       null.IntFrom(8),
+						Sell:       null.IntFrom(0),
+						StrongSell: null.IntFrom(0),
 					},
 					ThreeMonthsAgo: response.RecommendationTrend{
-						StrongBuy:  13,
-						Buy:        20,
-						Hold:       8,
-						Sell:       0,
-						StrongSell: 0,
+						StrongBuy:  null.IntFrom(13),
+						Buy:        null.IntFrom(20),
+						Hold:       null.IntFrom(8),
+						Sell:       null.IntFrom(0),
+						StrongSell: null.IntFrom(0),
 					},
 				},
 				Rating: null.FloatFrom(8.2),

@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // CrossListings represents the response structure for cross-listing data.
 type CrossListings struct {
 	Result CrossListingsResult `json:"result"`
@@ -8,7 +10,7 @@ type CrossListings struct {
 
 // CrossListingsResult contains the cross-listing results.
 type CrossListingsResult struct {
-	Count int             `json:"count"`
+	Count null.Int        `json:"count"`
 	List  []*CrossListing `json:"list"`
 }
 

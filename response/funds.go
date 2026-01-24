@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // Funds represents the response structure for funds data.
 type Funds struct {
 	Result FundsResult `json:"result"`
@@ -8,8 +10,8 @@ type Funds struct {
 
 // FundsResult contains the funds list and count.
 type FundsResult struct {
-	Count int     `json:"count"`
-	List  []*Fund `json:"list"`
+	Count null.Int `json:"count"`
+	List  []*Fund  `json:"list"`
 }
 
 // Fund represents a single investment fund with its details and access information.

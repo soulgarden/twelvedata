@@ -25,11 +25,30 @@ func NewHTTPCli(transport *fasthttp.Client, cfg *Conf, logger *zerolog.Logger) *
 }
 
 func (c *HTTPCli) makeRequest(uri string, resp *fasthttp.Response) (int64, int64, error) {
+	return c.doRequest(http.MethodGet, uri, nil, nil, resp)
+}
+
+func (c *HTTPCli) doRequest(method string, uri string, headers map[string]string, body []byte, resp *fasthttp.Response) (int64, int64, error) {
 	req := fasthttp.AcquireRequest()
 
 	defer fasthttp.ReleaseRequest(req)
 
 	req.SetRequestURI(uri)
+	if method == "" {
+		method = http.MethodGet
+	}
+	req.Header.SetMethod(method)
+
+	for key, val := range headers {
+		if val == "" {
+			continue
+		}
+		req.Header.Set(key, val)
+	}
+
+	if body != nil {
+		req.SetBody(body)
+	}
 
 	start := time.Now()
 

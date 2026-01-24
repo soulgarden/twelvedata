@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/guregu/null/v6"
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
 )
@@ -503,7 +504,7 @@ func Test_client_GetStocks(t *testing.T) {
 						Cusip:    "594918104",
 					},
 				},
-				Count:  2,
+				Count:  null.IntFrom(2),
 				Status: "ok",
 			},
 			want1:       response.NewCreditsImpl(100, 100),
@@ -671,7 +672,7 @@ func Test_client_GetETFs(t *testing.T) {
 			wantErr: fmt.Sprintf(
 				"HTTP 401 Unauthorized: %s (URL: %s?symbol=SPY)",
 				response.Error{
-					Code:    401,
+					Code:    null.IntFrom(401),
 					Message: "**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer",
 					Status:  "error",
 				}.Error(),
@@ -771,7 +772,7 @@ func Test_client_GetFunds(t *testing.T) {
 			},
 			want: response.Funds{
 				Result: response.FundsResult{
-					Count: 1,
+					Count: null.IntFrom(1),
 					List: []*response.Fund{
 						{
 							Symbol:   "FXAIX",
@@ -882,7 +883,7 @@ func Test_client_GetBonds(t *testing.T) {
 			},
 			want: response.Bonds{
 				Result: response.BondsResult{
-					Count: 1,
+					Count: null.IntFrom(1),
 					List: []*response.Bond{
 						{
 							Symbol:   "US2Y",
@@ -984,7 +985,7 @@ func Test_client_GetCrossListings(t *testing.T) {
 			},
 			want: response.CrossListings{
 				Result: response.CrossListingsResult{
-					Count: 2,
+					Count: null.IntFrom(2),
 					List: []*response.CrossListing{
 						{
 							Symbol:   "AAPL",

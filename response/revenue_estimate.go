@@ -13,7 +13,7 @@ type RevenueEstimate struct {
 type RevenueEstimateEntry struct {
 	Date             string     `json:"date"`
 	Period           string     `json:"period"`
-	NumberOfAnalysts int        `json:"number_of_analysts"`
+	NumberOfAnalysts null.Int   `json:"number_of_analysts"`
 	AvgEstimate      null.Float `json:"avg_estimate"`
 	LowEstimate      null.Float `json:"low_estimate"`
 	HighEstimate     null.Float `json:"high_estimate"`

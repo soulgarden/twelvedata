@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // Bonds represents the response structure for bonds data from the API.
 type Bonds struct {
 	Result BondsResult `json:"result"`
@@ -8,8 +10,8 @@ type Bonds struct {
 
 // BondsResult contains the bonds list and count.
 type BondsResult struct {
-	Count int     `json:"count"`
-	List  []*Bond `json:"list"`
+	Count null.Int `json:"count"`
+	List  []*Bond  `json:"list"`
 }
 
 // Bond represents a single bond instrument with its details and access information.

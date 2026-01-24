@@ -3,6 +3,7 @@ package twelvedata
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -12,6 +13,31 @@ import (
 )
 
 var encoder = schema.NewEncoder()
+
+// RequestMethoder allows a request to override the HTTP method.
+type RequestMethoder interface {
+	Method() string
+}
+
+// RequestQueryer allows a request to build custom query parameters.
+type RequestQueryer interface {
+	Query() (url.Values, error)
+}
+
+// RequestHeaderer allows a request to define custom headers.
+type RequestHeaderer interface {
+	Headers() map[string]string
+}
+
+// RequestBodyer allows a request to provide a JSON body and content type.
+type RequestBodyer interface {
+	Body() (any, string, error)
+}
+
+// RequestRawBodyer allows a request to provide raw body bytes and content type.
+type RequestRawBodyer interface {
+	RawBody() ([]byte, string, error)
+}
 
 // Endpoint represents a generic HTTP endpoint with type-safe request/response handling.
 type Endpoint[Request any, Response any, Credits response.Credits, Error error] struct {
@@ -27,6 +53,84 @@ func NewEndpoint[Request any, Response any, Credits response.Credits, Error erro
 	}
 }
 
+func buildQueryParams(req any) (url.Values, error) {
+	values := url.Values{}
+	if queryer, ok := req.(RequestQueryer); ok {
+		return queryer.Query()
+	}
+
+	if err := encoder.Encode(req, values); err != nil {
+		return nil, err
+	}
+
+	return values, nil
+}
+
+func buildRequestBody(req any) ([]byte, string, error) {
+	if rawBodyer, ok := req.(RequestRawBodyer); ok {
+		return rawBodyer.RawBody()
+	}
+
+	if bodyer, ok := req.(RequestBodyer); ok {
+		payload, contentType, err := bodyer.Body()
+		if err != nil {
+			return nil, "", err
+		}
+
+		if payload == nil {
+			return nil, contentType, nil
+		}
+
+		body, err := json.Marshal(payload)
+		if err != nil {
+			return nil, "", err
+		}
+
+		return body, contentType, nil
+	}
+
+	return nil, "", nil
+}
+
+func resolveMethod(req any, body []byte) string {
+	if methoder, ok := req.(RequestMethoder); ok {
+		method := strings.ToUpper(methoder.Method())
+		if method != "" {
+			return method
+		}
+	}
+
+	if body != nil {
+		return http.MethodPost
+	}
+
+	return http.MethodGet
+}
+
+func buildHeaders(req any, contentType string) map[string]string {
+	var headers map[string]string
+	if headerer, ok := req.(RequestHeaderer); ok {
+		headers = headerer.Headers()
+	}
+
+	if contentType != "" {
+		if headers == nil {
+			headers = map[string]string{}
+		}
+		headers["Content-Type"] = contentType
+	}
+
+	return headers
+}
+
+func validateMethodBody(method string, body []byte) error {
+	if method == http.MethodGet && body != nil {
+		return fmt.Errorf("GET request cannot include a body")
+	}
+
+	return nil
+}
+
 // Call executes the endpoint request and returns the response, credits, and any errors.
 func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Request) (resp Response, creds response.Credits, err Error) {
 	httpResp := fasthttp.AcquireResponse()
@@ -38,10 +142,9 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 		innerErr                 error
 	)
 
-	values := url.Values{}
-
-	if innerErr = encoder.Encode(req, values); innerErr != nil {
-		return resp, creds, NewError[Error](fmt.Errorf("encoding url params: %w", innerErr), nil)
+	values, innerErr := buildQueryParams(req)
+	if innerErr != nil {
+		return resp, creds, NewError[Error](fmt.Errorf("build query params: %w", innerErr), nil)
 	}
 
 	var uri *url.URL
@@ -52,7 +155,19 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 
 	uri.RawQuery = values.Encode()
 
-	if creditsLeft, creditsUsed, innerErr = endpoint.httpCli.makeRequest(uri.String(), httpResp); innerErr != nil {
+	body, contentType, innerErr := buildRequestBody(req)
+	if innerErr != nil {
+		return resp, creds, NewError[Error](fmt.Errorf("build body: %w", innerErr), nil)
+	}
+
+	method := resolveMethod(req, body)
+	if innerErr = validateMethodBody(method, body); innerErr != nil {
+		return resp, creds, NewError[Error](innerErr, nil)
+	}
+
+	headers := buildHeaders(req, contentType)
+
+	if creditsLeft, creditsUsed, innerErr = endpoint.httpCli.doRequest(method, uri.String(), headers, body, httpResp); innerErr != nil {
 		// Check if it's a network or timeout error
 		if isTimeoutError(innerErr) {
 			return resp, creds, NewError[Error](&TimeoutError{Message: innerErr.Error()}, nil)

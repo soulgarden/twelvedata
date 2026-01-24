@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // ADX represents the response structure for the Average Directional Index technical indicator endpoint.
 type ADX struct {
 	Meta   ADXMeta   `json:"meta"`
@@ -21,8 +23,8 @@ type ADXMeta struct {
 
 // ADXIndicator contains metadata about the Average Directional Index indicator configuration.
 type ADXIndicator struct {
-	Name       string `json:"name"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // ADXData represents individual Average Directional Index data points.

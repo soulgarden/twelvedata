@@ -46,14 +46,14 @@ func expectedMutualFundPerformanceInfo() response.MutualFundPerformanceInfo {
 		},
 		AnnualTotalReturns: []response.MutualFundAnnualTotalReturn{
 			{
-				Year:             2024,
+				Year:             null.IntFrom(2024),
 				ShareClassReturn: null.FloatFrom(0.08546),
 				CategoryReturn:   null.FloatFrom(0.1119),
 			},
 		},
 		QuarterlyTotalReturns: []response.MutualFundQuarterlyTotalReturn{
 			{
-				Year: 2024,
+				Year: null.IntFrom(2024),
 				Q1:   null.FloatFrom(0.02358),
 				Q2:   null.FloatFrom(-0.03071),
 				Q3:   null.FloatFrom(0.10099),

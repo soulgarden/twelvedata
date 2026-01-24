@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/guregu/null/v6"
 	"github.com/soulgarden/twelvedata/response"
 )
 
@@ -23,7 +24,7 @@ func TestNewHTTPError(t *testing.T) {
 			statusCode: http.StatusBadRequest,
 			body:       []byte(`{"code":400,"message":"Invalid parameter","status":"error"}`),
 			apiError: &response.Error{
-				Code:    400,
+				Code:    null.IntFrom(400),
 				Message: "Invalid parameter",
 				Status:  "error",
 			},
@@ -34,7 +35,7 @@ func TestNewHTTPError(t *testing.T) {
 			statusCode: http.StatusUnauthorized,
 			body:       []byte(`{"code":401,"message":"Invalid API key","status":"error"}`),
 			apiError: &response.Error{
-				Code:    401,
+				Code:    null.IntFrom(401),
 				Message: "Invalid API key",
 				Status:  "error",
 			},
@@ -52,7 +53,7 @@ func TestNewHTTPError(t *testing.T) {
 			statusCode: http.StatusTooManyRequests,
 			body:       []byte(`{"code":429,"message":"Rate limit exceeded","status":"error"}`),
 			apiError: &response.Error{
-				Code:    429,
+				Code:    null.IntFrom(429),
 				Message: "Rate limit exceeded",
 				Status:  "error",
 			},
@@ -190,7 +191,7 @@ func TestErrorMessages(t *testing.T) {
 			err: &BadRequestError{
 				HTTPError: HTTPError{StatusCode: 400, Message: "Bad Request"},
 				APIError: &response.Error{
-					Code:    400,
+					Code:    null.IntFrom(400),
 					Message: "Invalid parameter",
 					Status:  "error",
 				},
@@ -475,7 +476,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "symbol not found error",
 			apiError: &response.Error{
-				Code:    400,
+				Code:    null.IntFrom(400),
 				Message: "**AAPL** not found: symbol may be delisted",
 				Status:  "error",
 			},
@@ -488,7 +489,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "new symbol not found error",
 			apiError: &response.Error{
-				Code:    400,
+				Code:    null.IntFrom(400),
 				Message: "**GOOGL** with specified criteria not found: check your parameters",
 				Status:  "error",
 			},
@@ -501,7 +502,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "plan limitation error",
 			apiError: &response.Error{
-				Code:    403,
+				Code:    null.IntFrom(403),
 				Message: "Real-time data is not available with your plan",
 				Status:  "error",
 			},
@@ -514,7 +515,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "demo API key limitation error",
 			apiError: &response.Error{
-				Code:    403,
+				Code:    null.IntFrom(403),
 				Message: "The 'demo' API key is only used for initial familiarity. To become a full user, you can request your own API key at https://twelvedata.com/pricing. It is absolutely free, and it's yours for a lifetime. It only takes 10 seconds to obtain your own API key!",
 				Status:  "error",
 			},
@@ -527,7 +528,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "insufficient credits error",
 			apiError: &response.Error{
-				Code:    402,
+				Code:    null.IntFrom(402),
 				Message: "insufficient credits to complete this request",
 				Status:  "error",
 			},
@@ -540,7 +541,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "invalid api key error",
 			apiError: &response.Error{
-				Code:    401,
+				Code:    null.IntFrom(401),
 				Message: "invalid api key provided",
 				Status:  "error",
 			},
@@ -553,7 +554,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "api key required error",
 			apiError: &response.Error{
-				Code:    401,
+				Code:    null.IntFrom(401),
 				Message: "api key is required for this endpoint",
 				Status:  "error",
 			},
@@ -566,7 +567,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "daily credit limit exhausted error (429 status)",
 			apiError: &response.Error{
-				Code:    429,
+				Code:    null.IntFrom(429),
 				Message: "You have run out of API credits for the day. 7662 API credits were used, with the current limit being 800. Wait for the next day or consider switching to a paid plan that will remove daily limits at https://twelvedata.com/pricing",
 				Status:  "error",
 			},
@@ -579,7 +580,7 @@ func TestDomainErrorParsing(t *testing.T) {
 		{
 			name: "daily credit limit exhausted error (200 status)",
 			apiError: &response.Error{
-				Code:    429,
+				Code:    null.IntFrom(429),
 				Message: "You have run out of API credits for the day. 5000 API credits were used, with the current limit being 800",
 				Status:  "error",
 			},
@@ -985,7 +986,7 @@ func TestErrImplErrorUnwrap(t *testing.T) {
 // ParseDomainError -> NewError wrapper -> IsXXXError detection works through wrapper.
 func TestErrImplErrorUnwrapWithRealAPIError(t *testing.T) {
 	apiError := &response.Error{
-		Code:    429,
+		Code:    null.IntFrom(429),
 		Message: "You have run out of API credits for the day. 8456 API credits were used, with the current limit being 800. Wait for the next day or consider switching to a paid plan.",
 		Status:  "error",
 	}

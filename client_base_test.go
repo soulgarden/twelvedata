@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/guregu/null/v6"
 	"github.com/rs/zerolog"
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
@@ -35,7 +36,7 @@ func TestErrImplError_Error(t *testing.T) {
 			name: "api error",
 			e: ErrImplError[error]{
 				generic: nil,
-				inner:   response.Error{Code: 401, Message: "Invalid API key", Status: "error"},
+				inner:   response.Error{Code: null.IntFrom(401), Message: "Invalid API key", Status: "error"},
 			},
 			want: "code: 401, message: Invalid API key, status: error",
 		},
@@ -261,10 +262,10 @@ func TestNewError(t *testing.T) {
 			name: "new error with api error",
 			args: args[error]{
 				err: fasthttp.ErrDialTimeout,
-				t:   response.Error{Code: 500, Message: "Internal server error", Status: "error"},
+				t:   response.Error{Code: null.IntFrom(500), Message: "Internal server error", Status: "error"},
 			},
 			want: ErrImplError[error]{
-				generic: response.Error{Code: 500, Message: "Internal server error", Status: "error"},
+				generic: response.Error{Code: null.IntFrom(500), Message: "Internal server error", Status: "error"},
 				inner:   fasthttp.ErrDialTimeout,
 			},
 		},

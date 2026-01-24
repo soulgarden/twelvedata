@@ -10,7 +10,7 @@ type MutualFundsDirectory struct {
 
 // MutualFundsDirectoryResult contains the mutual funds directory list and count.
 type MutualFundsDirectoryResult struct {
-	Count int                        `json:"count"`
+	Count null.Int                   `json:"count"`
 	List  []MutualFundsDirectoryFund `json:"list"`
 }
 

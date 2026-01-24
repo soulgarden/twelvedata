@@ -73,7 +73,7 @@ func Test_client_GetMutualFundsDirectory(t *testing.T) {
 			},
 			want: response.MutualFundsDirectory{
 				Result: response.MutualFundsDirectoryResult{
-					Count: 1,
+					Count: null.IntFrom(1),
 					List: []response.MutualFundsDirectoryFund{
 						{
 							Symbol:            "0P0001LCQ3",

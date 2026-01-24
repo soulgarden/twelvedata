@@ -100,8 +100,8 @@ func TestWSMessageParser_parsePrice(t *testing.T) {
 				Currency:  "USD",
 				Exchange:  "NASDAQ",
 				Type:      "Common Stock",
-				Timestamp: 1643972766,
-				Price:     150.25,
+				Timestamp: null.IntFrom(1643972766),
+				Price:     null.FloatFrom(150.25),
 			},
 			shouldError: false,
 		},
@@ -114,8 +114,8 @@ func TestWSMessageParser_parsePrice(t *testing.T) {
 				Currency:      "USD",
 				Exchange:      "FOREX",
 				Type:          "Currency",
-				Timestamp:     1643972766,
-				Price:         1.1245,
+				Timestamp:     null.IntFrom(1643972766),
+				Price:         null.FloatFrom(1.1245),
 				Bid:           null.FloatFrom(1.1244),
 				Ask:           null.FloatFrom(1.1246),
 				CurrencyBase:  null.StringFrom("EUR"),
@@ -154,8 +154,8 @@ func TestWSMessageParser_parsePrice(t *testing.T) {
 			if priceEvent.Symbol != tt.expected.Symbol {
 				t.Errorf("expected symbol %q, got %q", tt.expected.Symbol, priceEvent.Symbol)
 			}
-			if priceEvent.Price != tt.expected.Price {
-				t.Errorf("expected price %f, got %f", tt.expected.Price, priceEvent.Price)
+			if priceEvent.Price.Valid != tt.expected.Price.Valid || priceEvent.Price.Float64 != tt.expected.Price.Float64 {
+				t.Errorf("expected price %f, got %f", tt.expected.Price.Float64, priceEvent.Price.Float64)
 			}
 
 			// Compare nullable fields if they exist

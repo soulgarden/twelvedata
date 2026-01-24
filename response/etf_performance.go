@@ -28,7 +28,7 @@ type ETFTrailingReturn struct {
 
 // ETFAnnualTotalReturn represents annual total return data for a specific year.
 type ETFAnnualTotalReturn struct {
-	Year             int        `json:"year"`
+	Year             null.Int   `json:"year"`
 	ShareClassReturn null.Float `json:"share_class_return"`
 	CategoryReturn   null.Float `json:"category_return"`
 }
@@ -48,6 +48,6 @@ type TrailingReturns struct {
 
 // AnnualReturn represents annual performance data for a specific year.
 type AnnualReturn struct {
-	Year   int        `json:"year"`
+	Year   null.Int   `json:"year"`
 	Return null.Float `json:"return"`
 }

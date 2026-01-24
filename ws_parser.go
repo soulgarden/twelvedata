@@ -26,8 +26,8 @@ type wsEventUnion struct {
 	Exchange      string      `json:"exchange,omitempty"`
 	MicCode       string      `json:"mic_code,omitempty"`
 	Type          string      `json:"type,omitempty"`
-	Timestamp     int64       `json:"timestamp,omitempty"`
-	Price         float64     `json:"price,omitempty"`
+	Timestamp     null.Int    `json:"timestamp,omitempty"`
+	Price         null.Float  `json:"price,omitempty"`
 	DayVolume     null.Int    `json:"day_volume,omitempty"`
 	Bid           null.Float  `json:"bid,omitempty"`
 	Ask           null.Float  `json:"ask,omitempty"`

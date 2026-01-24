@@ -20,9 +20,9 @@ type RecommendationTrends struct {
 
 // RecommendationTrend represents recommendation counts for a period.
 type RecommendationTrend struct {
-	StrongBuy  int `json:"strong_buy"`
-	Buy        int `json:"buy"`
-	Hold       int `json:"hold"`
-	Sell       int `json:"sell"`
-	StrongSell int `json:"strong_sell"`
+	StrongBuy  null.Int `json:"strong_buy"`
+	Buy        null.Int `json:"buy"`
+	Hold       null.Int `json:"hold"`
+	Sell       null.Int `json:"sell"`
+	StrongSell null.Int `json:"strong_sell"`
 }

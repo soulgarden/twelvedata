@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // Stoch represents the response structure for Stochastic Oscillator technical indicator.
 type Stoch struct {
 	Meta   StochMeta   `json:"meta"`
@@ -21,12 +23,12 @@ type StochMeta struct {
 
 // StochIndicator contains Stochastic indicator configuration.
 type StochIndicator struct {
-	Name        string `json:"name"`
-	FastKPeriod int    `json:"fast_k_period"`
-	SlowKPeriod int    `json:"slow_k_period"`
-	SlowDPeriod int    `json:"slow_d_period"`
-	SlowKMAType string `json:"slow_kma_type"`
-	SlowDMAType string `json:"slow_dma_type"`
+	Name        string   `json:"name"`
+	FastKPeriod null.Int `json:"fast_k_period"`
+	SlowKPeriod null.Int `json:"slow_k_period"`
+	SlowDPeriod null.Int `json:"slow_d_period"`
+	SlowKMAType string   `json:"slow_kma_type"`
+	SlowDMAType string   `json:"slow_dma_type"`
 }
 
 // StochData represents individual Stochastic data points.

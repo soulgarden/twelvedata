@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // ATR represents the Average True Range technical indicator response data.
 type ATR struct {
 	Meta   ATRMeta    `json:"meta"`
@@ -21,8 +23,8 @@ type ATRMeta struct {
 
 // ATRIndicator contains metadata about the Average True Range indicator configuration.
 type ATRIndicator struct {
-	Name       string `json:"name"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // ATRValue represents a single data point in the Average True Range technical indicator response.

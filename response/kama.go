@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // KAMA represents the Kaufman Adaptive Moving Average technical indicator response data.
 type KAMA struct {
 	Meta   KAMAMeta    `json:"meta"`
@@ -21,9 +23,9 @@ type KAMAMeta struct {
 
 // KAMAIndicator contains metadata about the Kaufman Adaptive Moving Average indicator configuration.
 type KAMAIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // KAMAValue represents a single data point in the Kaufman Adaptive Moving Average technical indicator response.

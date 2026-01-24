@@ -521,7 +521,7 @@ func Test_client_GetETFFullData(t *testing.T) {
 						},
 						AnnualTotalReturns: []response.ETFAnnualTotalReturn{
 							{
-								Year:             2021,
+								Year:             null.IntFrom(2021),
 								ShareClassReturn: null.FloatFrom(0.2866),
 								CategoryReturn:   null.FloatFrom(0),
 							},
@@ -650,7 +650,7 @@ func Test_client_GetETFPerformance(t *testing.T) {
 						},
 						AnnualTotalReturns: []response.ETFAnnualTotalReturn{
 							{
-								Year:             2021,
+								Year:             null.IntFrom(2021),
 								ShareClassReturn: null.FloatFrom(0.2866),
 								CategoryReturn:   null.FloatFrom(0),
 							},

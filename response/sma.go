@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // SMA represents the response structure for the Simple Moving Average technical indicator endpoint.
 type SMA struct {
 	Meta   SMAMeta   `json:"meta"`
@@ -21,9 +23,9 @@ type SMAMeta struct {
 
 // SMAIndicator contains metadata about the Simple Moving Average indicator configuration.
 type SMAIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // SMAData represents individual Simple Moving Average data points.

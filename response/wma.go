@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // WMA represents the Weighted Moving Average technical indicator response data.
 type WMA struct {
 	Meta   WMAMeta    `json:"meta"`
@@ -21,9 +23,9 @@ type WMAMeta struct {
 
 // WMAIndicator contains metadata about the Weighted Moving Average indicator configuration.
 type WMAIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
 }
 
 // WMAValue represents a single data point in the Weighted Moving Average technical indicator response.

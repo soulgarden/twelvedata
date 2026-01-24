@@ -242,7 +242,7 @@
 ## Advanced
 
 * Batches      ✅ **Useful**
-* Usage        ✅
+* API usage    ✅
 
 
 # Usage

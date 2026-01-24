@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/guregu/null/v6"
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
 )
@@ -68,7 +69,7 @@ func Test_client_GetETFsDirectory(t *testing.T) {
 			},
 			want: response.ETFsDirectory{
 				Result: response.ETFsDirectoryResult{
-					Count: 1000,
+					Count: null.IntFrom(1000),
 					List: []response.ETFsDirectoryETF{
 						{
 							Symbol:     "IVV",
@@ -100,7 +101,7 @@ func Test_client_GetETFsDirectory(t *testing.T) {
 			wantErr: fmt.Sprintf(
 				"HTTP 401 Unauthorized: %s (URL: %s?outputsize=1)",
 				response.Error{
-					Code:    401,
+					Code:    null.IntFrom(401),
 					Message: "**apikey** parameter is incorrect or not specified. You can get your free API key instantly following this link: https://twelvedata.com/pricing. If you believe that everything is correct, you can contact us at https://twelvedata.com/contact/customer",
 					Status:  "error",
 				}.Error(),

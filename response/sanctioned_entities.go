@@ -1,9 +1,11 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // SanctionedEntities represents the response structure for sanctioned entities data.
 type SanctionedEntities struct {
 	Sanctions []SanctionedEntity `json:"sanctions"`
-	Count     int                `json:"count"`
+	Count     null.Int           `json:"count"`
 	Status    string             `json:"status"`
 }
 

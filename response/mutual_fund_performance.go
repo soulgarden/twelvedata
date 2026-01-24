@@ -31,14 +31,14 @@ type MutualFundTrailingReturn struct {
 
 // MutualFundAnnualTotalReturn represents annual total return data for a specific year.
 type MutualFundAnnualTotalReturn struct {
-	Year             int        `json:"year"`
+	Year             null.Int   `json:"year"`
 	ShareClassReturn null.Float `json:"share_class_return"`
 	CategoryReturn   null.Float `json:"category_return"`
 }
 
 // MutualFundQuarterlyTotalReturn represents quarterly total return data for a specific year.
 type MutualFundQuarterlyTotalReturn struct {
-	Year int        `json:"year"`
+	Year null.Int   `json:"year"`
 	Q1   null.Float `json:"q1"`
 	Q2   null.Float `json:"q2"`
 	Q3   null.Float `json:"q3"`

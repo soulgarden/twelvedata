@@ -1,5 +1,7 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // PercentB represents the response structure for %B (Percent B) technical indicator.
 type PercentB struct {
 	Meta   PercentBMeta   `json:"meta"`
@@ -21,11 +23,11 @@ type PercentBMeta struct {
 
 // PercentBIndicator contains %B indicator configuration.
 type PercentBIndicator struct {
-	Name       string `json:"name"`
-	SeriesType string `json:"series_type"`
-	TimePeriod int    `json:"time_period"`
-	SD         int    `json:"sd"`
-	MAType     string `json:"ma_type"`
+	Name       string   `json:"name"`
+	SeriesType string   `json:"series_type"`
+	TimePeriod null.Int `json:"time_period"`
+	SD         null.Int `json:"sd"`
+	MAType     string   `json:"ma_type"`
 }
 
 // PercentBData represents individual %B data points.
