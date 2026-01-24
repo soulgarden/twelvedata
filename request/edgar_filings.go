@@ -1,7 +1,7 @@
 package request
 
-// GetEDGARFillings represents request parameters for EDGAR filings data.
-type GetEDGARFillings struct {
+// GetEDGARFilings represents request parameters for EDGAR filings data.
+type GetEDGARFilings struct {
 	APIKey
 	Symbol     string `schema:"symbol,omitempty"`
 	Figi       string `schema:"figi,omitempty"`

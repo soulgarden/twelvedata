@@ -39,6 +39,11 @@ type RequestRawBodyer interface {
 	RawBody() ([]byte, string, error)
 }
 
+// RequestPather allows a request to provide URL path parameters.
+type RequestPather interface {
+	PathParams() map[string]string
+}
+
 // Endpoint represents a generic HTTP endpoint with type-safe request/response handling.
 type Endpoint[Request any, Response any, Credits response.Credits, Error error] struct {
 	httpCli *HTTPCli
@@ -123,6 +128,23 @@ func buildHeaders(req any, contentType string) map[string]string {
 	return headers
 }
 
+func applyPathParams(urlTemplate string, req any) string {
+	pather, ok := req.(RequestPather)
+	if !ok {
+		return urlTemplate
+	}
+
+	urlValue := urlTemplate
+	for key, value := range pather.PathParams() {
+		placeholder := "{" + key + "}"
+		if strings.Contains(urlValue, placeholder) {
+			urlValue = strings.ReplaceAll(urlValue, placeholder, value)
+		}
+	}
+
+	return urlValue
+}
+
 func validateMethodBody(method string, body []byte) error {
 	if method == http.MethodGet && body != nil {
 		return fmt.Errorf("GET request cannot include a body")
@@ -149,7 +171,8 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 
 	var uri *url.URL
 
-	if uri, innerErr = url.Parse(endpoint.URL); innerErr != nil {
+	endpointURL := applyPathParams(endpoint.URL, req)
+	if uri, innerErr = url.Parse(endpointURL); innerErr != nil {
 		return resp, creds, NewError[Error](fmt.Errorf("parse uri: %w", innerErr), nil)
 	}
 

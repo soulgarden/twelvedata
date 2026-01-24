@@ -5,8 +5,8 @@ import "testing"
 func TestRegulatoryCredits(t *testing.T) {
 	t.Helper()
 
-	if EDGARFillings != 50 {
-		t.Fatalf("EDGARFillings = %d, want %d", EDGARFillings, 50)
+	if EDGARFilings != 50 {
+		t.Fatalf("EDGARFilings = %d, want %d", EDGARFilings, 50)
 	}
 
 	if TaxInformation != 50 {

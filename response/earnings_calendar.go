@@ -2,14 +2,14 @@ package response
 
 import "github.com/guregu/null/v6"
 
-// Earnings represents the response structure for earnings data grouped by date.
-type Earnings struct {
-	Earnings map[string][]*Earning `json:"earnings"`
-	Status   string                `json:"status"`
+// EarningsCalendar represents the response structure for earnings calendar data grouped by date.
+type EarningsCalendar struct {
+	Earnings map[string][]*EarningsCalendarItem `json:"earnings"`
+	Status   string                             `json:"status"`
 }
 
-// Earning represents a single earnings report with estimates and actuals.
-type Earning struct {
+// EarningsCalendarItem represents a single earnings report with estimates and actuals.
+type EarningsCalendarItem struct {
 	Symbol      string     `json:"symbol"`
 	Name        string     `json:"name"`
 	Currency    string     `json:"currency"`

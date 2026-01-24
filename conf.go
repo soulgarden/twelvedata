@@ -191,7 +191,7 @@ type Analysis struct {
 // Regulatory contains URL configurations for regulatory and compliance endpoints including filings and ownership data.
 // nolint: lll
 type Regulatory struct {
-	EDGARFillingsURL        string `default:"/edgar_filings/archive"        json:"edgar_fillings_url"`
+	EDGARFilingsURL         string `default:"/edgar_filings/archive"        json:"edgar_filings_url"`
 	InsiderTransactionsURL  string `default:"/insider_transactions"  json:"insider_transactions_url"`
 	InstitutionalHoldersURL string `default:"/institutional_holders" json:"institutional_holders_url"`
 	FundHoldersURL          string `default:"/fund_holders"          json:"fund_holders_url"`

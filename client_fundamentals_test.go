@@ -937,6 +937,92 @@ func Test_client_GetSplits(t *testing.T) {
 	}
 }
 
+func Test_client_GetSplitsCalendar(t *testing.T) {
+	type args struct {
+		req request.GetSplitsCalendar
+		url string
+	}
+
+	tests := []struct {
+		name        string
+		args        args
+		want        response.SplitsCalendar
+		want1       response.Credits
+		wantErr     string
+		expectedURL string
+	}{
+		{
+			name: "success",
+			args: args{
+				req: request.GetSplitsCalendar{
+					APIKey:     request.APIKey{APIKey: ""},
+					Symbol:     "AAPL",
+					StartDate:  "2024-01-01",
+					EndDate:    "2024-01-31",
+					OutputSize: 1,
+					Page:       1,
+				},
+				url: mockServerWithURL(
+					t,
+					http.StatusOK,
+					100,
+					100,
+					`[
+					  {
+					    "date": "2024-01-15",
+					    "symbol": "AAPL",
+					    "mic_code": "XNAS",
+					    "exchange": "NASDAQ",
+					    "description": "2-for-1 split",
+					    "ratio": 2,
+					    "from_factor": 1,
+					    "to_factor": 2
+					  }
+					]`,
+					"/?end_date=2024-01-31&outputsize=1&page=1&start_date=2024-01-01&symbol=AAPL",
+				),
+			},
+			want: response.SplitsCalendar{
+				{
+					Date:        "2024-01-15",
+					Symbol:      "AAPL",
+					MicCode:     "XNAS",
+					Exchange:    "NASDAQ",
+					Description: "2-for-1 split",
+					Ratio:       null.FloatFrom(2),
+					FromFactor:  null.IntFrom(1),
+					ToFactor:    null.IntFrom(2),
+				},
+			},
+			want1:       response.NewCreditsImpl(100, 100),
+			wantErr:     "",
+			expectedURL: "/?end_date=2024-01-31&outputsize=1&page=1&start_date=2024-01-01&symbol=AAPL",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testEndpointCall(
+				t,
+				tt.name,
+				tt.args,
+				tt.want,
+				tt.want1,
+				tt.wantErr,
+				func(httpCli *HTTPCli, url string) interface{} {
+					return client{
+						getSplitsCalendar: NewEndpoint[request.GetSplitsCalendar, response.SplitsCalendar, response.Credits, error](httpCli, url),
+					}
+				},
+				func(cli interface{}, req request.GetSplitsCalendar) (response.SplitsCalendar, response.Credits, error) {
+					return cli.(client).GetSplitsCalendar(req)
+				},
+				"GetSplitsCalendar",
+			)
+		})
+	}
+}
+
 func Test_client_GetDividendsCalendar(t *testing.T) {
 	type args struct {
 		req request.GetDividendsCalendar
@@ -1114,7 +1200,7 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 	tests := []struct {
 		name        string
 		args        args
-		want        response.Earnings
+		want        response.EarningsCalendar
 		want1       response.Credits
 		wantErr     string
 		expectedURL string
@@ -1161,8 +1247,8 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 					"/?country=US&delimiter=%2C&dp=2&end_date=2024-01-31&exchange=NASDAQ&format=json&mic_code=XNAS&start_date=2024-01-01",
 				),
 			},
-			want: response.Earnings{
-				Earnings: map[string][]*response.Earning{
+			want: response.EarningsCalendar{
+				Earnings: map[string][]*response.EarningsCalendarItem{
 					"2020-05-08": {
 						{
 							Symbol:      "BR",
@@ -1208,7 +1294,7 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 					"/?country=US&delimiter=%2C&dp=2&end_date=2024-01-31&exchange=NASDAQ&format=json&mic_code=XNAS&start_date=2024-01-01",
 				),
 			},
-			want:  response.Earnings{},
+			want:  response.EarningsCalendar{},
 			want1: response.NewCreditsImpl(100, 100),
 			wantErr: "error received: code: 401, message: **apikey** parameter is incorrect or not specified. " +
 				"You can get your free API key instantly following this link: https://twelvedata.com/pricing. " +
@@ -1228,10 +1314,10 @@ func Test_client_GetEarningsCalendar(t *testing.T) {
 				tt.wantErr,
 				func(httpCli *HTTPCli, url string) interface{} {
 					return client{
-						getEarningsCalendar: NewEndpoint[request.GetEarningsCalendar, response.Earnings, response.Credits, error](httpCli, url),
+						getEarningsCalendar: NewEndpoint[request.GetEarningsCalendar, response.EarningsCalendar, response.Credits, error](httpCli, url),
 					}
 				},
-				func(cli interface{}, req request.GetEarningsCalendar) (response.Earnings, response.Credits, error) {
+				func(cli interface{}, req request.GetEarningsCalendar) (response.EarningsCalendar, response.Credits, error) {
 					return cli.(client).GetEarningsCalendar(req)
 				},
 				"GetEarningsCalendar",
@@ -1595,138 +1681,136 @@ func runConsolidatedStatementTest[Req any, Resp any](
 	)
 }
 
-func Test_client_GetConsolidatedStatements(t *testing.T) {
-	t.Run("IncomeStatement", func(t *testing.T) {
-		runConsolidatedStatementTest(
-			t,
-			request.GetIncomeStatement{
-				APIKey: request.APIKey{APIKey: ""},
-				Symbol: "AAPL",
+func Test_client_GetIncomeStatementConsolidated(t *testing.T) {
+	runConsolidatedStatementTest(
+		t,
+		request.GetIncomeStatement{
+			APIKey: request.APIKey{APIKey: ""},
+			Symbol: "AAPL",
+		},
+		`{
+		  "meta": {
+		    "symbol": "AAPL",
+		    "name": "Apple Inc",
+		    "currency": "USD",
+		    "exchange": "NASDAQ",
+		    "mic_code": "XNAS",
+		    "exchange_timezone": "America/New_York",
+		    "period": "Quarterly"
+		  },
+		  "income_statement": []
+		}`,
+		response.IncomeStatements{
+			Meta: response.IncomeStatementsMeta{
+				Symbol:           "AAPL",
+				Name:             "Apple Inc",
+				Currency:         "USD",
+				Exchange:         "NASDAQ",
+				MicCode:          "XNAS",
+				ExchangeTimezone: "America/New_York",
+				Period:           "Quarterly",
 			},
-			`{
-			  "meta": {
-			    "symbol": "AAPL",
-			    "name": "Apple Inc",
-			    "currency": "USD",
-			    "exchange": "NASDAQ",
-			    "mic_code": "XNAS",
-			    "exchange_timezone": "America/New_York",
-			    "period": "Quarterly"
-			  },
-			  "income_statement": []
-			}`,
-			response.IncomeStatements{
-				Meta: response.IncomeStatementsMeta{
-					Symbol:           "AAPL",
-					Name:             "Apple Inc",
-					Currency:         "USD",
-					Exchange:         "NASDAQ",
-					MicCode:          "XNAS",
-					ExchangeTimezone: "America/New_York",
-					Period:           "Quarterly",
-				},
-				IncomeStatement: []response.IncomeStatement{},
-			},
-			"/income_statement/consolidated?symbol=AAPL",
-			func(httpCli *HTTPCli, url string) interface{} {
-				return client{
-					getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, url+"/income_statement/consolidated"),
-				}
-			},
-			func(cli interface{}, req request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error) {
-				return cli.(client).GetIncomeStatementConsolidated(req)
-			},
-			"GetIncomeStatementConsolidated",
-		)
-	})
+			IncomeStatement: []response.IncomeStatement{},
+		},
+		"/income_statement/consolidated?symbol=AAPL",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, url+"/income_statement/consolidated"),
+			}
+		},
+		func(cli interface{}, req request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error) {
+			return cli.(client).GetIncomeStatementConsolidated(req)
+		},
+		"GetIncomeStatementConsolidated",
+	)
+}
 
-	t.Run("BalanceSheet", func(t *testing.T) {
-		runConsolidatedStatementTest(
-			t,
-			request.GetBalanceSheet{
-				APIKey: request.APIKey{APIKey: ""},
-				Symbol: "AAPL",
+func Test_client_GetBalanceSheetConsolidated(t *testing.T) {
+	runConsolidatedStatementTest(
+		t,
+		request.GetBalanceSheet{
+			APIKey: request.APIKey{APIKey: ""},
+			Symbol: "AAPL",
+		},
+		`{
+		  "meta": {
+		    "symbol": "AAPL",
+		    "name": "Apple Inc",
+		    "currency": "USD",
+		    "exchange": "NASDAQ",
+		    "mic_code": "XNAS",
+		    "exchange_timezone": "America/New_York",
+		    "period": "Quarterly"
+		  },
+		  "balance_sheet": []
+		}`,
+		response.BalanceSheets{
+			Meta: response.BalanceSheetsMeta{
+				Symbol:           "AAPL",
+				Name:             "Apple Inc",
+				Currency:         "USD",
+				Exchange:         "NASDAQ",
+				MicCode:          "XNAS",
+				ExchangeTimezone: "America/New_York",
+				Period:           "Quarterly",
 			},
-			`{
-			  "meta": {
-			    "symbol": "AAPL",
-			    "name": "Apple Inc",
-			    "currency": "USD",
-			    "exchange": "NASDAQ",
-			    "mic_code": "XNAS",
-			    "exchange_timezone": "America/New_York",
-			    "period": "Quarterly"
-			  },
-			  "balance_sheet": []
-			}`,
-			response.BalanceSheets{
-				Meta: response.BalanceSheetsMeta{
-					Symbol:           "AAPL",
-					Name:             "Apple Inc",
-					Currency:         "USD",
-					Exchange:         "NASDAQ",
-					MicCode:          "XNAS",
-					ExchangeTimezone: "America/New_York",
-					Period:           "Quarterly",
-				},
-				BalanceSheet: []response.BalanceSheet{},
-			},
-			"/balance_sheet/consolidated?symbol=AAPL",
-			func(httpCli *HTTPCli, url string) interface{} {
-				return client{
-					getBalanceSheetConsolidated: NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, url+"/balance_sheet/consolidated"),
-				}
-			},
-			func(cli interface{}, req request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error) {
-				return cli.(client).GetBalanceSheetConsolidated(req)
-			},
-			"GetBalanceSheetConsolidated",
-		)
-	})
+			BalanceSheet: []response.BalanceSheet{},
+		},
+		"/balance_sheet/consolidated?symbol=AAPL",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getBalanceSheetConsolidated: NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, url+"/balance_sheet/consolidated"),
+			}
+		},
+		func(cli interface{}, req request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error) {
+			return cli.(client).GetBalanceSheetConsolidated(req)
+		},
+		"GetBalanceSheetConsolidated",
+	)
+}
 
-	t.Run("CashFlow", func(t *testing.T) {
-		runConsolidatedStatementTest(
-			t,
-			request.GetCashFlow{
-				APIKey: request.APIKey{APIKey: ""},
-				Symbol: "AAPL",
+func Test_client_GetCashFlowConsolidated(t *testing.T) {
+	runConsolidatedStatementTest(
+		t,
+		request.GetCashFlow{
+			APIKey: request.APIKey{APIKey: ""},
+			Symbol: "AAPL",
+		},
+		`{
+		  "meta": {
+		    "symbol": "AAPL",
+		    "name": "Apple Inc",
+		    "currency": "USD",
+		    "exchange": "NASDAQ",
+		    "mic_code": "XNAS",
+		    "exchange_timezone": "America/New_York",
+		    "period": "Quarterly"
+		  },
+		  "cash_flow": []
+		}`,
+		response.CashFlows{
+			Meta: response.CashFlowsMeta{
+				Symbol:           "AAPL",
+				Name:             "Apple Inc",
+				Currency:         "USD",
+				Exchange:         "NASDAQ",
+				MicCode:          "XNAS",
+				ExchangeTimezone: "America/New_York",
+				Period:           "Quarterly",
 			},
-			`{
-			  "meta": {
-			    "symbol": "AAPL",
-			    "name": "Apple Inc",
-			    "currency": "USD",
-			    "exchange": "NASDAQ",
-			    "mic_code": "XNAS",
-			    "exchange_timezone": "America/New_York",
-			    "period": "Quarterly"
-			  },
-			  "cash_flow": []
-			}`,
-			response.CashFlows{
-				Meta: response.CashFlowsMeta{
-					Symbol:           "AAPL",
-					Name:             "Apple Inc",
-					Currency:         "USD",
-					Exchange:         "NASDAQ",
-					MicCode:          "XNAS",
-					ExchangeTimezone: "America/New_York",
-					Period:           "Quarterly",
-				},
-				CashFlow: []response.CashFlow{},
-			},
-			"/cash_flow/consolidated?symbol=AAPL",
-			func(httpCli *HTTPCli, url string) interface{} {
-				return client{
-					getCashFlowConsolidated: NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, url+"/cash_flow/consolidated"),
-				}
-			},
-			func(cli interface{}, req request.GetCashFlow) (response.CashFlows, response.Credits, error) {
-				return cli.(client).GetCashFlowConsolidated(req)
-			},
-			"GetCashFlowConsolidated",
-		)
-	})
+			CashFlow: []response.CashFlow{},
+		},
+		"/cash_flow/consolidated?symbol=AAPL",
+		func(httpCli *HTTPCli, url string) interface{} {
+			return client{
+				getCashFlowConsolidated: NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, url+"/cash_flow/consolidated"),
+			}
+		},
+		func(cli interface{}, req request.GetCashFlow) (response.CashFlows, response.Credits, error) {
+			return cli.(client).GetCashFlowConsolidated(req)
+		},
+		"GetCashFlowConsolidated",
+	)
 }
 
 func Test_client_GetProfile(t *testing.T) {
@@ -2144,7 +2228,7 @@ func Test_client_GetEarnings(t *testing.T) {
 	tests := []struct {
 		name        string
 		args        args
-		want        response.EarningsData
+		want        response.Earnings
 		want1       response.Credits
 		wantErr     string
 		expectedURL string
@@ -2209,8 +2293,8 @@ func Test_client_GetEarnings(t *testing.T) {
 					"/?country=US&cusip=037833100&delimiter=%2C&dp=2&end_date=2024-12-31&exchange=NASDAQ&figi=BBG000B9XRY4&format=json&isin=US0378331005&mic_code=XNAS&outputsize=2&period=quarterly&start_date=2024-01-01&symbol=AAPL&type=actual",
 				),
 			},
-			want: response.EarningsData{
-				Meta: response.EarningsDataMeta{
+			want: response.Earnings{
+				Meta: response.EarningsMeta{
 					Symbol:           "AAPL",
 					Name:             "Apple Inc.",
 					Currency:         "USD",
@@ -2218,7 +2302,7 @@ func Test_client_GetEarnings(t *testing.T) {
 					MicCode:          "XNGS",
 					ExchangeTimezone: "America/New_York",
 				},
-				Earnings: []response.EarningsDataItem{
+				Earnings: []response.EarningsItem{
 					{
 						Date:        "2025-05-02",
 						Time:        "After Hours",
@@ -2284,8 +2368,8 @@ func Test_client_GetEarnings(t *testing.T) {
 					"/?end_date=2024-12-31&exchange=NASDAQ&outputsize=2&start_date=2024-01-01&symbol=MSFT",
 				),
 			},
-			want: response.EarningsData{
-				Meta: response.EarningsDataMeta{
+			want: response.Earnings{
+				Meta: response.EarningsMeta{
 					Symbol:           "MSFT",
 					Name:             "Microsoft Corporation",
 					Currency:         "USD",
@@ -2293,7 +2377,7 @@ func Test_client_GetEarnings(t *testing.T) {
 					MicCode:          "XNGS",
 					ExchangeTimezone: "America/New_York",
 				},
-				Earnings: []response.EarningsDataItem{
+				Earnings: []response.EarningsItem{
 					{
 						Date:        "2024-10-23",
 						Time:        "After Hours",
@@ -2327,7 +2411,7 @@ func Test_client_GetEarnings(t *testing.T) {
 					"/?symbol=INVALID",
 				),
 			},
-			want:        response.EarningsData{},
+			want:        response.Earnings{},
 			want1:       response.NewCreditsImpl(100, 0),
 			wantErr:     "Symbol Not Found: INVALID - **INVALID** not found: symbol may be delisted",
 			expectedURL: "/?symbol=INVALID",
@@ -2344,10 +2428,10 @@ func Test_client_GetEarnings(t *testing.T) {
 				tt.wantErr,
 				func(httpCli *HTTPCli, url string) interface{} {
 					return client{
-						getEarnings: NewEndpoint[request.GetEarnings, response.EarningsData, response.Credits, error](httpCli, url),
+						getEarnings: NewEndpoint[request.GetEarnings, response.Earnings, response.Credits, error](httpCli, url),
 					}
 				},
-				func(cli interface{}, req request.GetEarnings) (response.EarningsData, response.Credits, error) {
+				func(cli interface{}, req request.GetEarnings) (response.Earnings, response.Credits, error) {
 					return cli.(client).GetEarnings(req)
 				},
 				"GetEarnings",

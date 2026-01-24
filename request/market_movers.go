@@ -10,3 +10,10 @@ type GetMarketMovers struct {
 	PriceGreaterThan string `schema:"price_greater_than,omitempty"`
 	DecimalPlaces    string `schema:"dp,omitempty"`
 }
+
+// PathParams returns URL path parameters for the market movers endpoint.
+func (req GetMarketMovers) PathParams() map[string]string {
+	return map[string]string{
+		"market": req.Market,
+	}
+}

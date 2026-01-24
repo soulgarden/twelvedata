@@ -231,7 +231,7 @@
 
 ## Regulatory
 
-* EDGAR fillings        ✅
+* EDGAR filings         ✅
 * Insider transaction   ✅
 * Institutional holders ✅
 * Fund holders          ✅

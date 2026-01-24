@@ -32,6 +32,14 @@ func (rawBodyRequest) RawBody() ([]byte, string, error) {
 	return []byte(`{"foo":"bar"}`), "application/custom+json", nil
 }
 
+type pathRequest struct {
+	ID string `schema:"-"`
+}
+
+func (req pathRequest) PathParams() map[string]string {
+	return map[string]string{"id": req.ID}
+}
+
 type getWithBodyRequest struct{}
 
 func (getWithBodyRequest) Method() string {
@@ -135,5 +143,28 @@ func TestEndpoint_Call_RejectsGetWithBody(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "GET request cannot include a body") {
 		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestEndpoint_Call_UsesPathParams(t *testing.T) {
+	serverURL := mockServerWithRequest(
+		t,
+		http.StatusOK,
+		100,
+		1,
+		`{"status":"ok"}`,
+		expectedRequest{
+			Method: http.MethodGet,
+			URL:    "/path/abc",
+		},
+	)
+
+	endpoint := NewEndpoint[pathRequest, testResponse, response.Credits, error](newTestHTTPCli(serverURL), serverURL+"/path/{id}")
+	resp, _, err := endpoint.Call(pathRequest{ID: "abc"})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if resp.Status != "ok" {
+		t.Fatalf("unexpected status: %s", resp.Status)
 	}
 }

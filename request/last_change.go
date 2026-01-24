@@ -13,3 +13,10 @@ type GetLastChange struct {
 	Page       int    `schema:"page,omitempty"`       // Pagination page number
 	OutputSize int    `schema:"outputsize,omitempty"` // Items per page
 }
+
+// PathParams returns URL path parameters for the last change endpoint.
+func (req GetLastChange) PathParams() map[string]string {
+	return map[string]string{
+		"endpoint": req.Endpoint,
+	}
+}

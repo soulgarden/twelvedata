@@ -50,11 +50,11 @@ type Client interface {
 	GetKeyExecutives(request.GetKeyExecutives) (response.KeyExecutives, response.Credits, error)
 	GetDividends(request.GetDividends) (response.Dividends, response.Credits, error)
 	GetDividendsCalendar(request.GetDividendsCalendar) (response.DividendsCalendar, response.Credits, error)
-	GetEarnings(request.GetEarnings) (response.EarningsData, response.Credits, error)
+	GetEarnings(request.GetEarnings) (response.Earnings, response.Credits, error)
 	GetSplits(request.GetSplits) (response.Splits, response.Credits, error)
 	GetSplitsCalendar(request.GetSplitsCalendar) (response.SplitsCalendar, response.Credits, error)
 	GetStatistics(statistics request.GetStatistics) (response.Statistics, response.Credits, error)
-	GetEarningsCalendar(request.GetEarningsCalendar) (response.Earnings, response.Credits, error)
+	GetEarningsCalendar(request.GetEarningsCalendar) (response.EarningsCalendar, response.Credits, error)
 	GetIPOCalendar(request.GetIPOCalendar) (response.IPOCalendar, response.Credits, error)
 	GetIncomeStatement(request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error)
 	GetIncomeStatementConsolidated(request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error)
@@ -136,7 +136,7 @@ type Client interface {
 
 	// Regulatory
 	GetInsiderTransactions(request.GetInsiderTransactions) (response.InsiderTransactions, response.Credits, error)
-	GetEDGARFillings(request.GetEDGARFillings) (response.EDGARFillings, response.Credits, error)
+	GetEDGARFilings(request.GetEDGARFilings) (response.EDGARFilings, response.Credits, error)
 	GetInstitutionalHolders(request.GetInstitutionalHolders) (response.InstitutionalHolders, response.Credits, error)
 	GetFundHolders(request.GetFundHolders) (response.FundHolders, response.Credits, error)
 	GetDirectHolders(request.GetDirectHolders) (response.DirectHolders, response.Credits, error)

@@ -9,23 +9,23 @@ import (
 	"github.com/soulgarden/twelvedata/response"
 )
 
-func Test_client_GetEDGARFillings(t *testing.T) {
+func Test_client_GetEDGARFilings(t *testing.T) {
 	type args struct {
-		req request.GetEDGARFillings
+		req request.GetEDGARFilings
 		url string
 	}
 
 	tests := []struct {
 		name    string
 		args    args
-		want    response.EDGARFillings
+		want    response.EDGARFilings
 		want1   response.Credits
 		wantErr string
 	}{
 		{
 			name: "success",
 			args: args{
-				req: request.GetEDGARFillings{
+				req: request.GetEDGARFilings{
 					APIKey:     request.APIKey{APIKey: ""},
 					Symbol:     "AAPL",
 					Figi:       "BBG01293F5X4",
@@ -75,18 +75,18 @@ func Test_client_GetEDGARFillings(t *testing.T) {
 					"/edgar_filings/archive?country=United+States&cusip=594918104&exchange=NASDAQ&figi=BBG01293F5X4&filled_from=2024-01-01&filled_to=2024-02-01&form_type=8-K&isin=US0378331005&mic_code=XNGS&page=2&page_size=25&symbol=AAPL",
 				),
 			},
-			want: response.EDGARFillings{
-				Meta: response.EDGARFillingsMeta{
+			want: response.EDGARFilings{
+				Meta: response.EDGARFilingsMeta{
 					Symbol:   "AAPL",
 					Exchange: "NASDAQ",
 					MicCode:  "XNGS",
 					Type:     "Common Stock",
 				},
-				Values: []response.EDGARFilling{
+				Values: []response.EDGARFiling{
 					{
 						Cik:     null.IntFrom(1711463),
 						FiledAt: null.IntFrom(1726617600),
-						Files: []response.EDGARFillingFile{
+						Files: []response.EDGARFilingFile{
 							{
 								Name: "primary_doc.html",
 								Size: null.IntFrom(2980),
@@ -116,13 +116,13 @@ func Test_client_GetEDGARFillings(t *testing.T) {
 				tt.wantErr,
 				func(httpCli *HTTPCli, url string) interface{} {
 					return client{
-						getEDGARFillings: NewEndpoint[request.GetEDGARFillings, response.EDGARFillings, response.Credits, error](httpCli, url+"/edgar_filings/archive"),
+						getEDGARFilings: NewEndpoint[request.GetEDGARFilings, response.EDGARFilings, response.Credits, error](httpCli, url+"/edgar_filings/archive"),
 					}
 				},
-				func(cli interface{}, req request.GetEDGARFillings) (response.EDGARFillings, response.Credits, error) {
-					return cli.(client).GetEDGARFillings(req)
+				func(cli interface{}, req request.GetEDGARFilings) (response.EDGARFilings, response.Credits, error) {
+					return cli.(client).GetEDGARFilings(req)
 				},
-				"GetEDGARFillings",
+				"GetEDGARFilings",
 			)
 		})
 	}

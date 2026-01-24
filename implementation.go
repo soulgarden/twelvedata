@@ -1,8 +1,6 @@
 package twelvedata
 
 import (
-	"strings"
-
 	"github.com/soulgarden/twelvedata/request"
 	"github.com/soulgarden/twelvedata/response"
 )
@@ -47,11 +45,11 @@ type client struct {
 	getKeyExecutives               *Endpoint[request.GetKeyExecutives, response.KeyExecutives, response.Credits, error]
 	getDividends                   *Endpoint[request.GetDividends, response.Dividends, response.Credits, error]
 	getDividendsCalendar           *Endpoint[request.GetDividendsCalendar, response.DividendsCalendar, response.Credits, error]
-	getEarnings                    *Endpoint[request.GetEarnings, response.EarningsData, response.Credits, error]
+	getEarnings                    *Endpoint[request.GetEarnings, response.Earnings, response.Credits, error]
 	getSplits                      *Endpoint[request.GetSplits, response.Splits, response.Credits, error]
 	getSplitsCalendar              *Endpoint[request.GetSplitsCalendar, response.SplitsCalendar, response.Credits, error]
 	getStatistics                  *Endpoint[request.GetStatistics, response.Statistics, response.Credits, error]
-	getEarningsCalendar            *Endpoint[request.GetEarningsCalendar, response.Earnings, response.Credits, error]
+	getEarningsCalendar            *Endpoint[request.GetEarningsCalendar, response.EarningsCalendar, response.Credits, error]
 	getIPOCalendar                 *Endpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error]
 	getIncomeStatement             *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
 	getIncomeStatementConsolidated *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
@@ -133,7 +131,7 @@ type client struct {
 
 	// Regulatory
 	getInsiderTransactions  *Endpoint[request.GetInsiderTransactions, response.InsiderTransactions, response.Credits, error]
-	getEDGARFillings        *Endpoint[request.GetEDGARFillings, response.EDGARFillings, response.Credits, error]
+	getEDGARFilings         *Endpoint[request.GetEDGARFilings, response.EDGARFilings, response.Credits, error]
 	getInstitutionalHolders *Endpoint[request.GetInstitutionalHolders, response.InstitutionalHolders, response.Credits, error]
 	getFundHolders          *Endpoint[request.GetFundHolders, response.FundHolders, response.Credits, error]
 	getDirectHolders        *Endpoint[request.GetDirectHolders, response.DirectHolders, response.Credits, error]
@@ -169,8 +167,8 @@ func (cli client) GetInsiderTransactions(req request.GetInsiderTransactions) (re
 	return cli.getInsiderTransactions.Call(req)
 }
 
-func (cli client) GetEDGARFillings(req request.GetEDGARFillings) (response.EDGARFillings, response.Credits, error) {
-	return cli.getEDGARFillings.Call(req)
+func (cli client) GetEDGARFilings(req request.GetEDGARFilings) (response.EDGARFilings, response.Credits, error) {
+	return cli.getEDGARFilings.Call(req)
 }
 
 func (cli client) GetInstitutionalHolders(req request.GetInstitutionalHolders) (response.InstitutionalHolders, response.Credits, error) {
@@ -190,13 +188,7 @@ func (cli client) GetTaxInformation(req request.GetTaxInformation) (response.Tax
 }
 
 func (cli client) GetSanctionedEntities(req request.GetSanctionedEntities) (response.SanctionedEntities, response.Credits, error) {
-	url := strings.Replace(cli.getSanctionedEntities.URL, "{source}", req.Source, 1)
-	sanctionsEndpoint := NewEndpoint[request.GetSanctionedEntities, response.SanctionedEntities, response.Credits, error](
-		cli.getSanctionedEntities.httpCli,
-		url,
-	)
-
-	return sanctionsEndpoint.Call(req)
+	return cli.getSanctionedEntities.Call(req)
 }
 
 func (cli client) GetDividends(req request.GetDividends) (response.Dividends, response.Credits, error) {
@@ -207,7 +199,7 @@ func (cli client) GetDividendsCalendar(req request.GetDividendsCalendar) (respon
 	return cli.getDividendsCalendar.Call(req)
 }
 
-func (cli client) GetEarnings(req request.GetEarnings) (response.EarningsData, response.Credits, error) {
+func (cli client) GetEarnings(req request.GetEarnings) (response.Earnings, response.Credits, error) {
 	return cli.getEarnings.Call(req)
 }
 
@@ -239,17 +231,10 @@ func (cli client) GetBatches(req request.GetBatches) (response.Batches, response
 }
 
 func (cli client) GetLastChange(req request.GetLastChange) (response.LastChange, response.Credits, error) {
-	// Replace {endpoint} placeholder with actual endpoint value
-	url := strings.Replace(cli.getLastChange.URL, "{endpoint}", req.Endpoint, 1)
-	lastChangeEndpoint := NewEndpoint[request.GetLastChange, response.LastChange, response.Credits, error](
-		cli.getLastChange.httpCli,
-		url,
-	)
-
-	return lastChangeEndpoint.Call(req)
+	return cli.getLastChange.Call(req)
 }
 
-func (cli client) GetEarningsCalendar(req request.GetEarningsCalendar) (response.Earnings, response.Credits, error) {
+func (cli client) GetEarningsCalendar(req request.GetEarningsCalendar) (response.EarningsCalendar, response.Credits, error) {
 	return cli.getEarningsCalendar.Call(req)
 }
 
@@ -294,14 +279,7 @@ func (cli client) GetMarketCap(req request.GetMarketCap) (response.MarketCap, re
 }
 
 func (cli client) GetMarketMovers(req request.GetMarketMovers) (response.MarketMovers, response.Credits, error) {
-	// Replace {market} placeholder with actual market value
-	url := strings.Replace(cli.getMarketMovers.URL, "{market}", req.Market, 1)
-	marketEndpoint := NewEndpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error](
-		cli.getMarketMovers.httpCli,
-		url,
-	)
-
-	return marketEndpoint.Call(req)
+	return cli.getMarketMovers.Call(req)
 }
 
 func (cli client) GetMarketState(req request.GetMarketState) ([]response.MarketState, response.Credits, error) {
@@ -599,11 +577,11 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getKeyExecutives:               NewEndpoint[request.GetKeyExecutives, response.KeyExecutives, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.KeyExecutivesURL),
 		getDividends:                   NewEndpoint[request.GetDividends, response.Dividends, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.DividendsURL),
 		getDividendsCalendar:           NewEndpoint[request.GetDividendsCalendar, response.DividendsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.DividendsCalendarURL),
-		getEarnings:                    NewEndpoint[request.GetEarnings, response.EarningsData, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsURL),
+		getEarnings:                    NewEndpoint[request.GetEarnings, response.Earnings, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsURL),
 		getSplits:                      NewEndpoint[request.GetSplits, response.Splits, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.SplitsURL),
 		getSplitsCalendar:              NewEndpoint[request.GetSplitsCalendar, response.SplitsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.SplitsCalendarURL),
 		getStatistics:                  NewEndpoint[request.GetStatistics, response.Statistics, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.StatisticsURL),
-		getEarningsCalendar:            NewEndpoint[request.GetEarningsCalendar, response.Earnings, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsCalendarURL),
+		getEarningsCalendar:            NewEndpoint[request.GetEarningsCalendar, response.EarningsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsCalendarURL),
 		getIPOCalendar:                 NewEndpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IPOCalendarURL),
 		getIncomeStatement:             NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementURL),
 		getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementConsolidatedURL),
@@ -685,7 +663,7 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 
 		// Regulatory
 		getInsiderTransactions:  NewEndpoint[request.GetInsiderTransactions, response.InsiderTransactions, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.InsiderTransactionsURL),
-		getEDGARFillings:        NewEndpoint[request.GetEDGARFillings, response.EDGARFillings, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.EDGARFillingsURL),
+		getEDGARFilings:         NewEndpoint[request.GetEDGARFilings, response.EDGARFilings, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.EDGARFilingsURL),
 		getInstitutionalHolders: NewEndpoint[request.GetInstitutionalHolders, response.InstitutionalHolders, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.InstitutionalHoldersURL),
 		getFundHolders:          NewEndpoint[request.GetFundHolders, response.FundHolders, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.FundHoldersURL),
 		getDirectHolders:        NewEndpoint[request.GetDirectHolders, response.DirectHolders, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.DirectHoldersURL),

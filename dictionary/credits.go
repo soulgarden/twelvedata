@@ -239,9 +239,9 @@ const (
 	// AnalystRatingsUSEquities represents the API credit cost for US equities analyst ratings requests.
 	AnalystRatingsUSEquities = 200
 
-	// EDGARFillings represents the API credit cost for EDGAR filings requests.
+	// EDGARFilings represents the API credit cost for EDGAR filings requests.
 	// Regulatory.
-	EDGARFillings = 50
+	EDGARFilings = 50
 	// DirectHolders represents the API credit cost for direct holders requests.
 	DirectHolders = 1500
 	// TaxInformation represents the API credit cost for tax information requests.
