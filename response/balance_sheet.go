@@ -1,12 +1,14 @@
 package response
 
-import "gopkg.in/guregu/null.v4"
+import "github.com/guregu/null/v6"
 
+// BalanceSheets represents the response structure for balance sheet data.
 type BalanceSheets struct {
 	Meta         BalanceSheetsMeta `json:"meta"`
 	BalanceSheet []BalanceSheet    `json:"balance_sheet"`
 }
 
+// BalanceSheetsMeta contains metadata for balance sheet data.
 type BalanceSheetsMeta struct {
 	Symbol           string `json:"symbol"`
 	Name             string `json:"name"`
@@ -17,6 +19,7 @@ type BalanceSheetsMeta struct {
 	Period           string `json:"period"`
 }
 
+// BalanceSheet represents financial balance sheet data for a specific fiscal period.
 type BalanceSheet struct {
 	FiscalDate         string                         `json:"fiscal_date"`
 	Assets             BalanceSheetAssets             `json:"assets"`
@@ -24,12 +27,14 @@ type BalanceSheet struct {
 	ShareholdersEquity BalanceSheetShareholdersEquity `json:"shareholders_equity"`
 }
 
+// BalanceSheetAssets represents the assets section of a balance sheet.
 type BalanceSheetAssets struct {
 	CurrentAssets    BalanceSheetCurrentAssets    `json:"current_assets"`
 	NonCurrentAssets BalanceSheetNonCurrentAssets `json:"non_current_assets"`
 	TotalAssets      null.Int                     `json:"total_assets"`
 }
 
+// BalanceSheetCurrentAssets represents current assets in a balance sheet.
 type BalanceSheetCurrentAssets struct {
 	Cash                      null.Int `json:"cash"`
 	CashEquivalents           null.Int `json:"cash_equivalents"`
@@ -46,6 +51,7 @@ type BalanceSheetCurrentAssets struct {
 	TotalCurrentAssets        null.Int `json:"total_current_assets"`
 }
 
+// BalanceSheetNonCurrentAssets represents non-current assets in a balance sheet.
 type BalanceSheetNonCurrentAssets struct {
 	Properties                  null.Int `json:"properties"`
 	LandAndImprovements         null.Int `json:"land_and_improvements"`
@@ -62,12 +68,14 @@ type BalanceSheetNonCurrentAssets struct {
 	TotalNonCurrentAssets       null.Int `json:"total_non_current_assets"`
 }
 
+// BalanceSheetLiabilities represents the liabilities section of a balance sheet.
 type BalanceSheetLiabilities struct {
 	CurrentLiabilities    BalanceSheetCurrentLiabilities    `json:"current_liabilities"`
 	NonCurrentLiabilities BalanceSheetNonCurrentLiabilities `json:"non_current_liabilities"`
 	TotalLiabilities      null.Int                          `json:"total_liabilities"`
 }
 
+// BalanceSheetCurrentLiabilities represents current liabilities in a balance sheet.
 type BalanceSheetCurrentLiabilities struct {
 	AccountsPayable         null.Int `json:"accounts_payable"`
 	AccruedExpenses         null.Int `json:"accrued_expenses"`
@@ -79,6 +87,7 @@ type BalanceSheetCurrentLiabilities struct {
 	TotalCurrentLiabilities null.Int `json:"total_current_liabilities"`
 }
 
+// BalanceSheetNonCurrentLiabilities represents non-current liabilities in a balance sheet.
 type BalanceSheetNonCurrentLiabilities struct {
 	LongTermProvisions           null.Int `json:"long_term_provisions"`
 	LongTermDebt                 null.Int `json:"long_term_debt"`
@@ -89,6 +98,7 @@ type BalanceSheetNonCurrentLiabilities struct {
 	TotalNonCurrentLiabilities   null.Int `json:"total_non_current_liabilities"`
 }
 
+// BalanceSheetShareholdersEquity represents shareholders' equity section of a balance sheet.
 type BalanceSheetShareholdersEquity struct {
 	CommonStock             null.Int `json:"common_stock"`
 	RetainedEarnings        null.Int `json:"retained_earnings"`

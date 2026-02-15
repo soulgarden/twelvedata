@@ -4,6 +4,8 @@
 *.dll
 *.so
 *.dylib
+*.bak
+*.backup
 
 # Test binary, built with `go test -c`
 *.test
@@ -15,3 +17,8 @@
 vendor/
 
 .idea
+
+*_easyjson.go
+*_easyjson_test.go
+
+doc.html

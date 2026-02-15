@@ -1,5 +1,6 @@
 package response
 
+// MarketState represents the current state of a market exchange.
 type MarketState struct {
 	Name          string `json:"name"`
 	Code          string `json:"code"`

@@ -1,7 +1,8 @@
 package response
 
-import "gopkg.in/guregu/null.v4"
+import "github.com/guregu/null/v6"
 
+// Profile represents detailed company profile information.
 type Profile struct {
 	Symbol      string   `json:"symbol"`
 	Name        string   `json:"name"`
@@ -15,6 +16,7 @@ type Profile struct {
 	Type        string   `json:"type"`
 	CEO         string   `json:"CEO"`
 	Address     string   `json:"address"`
+	Address2    string   `json:"address2"`
 	City        string   `json:"city"`
 	Zip         string   `json:"zip"`
 	State       string   `json:"state"`
