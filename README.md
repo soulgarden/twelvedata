@@ -3,6 +3,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/soulgarden/twelvedata)](https://goreportcard.com/report/github.com/soulgarden/twelvedata)
 ![Tests and linters](https://github.com/soulgarden/twelvedata/actions/workflows/main.yml/badge.svg)
 
+## Install
+
+```bash
+go get github.com/soulgarden/twelvedata@latest
+```
+
+If you're upgrading from `v0.1.x`, see `MIGRATION.md`.
 
 # Covered:
 
@@ -247,6 +254,8 @@
 
 # Usage
 
-[http example](https://github.com/soulgarden/twelvedata/blob/main/examples/etfs.go)
+[http example](https://github.com/soulgarden/twelvedata/blob/main/examples/etf_example/etfs.go)
 
-[ws example](https://github.com/soulgarden/twelvedata/blob/main/examples/ws.go)
+[ws example](https://github.com/soulgarden/twelvedata/blob/main/examples/ws_example/ws.go)
+
+[error handling example](https://github.com/soulgarden/twelvedata/blob/main/examples/error_handling/error_handling.go)
