@@ -43,3 +43,4 @@ linters:
     - funlen   # Disabled - test functions are commonly long
     - gosec    # Disabled - false positives on API constants
     - maintidx # Disabled - maintainability index not critical for API client
+    - depguard

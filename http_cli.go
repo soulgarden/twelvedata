@@ -127,9 +127,9 @@ func (c *HTTPCli) logRequest(
 	var event *zerolog.Event
 
 	if err == nil {
-		event = c.logger.Debug()
+		event = c.logger.Debug() // nolint: zerologlint
 	} else {
-		event = c.logger.Err(err)
+		event = c.logger.Err(err) // nolint: zerologlint
 	}
 
 	event.
