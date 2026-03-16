@@ -1,5 +1,5 @@
 // Package twelvedata provides a Go client for the Twelve Data API, offering comprehensive access to
-// financial market data including real-time quotes, historical time series, fundamental data, and more.
+// market data, reference data, fundamentals, and more.
 package twelvedata
 
 import (
@@ -9,8 +9,16 @@ import (
 
 // Client defines the interface for interacting with the Twelve Data API.
 // It provides methods for accessing various financial data endpoints including
-// reference data, core market data, fundamentals, currencies, and WebSocket streaming.
+// market data, reference data, fundamentals, and currencies.
 type Client interface {
+	// Market Data
+	GetTimeSeries(request.GetTimeSeries) (response.TimeSeries, response.Credits, error)
+	GetTimeSeriesCross(request.GetTimeSeriesCross) (response.TimeSeriesCross, response.Credits, error)
+	GetQuote(request.GetQuote) (response.Quote, response.Credits, error)
+	GetPrice(request.GetPrice) (response.Price, response.Credits, error)
+	GetEOD(request.GetEOD) (response.EOD, response.Credits, error)
+	GetMarketMovers(request.GetMarketMovers) (response.MarketMovers, response.Credits, error)
+
 	// Reference Data - Asset Catalogs
 	GetStocks(request.GetStock) (response.Stocks, response.Credits, error)
 	GetForexPairs(request.GetForexPairs) (response.ForexPairs, response.Credits, error)
@@ -36,34 +44,54 @@ type Client interface {
 	GetInstrumentType(request.GetInstrumentType) (response.InstrumentType, response.Credits, error)
 	GetTechnicalIndicators(request.GetTechnicalIndicators) (response.TechnicalIndicators, response.Credits, error)
 
-	// Core Data
-	GetTimeSeries(request.GetTimeSeries) (response.TimeSeries, response.Credits, error)
-	GetTimeSeriesCross(request.GetTimeSeriesCross) (response.TimeSeriesCross, response.Credits, error)
-	GetQuote(request.GetQuote) (response.Quote, response.Credits, error)
-	GetPrice(request.GetPrice) (response.Price, response.Credits, error)
-	GetEOD(request.GetEOD) (response.EOD, response.Credits, error)
-	GetMarketMovers(request.GetMarketMovers) (response.MarketMovers, response.Credits, error)
-
 	// Fundamentals
 	GetLogo(request.GetLogo) (response.Logo, response.Credits, error)
 	GetProfile(request.GetProfile) (response.Profile, response.Credits, error)
-	GetKeyExecutives(request.GetKeyExecutives) (response.KeyExecutives, response.Credits, error)
 	GetDividends(request.GetDividends) (response.Dividends, response.Credits, error)
 	GetDividendsCalendar(request.GetDividendsCalendar) (response.DividendsCalendar, response.Credits, error)
 	GetEarnings(request.GetEarnings) (response.Earnings, response.Credits, error)
+	GetEarningsCalendar(request.GetEarningsCalendar) (response.EarningsCalendar, response.Credits, error)
+	GetIPOCalendar(request.GetIPOCalendar) (response.IPOCalendar, response.Credits, error)
 	GetSplits(request.GetSplits) (response.Splits, response.Credits, error)
 	GetSplitsCalendar(request.GetSplitsCalendar) (response.SplitsCalendar, response.Credits, error)
 	GetStatistics(statistics request.GetStatistics) (response.Statistics, response.Credits, error)
-	GetEarningsCalendar(request.GetEarningsCalendar) (response.EarningsCalendar, response.Credits, error)
-	GetIPOCalendar(request.GetIPOCalendar) (response.IPOCalendar, response.Credits, error)
+	GetPressReleases(request.GetPressReleases) (response.PressReleases, response.Credits, error)
 	GetIncomeStatement(request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error)
 	GetIncomeStatementConsolidated(request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error)
 	GetBalanceSheet(request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error)
 	GetBalanceSheetConsolidated(request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error)
 	GetCashFlow(request.GetCashFlow) (response.CashFlows, response.Credits, error)
 	GetCashFlowConsolidated(request.GetCashFlow) (response.CashFlows, response.Credits, error)
+	GetKeyExecutives(request.GetKeyExecutives) (response.KeyExecutives, response.Credits, error)
 	GetMarketCap(request.GetMarketCap) (response.MarketCap, response.Credits, error)
 	GetLastChange(request.GetLastChange) (response.LastChange, response.Credits, error)
+
+	// Currencies
+	GetExchangeRate(request.GetExchangeRate) (response.ExchangeRate, response.Credits, error)
+	GetCurrencyConversion(request.GetCurrencyConversion) (response.CurrencyConversion, response.Credits, error)
+
+	// ETFs
+	GetETFsDirectory(request.GetETFsDirectory) (response.ETFsDirectory, response.Credits, error)
+	GetETFFullData(request.GetETFFullData) (response.ETFFullData, response.Credits, error)
+	GetETFSummary(request.GetETFSummary) (response.ETFWorldSummary, response.Credits, error)
+	GetETFPerformance(request.GetETFPerformance) (response.ETFPerformance, response.Credits, error)
+	GetETFRisk(request.GetETFRisk) (response.ETFRisk, response.Credits, error)
+	GetETFComposition(request.GetETFComposition) (response.ETFComposition, response.Credits, error)
+	GetETFFamilies(request.GetETFFamilies) (response.ETFFamilies, response.Credits, error)
+	GetETFTypes(request.GetETFTypes) (response.ETFTypes, response.Credits, error)
+
+	// Mutual Funds
+	GetMutualFundsDirectory(request.GetMutualFundsDirectory) (response.MutualFundsDirectory, response.Credits, error)
+	GetMutualFundFullData(request.GetMutualFundFullData) (response.MutualFundFullData, response.Credits, error)
+	GetMutualFundSummary(request.GetMutualFundSummary) (response.MutualFundSummary, response.Credits, error)
+	GetMutualFundPerformance(request.GetMutualFundPerformance) (response.MutualFundPerformance, response.Credits, error)
+	GetMutualFundRisk(request.GetMutualFundRisk) (response.MutualFundRisk, response.Credits, error)
+	GetMutualFundRatings(request.GetMutualFundRatings) (response.MutualFundRatings, response.Credits, error)
+	GetMutualFundComposition(request.GetMutualFundComposition) (response.MutualFundComposition, response.Credits, error)
+	GetMutualFundPurchaseInfo(request.GetMutualFundPurchaseInfo) (response.MutualFundPurchaseInfo, response.Credits, error)
+	GetMutualFundSustainability(request.GetMutualFundSustainability) (response.MutualFundSustainability, response.Credits, error)
+	GetMutualFundFamilies(request.GetMutualFundFamilies) (response.MutualFundFamilies, response.Credits, error)
+	GetMutualFundTypes(request.GetMutualFundTypes) (response.MutualFundTypes, response.Credits, error)
 
 	// Technical Indicators
 	GetBBands(request.GetBBands) (response.BBands, response.Credits, error)
@@ -92,37 +120,6 @@ type Client interface {
 	GetNATR(request.GetNATR) (response.NATR, response.Credits, error)
 	GetTR(request.GetTR) (response.TR, response.Credits, error)
 
-	// Currencies
-	GetExchangeRate(request.GetExchangeRate) (response.ExchangeRate, response.Credits, error)
-	GetCurrencyConversion(request.GetCurrencyConversion) (response.CurrencyConversion, response.Credits, error)
-
-	// Advanced
-	GetUsage(request.GetUsage) (response.Usage, response.Credits, error)
-	GetBatches(request.GetBatches) (response.Batches, response.Credits, error)
-
-	// ETFs
-	GetETFsDirectory(request.GetETFsDirectory) (response.ETFsDirectory, response.Credits, error)
-	GetETFFullData(request.GetETFFullData) (response.ETFFullData, response.Credits, error)
-	GetETFSummary(request.GetETFSummary) (response.ETFWorldSummary, response.Credits, error)
-	GetETFPerformance(request.GetETFPerformance) (response.ETFPerformance, response.Credits, error)
-	GetETFRisk(request.GetETFRisk) (response.ETFRisk, response.Credits, error)
-	GetETFComposition(request.GetETFComposition) (response.ETFComposition, response.Credits, error)
-	GetETFFamilies(request.GetETFFamilies) (response.ETFFamilies, response.Credits, error)
-	GetETFTypes(request.GetETFTypes) (response.ETFTypes, response.Credits, error)
-
-	// Mutual Funds
-	GetMutualFundsDirectory(request.GetMutualFundsDirectory) (response.MutualFundsDirectory, response.Credits, error)
-	GetMutualFundFullData(request.GetMutualFundFullData) (response.MutualFundFullData, response.Credits, error)
-	GetMutualFundSummary(request.GetMutualFundSummary) (response.MutualFundSummary, response.Credits, error)
-	GetMutualFundPerformance(request.GetMutualFundPerformance) (response.MutualFundPerformance, response.Credits, error)
-	GetMutualFundRisk(request.GetMutualFundRisk) (response.MutualFundRisk, response.Credits, error)
-	GetMutualFundRatings(request.GetMutualFundRatings) (response.MutualFundRatings, response.Credits, error)
-	GetMutualFundComposition(request.GetMutualFundComposition) (response.MutualFundComposition, response.Credits, error)
-	GetMutualFundPurchaseInfo(request.GetMutualFundPurchaseInfo) (response.MutualFundPurchaseInfo, response.Credits, error)
-	GetMutualFundSustainability(request.GetMutualFundSustainability) (response.MutualFundSustainability, response.Credits, error)
-	GetMutualFundFamilies(request.GetMutualFundFamilies) (response.MutualFundFamilies, response.Credits, error)
-	GetMutualFundTypes(request.GetMutualFundTypes) (response.MutualFundTypes, response.Credits, error)
-
 	// Analysis
 	GetRecommendations(request.GetRecommendations) (response.Recommendations, response.Credits, error)
 	GetPriceTarget(request.GetPriceTarget) (response.PriceTarget, response.Credits, error)
@@ -142,4 +139,8 @@ type Client interface {
 	GetDirectHolders(request.GetDirectHolders) (response.DirectHolders, response.Credits, error)
 	GetTaxInformation(request.GetTaxInformation) (response.TaxInformation, response.Credits, error)
 	GetSanctionedEntities(request.GetSanctionedEntities) (response.SanctionedEntities, response.Credits, error)
+
+	// Advanced
+	GetUsage(request.GetUsage) (response.Usage, response.Credits, error)
+	GetBatches(request.GetBatches) (response.Batches, response.Credits, error)
 }

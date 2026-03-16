@@ -6,6 +6,14 @@ import (
 )
 
 type client struct {
+	// Market Data
+	getTimeSeries      *Endpoint[request.GetTimeSeries, response.TimeSeries, response.Credits, error]
+	getTimeSeriesCross *Endpoint[request.GetTimeSeriesCross, response.TimeSeriesCross, response.Credits, error]
+	getQuote           *Endpoint[request.GetQuote, response.Quote, response.Credits, error]
+	getPrice           *Endpoint[request.GetPrice, response.Price, response.Credits, error]
+	getEOD             *Endpoint[request.GetEOD, response.EOD, response.Credits, error]
+	getMarketMovers    *Endpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error]
+
 	// Reference Data - Asset Catalogs
 	getStocks           *Endpoint[request.GetStock, response.Stocks, response.Credits, error]
 	getForexPairs       *Endpoint[request.GetForexPairs, response.ForexPairs, response.Credits, error]
@@ -31,14 +39,6 @@ type client struct {
 	getInstrumentType      *Endpoint[request.GetInstrumentType, response.InstrumentType, response.Credits, error]
 	getTechnicalIndicators *Endpoint[request.GetTechnicalIndicators, response.TechnicalIndicators, response.Credits, error]
 
-	// Core Data
-	getTimeSeries      *Endpoint[request.GetTimeSeries, response.TimeSeries, response.Credits, error]
-	getTimeSeriesCross *Endpoint[request.GetTimeSeriesCross, response.TimeSeriesCross, response.Credits, error]
-	getQuote           *Endpoint[request.GetQuote, response.Quote, response.Credits, error]
-	getPrice           *Endpoint[request.GetPrice, response.Price, response.Credits, error]
-	getEOD             *Endpoint[request.GetEOD, response.EOD, response.Credits, error]
-	getMarketMovers    *Endpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error]
-
 	// Fundamentals
 	getLogo                        *Endpoint[request.GetLogo, response.Logo, response.Credits, error]
 	getProfile                     *Endpoint[request.GetProfile, response.Profile, response.Credits, error]
@@ -51,6 +51,7 @@ type client struct {
 	getStatistics                  *Endpoint[request.GetStatistics, response.Statistics, response.Credits, error]
 	getEarningsCalendar            *Endpoint[request.GetEarningsCalendar, response.EarningsCalendar, response.Credits, error]
 	getIPOCalendar                 *Endpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error]
+	getPressReleases               *Endpoint[request.GetPressReleases, response.PressReleases, response.Credits, error]
 	getIncomeStatement             *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
 	getIncomeStatementConsolidated *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
 	getBalanceSheet                *Endpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error]
@@ -59,6 +60,33 @@ type client struct {
 	getCashFlowConsolidated        *Endpoint[request.GetCashFlow, response.CashFlows, response.Credits, error]
 	getMarketCap                   *Endpoint[request.GetMarketCap, response.MarketCap, response.Credits, error]
 	getLastChange                  *Endpoint[request.GetLastChange, response.LastChange, response.Credits, error]
+
+	// Currencies
+	getExchangeRate       *Endpoint[request.GetExchangeRate, response.ExchangeRate, response.Credits, error]
+	getCurrencyConversion *Endpoint[request.GetCurrencyConversion, response.CurrencyConversion, response.Credits, error]
+
+	// ETFs
+	getETFsDirectory  *Endpoint[request.GetETFsDirectory, response.ETFsDirectory, response.Credits, error]
+	getETFFullData    *Endpoint[request.GetETFFullData, response.ETFFullData, response.Credits, error]
+	getETFSummary     *Endpoint[request.GetETFSummary, response.ETFWorldSummary, response.Credits, error]
+	getETFPerformance *Endpoint[request.GetETFPerformance, response.ETFPerformance, response.Credits, error]
+	getETFRisk        *Endpoint[request.GetETFRisk, response.ETFRisk, response.Credits, error]
+	getETFComposition *Endpoint[request.GetETFComposition, response.ETFComposition, response.Credits, error]
+	getETFFamilies    *Endpoint[request.GetETFFamilies, response.ETFFamilies, response.Credits, error]
+	getETFTypes       *Endpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error]
+
+	// Mutual Funds
+	getMutualFundsDirectory     *Endpoint[request.GetMutualFundsDirectory, response.MutualFundsDirectory, response.Credits, error]
+	getMutualFundFullData       *Endpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error]
+	getMutualFundSummary        *Endpoint[request.GetMutualFundSummary, response.MutualFundSummary, response.Credits, error]
+	getMutualFundPerformance    *Endpoint[request.GetMutualFundPerformance, response.MutualFundPerformance, response.Credits, error]
+	getMutualFundRisk           *Endpoint[request.GetMutualFundRisk, response.MutualFundRisk, response.Credits, error]
+	getMutualFundRatings        *Endpoint[request.GetMutualFundRatings, response.MutualFundRatings, response.Credits, error]
+	getMutualFundComposition    *Endpoint[request.GetMutualFundComposition, response.MutualFundComposition, response.Credits, error]
+	getMutualFundPurchaseInfo   *Endpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfo, response.Credits, error]
+	getMutualFundSustainability *Endpoint[request.GetMutualFundSustainability, response.MutualFundSustainability, response.Credits, error]
+	getMutualFundFamilies       *Endpoint[request.GetMutualFundFamilies, response.MutualFundFamilies, response.Credits, error]
+	getMutualFundTypes          *Endpoint[request.GetMutualFundTypes, response.MutualFundTypes, response.Credits, error]
 
 	// Technical Indicators
 	getBBands   *Endpoint[request.GetBBands, response.BBands, response.Credits, error]
@@ -87,37 +115,6 @@ type client struct {
 	getNATR     *Endpoint[request.GetNATR, response.NATR, response.Credits, error]
 	getTR       *Endpoint[request.GetTR, response.TR, response.Credits, error]
 
-	// Currencies
-	getExchangeRate       *Endpoint[request.GetExchangeRate, response.ExchangeRate, response.Credits, error]
-	getCurrencyConversion *Endpoint[request.GetCurrencyConversion, response.CurrencyConversion, response.Credits, error]
-
-	// Advanced
-	getUsage   *Endpoint[request.GetUsage, response.Usage, response.Credits, error]
-	getBatches *Endpoint[request.GetBatches, response.Batches, response.Credits, error]
-
-	// ETFs
-	getETFsDirectory  *Endpoint[request.GetETFsDirectory, response.ETFsDirectory, response.Credits, error]
-	getETFFullData    *Endpoint[request.GetETFFullData, response.ETFFullData, response.Credits, error]
-	getETFSummary     *Endpoint[request.GetETFSummary, response.ETFWorldSummary, response.Credits, error]
-	getETFPerformance *Endpoint[request.GetETFPerformance, response.ETFPerformance, response.Credits, error]
-	getETFRisk        *Endpoint[request.GetETFRisk, response.ETFRisk, response.Credits, error]
-	getETFComposition *Endpoint[request.GetETFComposition, response.ETFComposition, response.Credits, error]
-	getETFFamilies    *Endpoint[request.GetETFFamilies, response.ETFFamilies, response.Credits, error]
-	getETFTypes       *Endpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error]
-
-	// Mutual Funds
-	getMutualFundsDirectory     *Endpoint[request.GetMutualFundsDirectory, response.MutualFundsDirectory, response.Credits, error]
-	getMutualFundFullData       *Endpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error]
-	getMutualFundSummary        *Endpoint[request.GetMutualFundSummary, response.MutualFundSummary, response.Credits, error]
-	getMutualFundPerformance    *Endpoint[request.GetMutualFundPerformance, response.MutualFundPerformance, response.Credits, error]
-	getMutualFundRisk           *Endpoint[request.GetMutualFundRisk, response.MutualFundRisk, response.Credits, error]
-	getMutualFundRatings        *Endpoint[request.GetMutualFundRatings, response.MutualFundRatings, response.Credits, error]
-	getMutualFundComposition    *Endpoint[request.GetMutualFundComposition, response.MutualFundComposition, response.Credits, error]
-	getMutualFundPurchaseInfo   *Endpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfo, response.Credits, error]
-	getMutualFundSustainability *Endpoint[request.GetMutualFundSustainability, response.MutualFundSustainability, response.Credits, error]
-	getMutualFundFamilies       *Endpoint[request.GetMutualFundFamilies, response.MutualFundFamilies, response.Credits, error]
-	getMutualFundTypes          *Endpoint[request.GetMutualFundTypes, response.MutualFundTypes, response.Credits, error]
-
 	// Analysis
 	getRecommendations          *Endpoint[request.GetRecommendations, response.Recommendations, response.Credits, error]
 	getPriceTarget              *Endpoint[request.GetPriceTarget, response.PriceTarget, response.Credits, error]
@@ -137,6 +134,10 @@ type client struct {
 	getDirectHolders        *Endpoint[request.GetDirectHolders, response.DirectHolders, response.Credits, error]
 	getTaxInformation       *Endpoint[request.GetTaxInformation, response.TaxInformation, response.Credits, error]
 	getSanctionedEntities   *Endpoint[request.GetSanctionedEntities, response.SanctionedEntities, response.Credits, error]
+
+	// Advanced
+	getUsage   *Endpoint[request.GetUsage, response.Usage, response.Credits, error]
+	getBatches *Endpoint[request.GetBatches, response.Batches, response.Credits, error]
 }
 
 func (cli client) GetStocks(req request.GetStock) (response.Stocks, response.Credits, error) {
@@ -213,6 +214,10 @@ func (cli client) GetSplitsCalendar(req request.GetSplitsCalendar) (response.Spl
 
 func (cli client) GetStatistics(statistics request.GetStatistics) (response.Statistics, response.Credits, error) {
 	return cli.getStatistics.Call(statistics)
+}
+
+func (cli client) GetPressReleases(req request.GetPressReleases) (response.PressReleases, response.Credits, error) {
+	return cli.getPressReleases.Call(req)
 }
 
 func (cli client) GetExchanges(req request.GetExchanges) (response.Exchanges, response.Credits, error) {
@@ -538,6 +543,14 @@ func (cli client) GetAnalystRatingsUSEquities(req request.GetAnalystRatingsUSEqu
 // while cfg contains the API endpoints, authentication, and other client configuration.
 func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 	return client{
+		// Market Data
+		getTimeSeries:      NewEndpoint[request.GetTimeSeries, response.TimeSeries, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.TimeSeriesURL),
+		getTimeSeriesCross: NewEndpoint[request.GetTimeSeriesCross, response.TimeSeriesCross, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.TimeSeriesCrossURL),
+		getQuote:           NewEndpoint[request.GetQuote, response.Quote, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.QuotesURL),
+		getPrice:           NewEndpoint[request.GetPrice, response.Price, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.PriceURL),
+		getEOD:             NewEndpoint[request.GetEOD, response.EOD, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.EODURL),
+		getMarketMovers:    NewEndpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.MarketMoversURL),
+
 		// Reference Data - Asset Catalogs
 		getStocks:           NewEndpoint[request.GetStock, response.Stocks, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.StocksURL),
 		getForexPairs:       NewEndpoint[request.GetForexPairs, response.ForexPairs, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.ForexPairsURL),
@@ -563,14 +576,6 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getInstrumentType:      NewEndpoint[request.GetInstrumentType, response.InstrumentType, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.InstrumentTypeURL),
 		getTechnicalIndicators: NewEndpoint[request.GetTechnicalIndicators, response.TechnicalIndicators, response.Credits, error](httpCli, cfg.BaseURL+cfg.ReferenceData.TechnicalIndicatorsURL),
 
-		// Core Data
-		getTimeSeries:      NewEndpoint[request.GetTimeSeries, response.TimeSeries, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.TimeSeriesURL),
-		getTimeSeriesCross: NewEndpoint[request.GetTimeSeriesCross, response.TimeSeriesCross, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.TimeSeriesCrossURL),
-		getQuote:           NewEndpoint[request.GetQuote, response.Quote, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.QuotesURL),
-		getPrice:           NewEndpoint[request.GetPrice, response.Price, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.PriceURL),
-		getEOD:             NewEndpoint[request.GetEOD, response.EOD, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.EODURL),
-		getMarketMovers:    NewEndpoint[request.GetMarketMovers, response.MarketMovers, response.Credits, error](httpCli, cfg.BaseURL+cfg.CoreData.MarketMoversURL),
-
 		// Fundamentals
 		getLogo:                        NewEndpoint[request.GetLogo, response.Logo, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.LogoURL),
 		getProfile:                     NewEndpoint[request.GetProfile, response.Profile, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.ProfileURL),
@@ -583,6 +588,7 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getStatistics:                  NewEndpoint[request.GetStatistics, response.Statistics, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.StatisticsURL),
 		getEarningsCalendar:            NewEndpoint[request.GetEarningsCalendar, response.EarningsCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.EarningsCalendarURL),
 		getIPOCalendar:                 NewEndpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IPOCalendarURL),
+		getPressReleases:               NewEndpoint[request.GetPressReleases, response.PressReleases, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.PressReleasesURL),
 		getIncomeStatement:             NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementURL),
 		getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementConsolidatedURL),
 		getBalanceSheet:                NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetURL),
@@ -591,6 +597,33 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getCashFlowConsolidated:        NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowConsolidatedURL),
 		getMarketCap:                   NewEndpoint[request.GetMarketCap, response.MarketCap, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.MarketCapURL),
 		getLastChange:                  NewEndpoint[request.GetLastChange, response.LastChange, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.LastChangeURL),
+
+		// Currencies
+		getExchangeRate:       NewEndpoint[request.GetExchangeRate, response.ExchangeRate, response.Credits, error](httpCli, cfg.BaseURL+cfg.Currencies.ExchangeRateURL),
+		getCurrencyConversion: NewEndpoint[request.GetCurrencyConversion, response.CurrencyConversion, response.Credits, error](httpCli, cfg.BaseURL+cfg.Currencies.CurrencyConversionURL),
+
+		// ETFs
+		getETFsDirectory:  NewEndpoint[request.GetETFsDirectory, response.ETFsDirectory, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsDirectoryURL),
+		getETFFullData:    NewEndpoint[request.GetETFFullData, response.ETFFullData, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsFullDataURL),
+		getETFSummary:     NewEndpoint[request.GetETFSummary, response.ETFWorldSummary, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsSummaryURL),
+		getETFPerformance: NewEndpoint[request.GetETFPerformance, response.ETFPerformance, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsPerformanceURL),
+		getETFRisk:        NewEndpoint[request.GetETFRisk, response.ETFRisk, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsRiskURL),
+		getETFComposition: NewEndpoint[request.GetETFComposition, response.ETFComposition, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsCompositionURL),
+		getETFFamilies:    NewEndpoint[request.GetETFFamilies, response.ETFFamilies, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsFamiliesURL),
+		getETFTypes:       NewEndpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsTypesURL),
+
+		// Mutual Funds
+		getMutualFundsDirectory:     NewEndpoint[request.GetMutualFundsDirectory, response.MutualFundsDirectory, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsDirectoryURL),
+		getMutualFundFullData:       NewEndpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsFullDataURL),
+		getMutualFundSummary:        NewEndpoint[request.GetMutualFundSummary, response.MutualFundSummary, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSummaryURL),
+		getMutualFundPerformance:    NewEndpoint[request.GetMutualFundPerformance, response.MutualFundPerformance, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsPerformanceURL),
+		getMutualFundRisk:           NewEndpoint[request.GetMutualFundRisk, response.MutualFundRisk, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRiskURL),
+		getMutualFundRatings:        NewEndpoint[request.GetMutualFundRatings, response.MutualFundRatings, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRatingsURL),
+		getMutualFundComposition:    NewEndpoint[request.GetMutualFundComposition, response.MutualFundComposition, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsCompositionURL),
+		getMutualFundPurchaseInfo:   NewEndpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfo, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsPurchaseInfoURL),
+		getMutualFundSustainability: NewEndpoint[request.GetMutualFundSustainability, response.MutualFundSustainability, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSustainabilityURL),
+		getMutualFundFamilies:       NewEndpoint[request.GetMutualFundFamilies, response.MutualFundFamilies, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsFamiliesURL),
+		getMutualFundTypes:          NewEndpoint[request.GetMutualFundTypes, response.MutualFundTypes, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsTypesURL),
 
 		// Technical Indicators
 		getBBands:   NewEndpoint[request.GetBBands, response.BBands, response.Credits, error](httpCli, cfg.BaseURL+cfg.TechnicalIndicators.BbandsURL),
@@ -619,37 +652,6 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getNATR:     NewEndpoint[request.GetNATR, response.NATR, response.Credits, error](httpCli, cfg.BaseURL+cfg.TechnicalIndicators.NATRURL),
 		getTR:       NewEndpoint[request.GetTR, response.TR, response.Credits, error](httpCli, cfg.BaseURL+cfg.TechnicalIndicators.TRURL),
 
-		// Currencies
-		getExchangeRate:       NewEndpoint[request.GetExchangeRate, response.ExchangeRate, response.Credits, error](httpCli, cfg.BaseURL+cfg.Currencies.ExchangeRateURL),
-		getCurrencyConversion: NewEndpoint[request.GetCurrencyConversion, response.CurrencyConversion, response.Credits, error](httpCli, cfg.BaseURL+cfg.Currencies.CurrencyConversionURL),
-
-		// Advanced
-		getUsage:   NewEndpoint[request.GetUsage, response.Usage, response.Credits, error](httpCli, cfg.BaseURL+cfg.Advanced.UsageURL),
-		getBatches: NewEndpoint[request.GetBatches, response.Batches, response.Credits, error](httpCli, cfg.BaseURL+cfg.Advanced.BatchesURL),
-
-		// ETFs
-		getETFsDirectory:  NewEndpoint[request.GetETFsDirectory, response.ETFsDirectory, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsDirectoryURL),
-		getETFFullData:    NewEndpoint[request.GetETFFullData, response.ETFFullData, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsFullDataURL),
-		getETFSummary:     NewEndpoint[request.GetETFSummary, response.ETFWorldSummary, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsSummaryURL),
-		getETFPerformance: NewEndpoint[request.GetETFPerformance, response.ETFPerformance, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsPerformanceURL),
-		getETFRisk:        NewEndpoint[request.GetETFRisk, response.ETFRisk, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsRiskURL),
-		getETFComposition: NewEndpoint[request.GetETFComposition, response.ETFComposition, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsCompositionURL),
-		getETFFamilies:    NewEndpoint[request.GetETFFamilies, response.ETFFamilies, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsFamiliesURL),
-		getETFTypes:       NewEndpoint[request.GetETFTypes, response.ETFTypes, response.Credits, error](httpCli, cfg.BaseURL+cfg.ETFs.ETFsTypesURL),
-
-		// Mutual Funds
-		getMutualFundsDirectory:     NewEndpoint[request.GetMutualFundsDirectory, response.MutualFundsDirectory, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsDirectoryURL),
-		getMutualFundFullData:       NewEndpoint[request.GetMutualFundFullData, response.MutualFundFullData, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsFullDataURL),
-		getMutualFundSummary:        NewEndpoint[request.GetMutualFundSummary, response.MutualFundSummary, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSummaryURL),
-		getMutualFundPerformance:    NewEndpoint[request.GetMutualFundPerformance, response.MutualFundPerformance, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsPerformanceURL),
-		getMutualFundRisk:           NewEndpoint[request.GetMutualFundRisk, response.MutualFundRisk, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRiskURL),
-		getMutualFundRatings:        NewEndpoint[request.GetMutualFundRatings, response.MutualFundRatings, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsRatingsURL),
-		getMutualFundComposition:    NewEndpoint[request.GetMutualFundComposition, response.MutualFundComposition, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsCompositionURL),
-		getMutualFundPurchaseInfo:   NewEndpoint[request.GetMutualFundPurchaseInfo, response.MutualFundPurchaseInfo, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsPurchaseInfoURL),
-		getMutualFundSustainability: NewEndpoint[request.GetMutualFundSustainability, response.MutualFundSustainability, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsSustainabilityURL),
-		getMutualFundFamilies:       NewEndpoint[request.GetMutualFundFamilies, response.MutualFundFamilies, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsFamiliesURL),
-		getMutualFundTypes:          NewEndpoint[request.GetMutualFundTypes, response.MutualFundTypes, response.Credits, error](httpCli, cfg.BaseURL+cfg.MutualFunds.MutualFundsTypesURL),
-
 		// Analysis
 		getRecommendations:          NewEndpoint[request.GetRecommendations, response.Recommendations, response.Credits, error](httpCli, cfg.BaseURL+cfg.Analysis.RecommendationsURL),
 		getPriceTarget:              NewEndpoint[request.GetPriceTarget, response.PriceTarget, response.Credits, error](httpCli, cfg.BaseURL+cfg.Analysis.PriceTargetURL),
@@ -669,5 +671,9 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getDirectHolders:        NewEndpoint[request.GetDirectHolders, response.DirectHolders, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.DirectHoldersURL),
 		getTaxInformation:       NewEndpoint[request.GetTaxInformation, response.TaxInformation, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.TaxInformationURL),
 		getSanctionedEntities:   NewEndpoint[request.GetSanctionedEntities, response.SanctionedEntities, response.Credits, error](httpCli, cfg.BaseURL+cfg.Regulatory.SanctionedEntitiesURL),
+
+		// Advanced
+		getUsage:   NewEndpoint[request.GetUsage, response.Usage, response.Credits, error](httpCli, cfg.BaseURL+cfg.Advanced.UsageURL),
+		getBatches: NewEndpoint[request.GetBatches, response.Batches, response.Credits, error](httpCli, cfg.BaseURL+cfg.Advanced.BatchesURL),
 	}
 }

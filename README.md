@@ -13,7 +13,7 @@ If you're upgrading from `v0.1.x`, see `MIGRATION.md`.
 
 # Covered:
 
-## Core Data
+## Market data
 
 * Time series          ✅ **High demand**
 * Time series cross    ✅
@@ -25,28 +25,28 @@ If you're upgrading from `v0.1.x`, see `MIGRATION.md`.
 ## Reference Data
 
 ### Asset Catalogs
-* Stocks list           ✅
-* Forex Pairs List      ✅
-* Cryptocurrencies List ✅
+* Stocks                ✅
+* Forex pairs           ✅
+* Cryptocurrency pairs  ✅
 * ETFs                  ✅
 * Funds                 ✅
 * Commodities           ✅
-* Fixed Income          ✅
+* Fixed income          ✅
 
 ### Discovery
 * Symbol search         ✅ **High demand**
-* Cross Listings        ✅
+* Cross listings        ✅
 * Earliest timestamp    ✅
 
 ### Markets
 * Exchanges                ✅ **High demand**
-* Exchanges Schedule       ✅
+* Exchanges schedule       ✅
 * Cryptocurrency exchanges ✅
 * Market state             ✅
 
 ### Supporting Metadata
 * Countries             ✅
-* Instrument Type       ✅
+* Instrument type       ✅
 * Technical indicators  ✅
 
 ## Fundamentals
@@ -54,57 +54,53 @@ If you're upgrading from `v0.1.x`, see `MIGRATION.md`.
 * Logo                  ✅
 * Profile               ✅ **Useful**
 * Dividends             ✅
-* Dividends Calendar    ✅
+* Dividends calendar    ✅
 * Splits                ✅
-* Splits Calendar       ✅
+* Splits calendar       ✅
 * Earnings              ✅
 * Earnings calendar     ✅
 * IPO calendar          ✅
 * Statistics            ✅
+* Press releases        ✅ **New**
 * Income statement      ✅
 * Income statement consolidated ✅ **New**
 * Balance sheet         ✅
 * Balance sheet consolidated ✅ **New**
 * Cash flow             ✅
 * Cash flow consolidated ✅ **New**
-* Insider transactions  ✅
 * Key executives        ✅ **Useful**
-* Market Capitalization ✅ **New**
-* Last Changes          ✅ **New**
+* Market capitalization ✅ **New**
+* Last changes          ✅ **New**
 
 ## Currencies
 
 * Exchange rate         ✅
 * Currency conversion   ✅ **Useful**
 
-## WebSocket
-
-* Real-time price ✅ **Useful**
-
 ## ETFs
 
-* ETFs Directory        ✅ **Useful**
-* ETF Full Data         ✅ **High demand**
-* ETF Summary           ✅
-* ETF Performance       ✅ **High demand**
-* ETF Risk              ✅
-* ETF Composition       ✅ **High demand**
-* ETF Families          ✅
-* ETF Types             ✅
+* ETFs directory        ✅ **Useful**
+* ETF full data         ✅ **High demand**
+* Summary               ✅
+* Performance           ✅ **High demand**
+* Risk                  ✅
+* Composition           ✅ **High demand**
+* ETFs families         ✅
+* ETFs types            ✅
 
 ## Mutual Funds
 
-* Mutual Funds Directory         ✅ **Useful**
-* Mutual Fund Full Data          ✅ **High demand**
-* Mutual Fund Summary            ✅
-* Mutual Fund Performance        ✅ **High demand**
-* Mutual Fund Risk               ✅
-* Mutual Fund Ratings            ✅
-* Mutual Fund Composition        ✅ **High demand**
-* Mutual Fund Purchase Info      ✅
-* Mutual Fund Sustainability     ✅
-* Mutual Fund Families           ✅
-* Mutual Fund Types              ✅
+* MFs directory                  ✅ **Useful**
+* MF full data                   ✅ **High demand**
+* Summary                        ✅
+* Performance                    ✅ **High demand**
+* Risk                           ✅
+* Ratings                        ✅
+* Composition                    ✅ **High demand**
+* Purchase info                  ✅
+* Sustainability                 ✅
+* MFs families                   ✅
+* MFs types                      ✅
 
 ## Technical Indicators
 
@@ -250,6 +246,10 @@ If you're upgrading from `v0.1.x`, see `MIGRATION.md`.
 
 * Batches      ✅ **Useful**
 * API usage    ✅
+
+## WebSocket
+
+* Real-time price ✅ **Useful**
 
 
 # Usage
