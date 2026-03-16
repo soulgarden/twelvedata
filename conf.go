@@ -6,20 +6,33 @@ type Conf struct {
 	BaseURL   string `default:"https://api.twelvedata.com" json:"base_url"`
 	BaseWSURL string `default:"ws.twelvedata.com"          json:"base_ws_url"`
 
-	ReferenceData       ReferenceData       `json:"reference_data"`
 	CoreData            CoreData            `json:"core_data"`
+	ReferenceData       ReferenceData       `json:"reference_data"`
 	Fundamentals        Fundamentals        `json:"fundamentals"`
-	TechnicalIndicators TechnicalIndicators `json:"technical_indicators"`
 	Currencies          Currencies          `json:"currencies"`
-	WebSocket           WebSocket           `json:"web_socket"`
 	ETFs                ETFs                `json:"etfs"`
 	MutualFunds         MutualFunds         `json:"mutual_funds"`
+	TechnicalIndicators TechnicalIndicators `json:"technical_indicators"`
 	Analysis            Analysis            `json:"analysis"`
 	Regulatory          Regulatory          `json:"regulatory"`
 	Advanced            Advanced            `json:"advanced"`
+	WebSocket           WebSocket           `json:"web_socket"`
 
 	APIKey  string `default:"demo" json:"api_key"`
 	Timeout int    `default:"15"   json:"timeout"`
+}
+
+// CoreData contains URL configurations for market data endpoints including
+// time series data, quotes, prices, and end-of-day data.
+// nolint: lll
+type CoreData struct {
+	TimeSeriesURL      string `default:"/time_series"       json:"time_series_url"`
+	TimeSeriesCrossURL string `default:"/time_series/cross" json:"time_series_cross_url"`
+	QuotesURL          string `default:"/quote"             json:"quotes_url"`
+	PriceURL           string `default:"/price"             json:"price_url"`
+	EODURL             string `default:"/eod"               json:"eod_url"`
+
+	MarketMoversURL string `default:"/market_movers/{market}" json:"market_movers_url"`
 }
 
 // ReferenceData contains URL configurations for reference data endpoints including
@@ -52,47 +65,30 @@ type ReferenceData struct {
 	TechnicalIndicatorsURL string `default:"/technical_indicators" json:"technical_indicators_url"`
 }
 
-// CoreData contains URL configurations for core market data endpoints including
-// time series data, quotes, prices, and end-of-day data.
-// nolint: lll
-type CoreData struct {
-	TimeSeriesURL      string `default:"/time_series"       json:"time_series_url"`
-	TimeSeriesCrossURL string `default:"/time_series/cross" json:"time_series_cross_url"`
-	QuotesURL          string `default:"/quote"             json:"quotes_url"`
-	PriceURL           string `default:"/price"             json:"price_url"`
-	EODURL             string `default:"/eod"               json:"eod_url"`
-
-	MarketMoversURL string `default:"/market_movers/{market}" json:"market_movers_url"`
-}
-
 // Fundamentals contains URL configurations for fundamental data endpoints including
-// company profiles, financial statements, dividends, splits, and other corporate data.
+// company profiles, press releases, financial statements, dividends, splits, and other corporate data.
 // nolint: lll
 type Fundamentals struct {
 	LogoURL                        string `default:"/logo"                    json:"logo_url"`
+	ProfileURL                     string `default:"/profile"                 json:"profile_url"`
+	DividendsURL                   string `default:"/dividends"               json:"dividends_url"`
+	DividendsCalendarURL           string `default:"/dividends_calendar"      json:"dividends_calendar_url"`
+	EarningsURL                    string `default:"/earnings"                json:"earnings_url"`
 	EarningsCalendarURL            string `default:"/earnings_calendar"       json:"earnings_calendar_url"`
 	IPOCalendarURL                 string `default:"/ipo_calendar"            json:"ipo_calendar_url"`
-	ProfileURL                     string `default:"/profile"                 json:"profile_url"`
-	KeyExecutivesURL               string `default:"/key_executives"          json:"key_executives_url"`
+	SplitsURL                      string `default:"/splits"                  json:"splits_url"`
+	SplitsCalendarURL              string `default:"/splits_calendar"         json:"splits_calendar_url"`
+	StatisticsURL                  string `default:"/statistics"              json:"statistics_url"`
+	PressReleasesURL               string `default:"/press_releases"          json:"press_releases_url"`
 	IncomeStatementURL             string `default:"/income_statement"        json:"income_statement_url"`
 	IncomeStatementConsolidatedURL string `default:"/income_statement/consolidated" json:"income_statement_consolidated_url"`
 	BalanceSheetURL                string `default:"/balance_sheet"           json:"balance_sheet_url"`
 	BalanceSheetConsolidatedURL    string `default:"/balance_sheet/consolidated" json:"balance_sheet_consolidated_url"`
 	CashFlowURL                    string `default:"/cash_flow"               json:"cash_flow_url"`
 	CashFlowConsolidatedURL        string `default:"/cash_flow/consolidated" json:"cash_flow_consolidated_url"`
-	DividendsURL                   string `default:"/dividends"               json:"dividends_url"`
-	DividendsCalendarURL           string `default:"/dividends_calendar"      json:"dividends_calendar_url"`
-	EarningsURL                    string `default:"/earnings"                json:"earnings_url"`
-	SplitsURL                      string `default:"/splits"                  json:"splits_url"`
-	SplitsCalendarURL              string `default:"/splits_calendar"         json:"splits_calendar_url"`
-	StatisticsURL                  string `default:"/statistics"              json:"statistics_url"`
+	KeyExecutivesURL               string `default:"/key_executives"          json:"key_executives_url"`
 	MarketCapURL                   string `default:"/market_cap"              json:"market_cap_url"`
 	LastChangeURL                  string `default:"/last_change/{endpoint}"  json:"last_change_url"`
-}
-
-// WebSocket contains URL configurations for WebSocket endpoints used for real-time data streaming.
-type WebSocket struct {
-	PriceURL string `default:"/v1/quotes/price" json:"ws_price_url"`
 }
 
 // Currencies contains URL configurations for currency-related endpoints including exchange rates and conversions.
@@ -137,12 +133,6 @@ type TechnicalIndicators struct {
 	ATRURL  string `default:"/atr" json:"atr_url"`
 	NATRURL string `default:"/natr" json:"natr_url"`
 	TRURL   string `default:"/trange" json:"trange_url"`
-}
-
-// Advanced contains URL configurations for advanced API endpoints such as usage tracking and batch operations.
-type Advanced struct {
-	UsageURL   string `default:"/api_usage" json:"usage_url"`
-	BatchesURL string `default:"/batch"     json:"batches_url"`
 }
 
 // ETFs contains URL configurations for ETF-related endpoints including directory, full data, and performance metrics.
@@ -198,4 +188,15 @@ type Regulatory struct {
 	DirectHoldersURL        string `default:"/direct_holders"        json:"direct_holders_url"`
 	TaxInformationURL       string `default:"/tax_info"            json:"tax_information_url"`
 	SanctionedEntitiesURL   string `default:"/sanctions/{source}"  json:"sanctioned_entities_url"`
+}
+
+// Advanced contains URL configurations for advanced API endpoints such as usage tracking and batch operations.
+type Advanced struct {
+	UsageURL   string `default:"/api_usage" json:"usage_url"`
+	BatchesURL string `default:"/batch"     json:"batches_url"`
+}
+
+// WebSocket contains URL configurations for WebSocket endpoints used for real-time data streaming.
+type WebSocket struct {
+	PriceURL string `default:"/v1/quotes/price" json:"ws_price_url"`
 }

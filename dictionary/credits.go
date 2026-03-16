@@ -4,7 +4,7 @@ package dictionary
 
 const (
 	// TimeSeries represents the API credit cost for time series data requests.
-	// Core Data endpoints.
+	// Market Data endpoints.
 	TimeSeries = 1
 	// TimeSeriesCross represents the API credit cost for cross-currency time series requests.
 	TimeSeriesCross = 5
@@ -84,6 +84,8 @@ const (
 	IPOCalendar = 40
 	// Statistics represents the API credit cost for company statistics requests.
 	Statistics = 50
+	// PressReleases represents the API credit cost for press releases requests.
+	PressReleases = 50
 	// IncomeStatement represents the API credit cost for income statement requests.
 	IncomeStatement = 100
 	// IncomeStatementConsolidated represents the API credit cost for consolidated income statement requests.
@@ -96,8 +98,6 @@ const (
 	CashFlow = 100
 	// CashFlowConsolidated represents the API credit cost for consolidated cash flow statement requests.
 	CashFlowConsolidated = 100
-	// InsiderTransactions represents the API credit cost for insider transactions requests.
-	InsiderTransactions = 200
 	// OptionsExpiration represents the API credit cost for options expiration requests.
 	OptionsExpiration = 50
 	// OptionsChain represents the API credit cost for options chain requests.
@@ -108,20 +108,12 @@ const (
 	MarketCapitalization = 5
 	// LastChanges represents the API credit cost for last changes requests.
 	LastChanges = 50
-	// InstitutionalHolders represents the API credit cost for institutional holders requests.
-	InstitutionalHolders = 1500
-	// FundHolders represents the API credit cost for fund holders requests.
-	FundHolders = 1500
 
 	// ExchangeRate represents the API credit cost for exchange rate requests.
 	// Currencies.
 	ExchangeRate = 1
 	// CurrencyConversion represents the API credit cost for currency conversion requests.
 	CurrencyConversion = 1
-
-	// RealTimePrice represents the API credit cost for real-time price WebSocket connections.
-	// WebSocket.
-	RealTimePrice = 1
 
 	// ETFFullData represents the API credit cost for ETF full data requests.
 	// ETFs.
@@ -239,9 +231,15 @@ const (
 	// AnalystRatingsUSEquities represents the API credit cost for US equities analyst ratings requests.
 	AnalystRatingsUSEquities = 200
 
-	// EDGARFilings represents the API credit cost for EDGAR filings requests.
+	// InsiderTransactions represents the API credit cost for insider transactions requests.
 	// Regulatory.
+	InsiderTransactions = 200
+	// EDGARFilings represents the API credit cost for EDGAR filings requests.
 	EDGARFilings = 50
+	// InstitutionalHolders represents the API credit cost for institutional holders requests.
+	InstitutionalHolders = 1500
+	// FundHolders represents the API credit cost for fund holders requests.
+	FundHolders = 1500
 	// DirectHolders represents the API credit cost for direct holders requests.
 	DirectHolders = 1500
 	// TaxInformation represents the API credit cost for tax information requests.
@@ -250,5 +248,10 @@ const (
 	SanctionedEntities = 50
 
 	// Usage represents the API credit cost for usage tracking requests.
+	// Advanced.
 	Usage = 1
+
+	// RealTimePrice represents the API credit cost for real-time price WebSocket connections.
+	// WebSocket.
+	RealTimePrice = 1
 )
