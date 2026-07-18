@@ -9,6 +9,8 @@
 go get github.com/soulgarden/twelvedata@latest
 ```
 
+Requires Go 1.25 or newer. CI validates the latest patch releases of Go 1.25 and Go 1.26.
+
 If you're upgrading from `v0.1.x`, see `MIGRATION.md`.
 
 # Covered:
