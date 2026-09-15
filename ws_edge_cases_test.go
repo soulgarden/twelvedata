@@ -243,7 +243,7 @@ func TestWS_ChannelConsumersAfterConnectionLoss(t *testing.T) {
 
 // TestWS_HighFrequencyConnectDisconnect tests rapid connect/disconnect cycles.
 func TestWS_HighFrequencyConnectDisconnect(t *testing.T) {
-	t.Parallel()
+	// Measure process-wide goroutines without interference from parallel tests.
 
 	server := createMockWSServer(t, func(conn *websocket.Conn) {
 		// Send one message then close

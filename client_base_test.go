@@ -28,7 +28,7 @@ func TestErrImplError_Error(t *testing.T) {
 			name: "simple error",
 			e: ErrImplError[error]{
 				generic: nil,
-				inner:   fasthttp.ErrTimeout,
+				inner:   errors.New("timeout"),
 			},
 			want: "timeout",
 		},
