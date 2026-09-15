@@ -14,6 +14,10 @@ updates:
       interval: "weekly"
     allow:
       - dependency-type: "all"
+    ignore:
+      # x/sync v0.23.0 requires Go 1.26; keep Go 1.25 support until a planned upgrade.
+      - dependency-name: "golang.org/x/sync"
+        versions: [">=0.23.0"]
     groups:
       all:
         patterns:
