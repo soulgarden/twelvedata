@@ -1,0 +1,142 @@
+{
+  "income_statement": [
+    {
+      "fiscal_date": "2023-09-30",
+      "year": 2022,
+      "revenue": {
+        "total_revenue": 383285000000,
+        "operating_revenue": 383285000000
+      },
+      "gross_profit": {
+        "gross_profit_value": 169148000000,
+        "cost_of_revenue": {
+          "cost_of_revenue_value": 214137000000,
+          "excise_taxes": 214137000000,
+          "reconciled_cost_of_revenue": 214137000000
+        }
+      },
+      "operating_income": {
+        "operating_income_value": 114301000000,
+        "total_operating_income_as_reported": 114301000000,
+        "operating_expense": 54847000000,
+        "other_operating_expenses": 114301000000,
+        "total_expenses": 268984000000
+      },
+      "net_income": {
+        "net_income_value": 96995000000,
+        "net_income_common_stockholders": 96995000000,
+        "net_income_including_noncontrolling_interests": 96995000000,
+        "net_income_from_tax_loss_carryforward": 96995000000,
+        "net_income_extraordinary": 96995000000,
+        "net_income_discontinuous_operations": 96995000000,
+        "net_income_continuous_operations": 96995000000,
+        "net_income_from_continuing_operation_net_minority_interest": 96995000000,
+        "net_income_from_continuing_and_discontinued_operation": 96995000000,
+        "normalized_income": 96995000000,
+        "minority_interests": 96995000000
+      },
+      "earnings_per_share": {
+        "diluted_eps": 6.13,
+        "basic_eps": 6.16,
+        "continuing_and_discontinued_diluted_eps": 6.16,
+        "continuing_and_discontinued_basic_eps": 6.16,
+        "normalized_diluted_eps": 6.16,
+        "normalized_basic_eps": 6.16,
+        "reported_normalized_diluted_eps": 6.16,
+        "reported_normalized_basic_eps": 6.16,
+        "diluted_eps_other_gains_losses": 6.16,
+        "tax_loss_carryforward_diluted_eps": 6.16,
+        "diluted_accounting_change": 6.16,
+        "diluted_extraordinary": 6.16,
+        "diluted_discontinuous_operations": 6.16,
+        "diluted_continuous_operations": 6.16,
+        "basic_eps_other_gains_losses": 6.16,
+        "tax_loss_carryforward_basic_eps": 6.16,
+        "basic_accounting_change": 6.16,
+        "basic_extraordinary": 6.16,
+        "basic_discontinuous_operations": 6.16,
+        "basic_continuous_operations": 6.16,
+        "diluted_ni_avail_to_common_stockholders": 96995000000,
+        "average_dilution_earnings": 96995000000
+      },
+      "expenses": {
+        "total_expenses": 268984000000,
+        "selling_general_and_administration_expense": 24932000000,
+        "selling_and_marketing_expense": 24932000000,
+        "general_and_administrative_expense": 24932000000,
+        "other_general_and_administrative_expense": 24932000000,
+        "depreciation_amortization_depletion_income_statement": 29915000000,
+        "research_and_development_expense": 29915000000,
+        "insurance_and_claims_expense": 29915000000,
+        "rent_and_landing_fees": 29915000000,
+        "salaries_and_wages_expense": 29915000000,
+        "rent_expense_supplemental": 29915000000,
+        "provision_for_doubtful_accounts": 29915000000
+      },
+      "interest_income_and_expense": {
+        "interest_income": 3750000000,
+        "interest_expense": 3933000000,
+        "net_interest_income": -183000000,
+        "net_non_operating_interest_income_expense": -183000000,
+        "interest_expense_non_operating": 3933000000,
+        "interest_income_non_operating": 3750000000
+      },
+      "other_income_and_expenses": {
+        "other_income_expense": -382000000,
+        "other_non_operating_income_expenses": -382000000,
+        "special_income_charges": 382000000,
+        "gain_on_sale_of_ppe": 382000000,
+        "gain_on_sale_of_business": 382000000,
+        "gain_on_sale_of_security": 382000000,
+        "other_special_charges": 382000000,
+        "write_off": 382000000,
+        "impairment_of_capital_assets": 382000000,
+        "restructuring_and_merger_acquisition": 382000000,
+        "securities_amortization": 382000000,
+        "earnings_from_equity_interest": 382000000,
+        "earnings_from_equity_interest_net_of_tax": 382000000,
+        "total_other_finance_cost": 382000000
+      },
+      "taxes": {
+        "tax_provision": 16741000000,
+        "tax_effect_of_unusual_items": 0,
+        "tax_rate_for_calculations": 0.147,
+        "other_taxes": 0
+      },
+      "depreciation_and_amortization": {
+        "depreciation_amortization_depletion": 129188000000,
+        "amortization_of_intangibles": 129188000000,
+        "depreciation": 129188000000,
+        "amortization": 129188000000,
+        "depletion": 129188000000,
+        "depreciation_and_amortization_in_income_statement": 129188000000
+      },
+      "ebitda": {
+        "ebitda_value": 129188000000,
+        "normalized_ebitda_value": 129188000000,
+        "ebit_value": 117669000000
+      },
+      "dividends_and_shares": {
+        "dividend_per_share": 15812547000,
+        "diluted_average_shares": 15812547000,
+        "basic_average_shares": 15744231000,
+        "preferred_stock_dividends": 15744231000,
+        "other_under_preferred_stock_dividend": 15744231000
+      },
+      "unusual_items": {
+        "total_unusual_items": 11519000000,
+        "total_unusual_items_excluding_goodwill": 11519000000
+      },
+      "depreciation": {
+        "reconciled_depreciation": 11519000000
+      },
+      "pretax_income": {
+        "pretax_income_value": 113736000000
+      },
+      "special_income_charges": {
+        "special_income_charges_value": 113736000000
+      }
+    }
+  ],
+  "status": "ok"
+}

@@ -23,15 +23,16 @@ type BBandsMeta struct {
 
 // BbandsIndicator contains metadata about the Bollinger Bands indicator configuration.
 type BbandsIndicator struct {
-	Name       string   `json:"name"`
-	SeriesType string   `json:"series_type"`
-	TimePeriod null.Int `json:"time_period"`
-	SD         null.Int `json:"sd"`
-	MAType     string   `json:"ma_type"`
+	Name       string     `json:"name"`
+	SeriesType string     `json:"series_type"`
+	TimePeriod null.Int   `json:"time_period"`
+	SD         null.Float `json:"sd"`
+	MAType     string     `json:"ma_type"`
 }
 
 // BbandsData represents individual Bollinger Bands data points.
 type BbandsData struct {
+	OHLCV
 	Datetime   string `json:"datetime"`
 	UpperBand  string `json:"upper_band"`
 	MiddleBand string `json:"middle_band"`

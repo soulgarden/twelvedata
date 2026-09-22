@@ -1,0 +1,12 @@
+{
+  "count": 100,
+  "data": [
+    {
+      "symbol": "EUR/USD",
+      "currency_group": "Major",
+      "currency_base": "EUR",
+      "currency_quote": "USD"
+    }
+  ],
+  "status": "ok"
+}

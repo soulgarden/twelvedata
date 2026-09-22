@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "symbol": "7203",
+    "name": "Elm Co.",
+    "currency": "SAR",
+    "exchange": "Tadawul",
+    "mic_code": "XSAU",
+    "exchange_timezone": "Asia/Riyadh"
+  },
+  "direct_holders": [
+    {
+      "entity_name": "Public Investment Fund (Investment Company)",
+      "date_reported": "2025-03-13",
+      "shares": 53600000,
+      "value": 43148000000,
+      "percent_held": 0
+    }
+  ]
+}

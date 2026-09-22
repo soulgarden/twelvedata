@@ -1,0 +1,121 @@
+# Twelve Data contract examples
+
+These JSON examples were captured from the official documentation on 2026-09-15.
+The response schemas and credit costs were rechecked against
+[OpenAPI](https://api.twelvedata.com/doc/swagger/openapi.json) on 2026-09-22;
+they are unchanged. Only catalog pagination descriptions/defaults changed.
+No live market-data requests or API keys are used by these tests.
+
+The round-trip assertions require every published field and value to survive decoding.
+Extra fields emitted by the Go models are allowed. Numeric strings may become numbers.
+Fractional-number tests use synthetic values allowed by the published schema.
+
+| Fixture | Documentation |
+| --- | --- |
+| `time_series.json` | [/time_series](https://twelvedata.com/docs/market-data/time-series) |
+| `time_series_cross.json` | [/time_series/cross](https://twelvedata.com/docs/market-data/time-series-cross) |
+| `quote.json` | [/quote](https://twelvedata.com/docs/market-data/quote) |
+| `price.json` | [/price](https://twelvedata.com/docs/market-data/real-time-price) |
+| `eod.json` | [/eod](https://twelvedata.com/docs/market-data/end-of-day-price) |
+| `market_movers_market.json` | [/market_movers/{market}](https://twelvedata.com/docs/market-data/market-movers) |
+| `stocks.json` | [/stocks](https://twelvedata.com/docs/asset-catalogs/stocks-list) |
+| `forex_pairs.json` | [/forex_pairs](https://twelvedata.com/docs/asset-catalogs/forex-pairs-list) |
+| `cryptocurrencies.json` | [/cryptocurrencies](https://twelvedata.com/docs/asset-catalogs/cryptocurrencies-list) |
+| `etfs.json` | [/etfs](https://twelvedata.com/docs/asset-catalogs/etf-list) |
+| `funds.json` | [/funds](https://twelvedata.com/docs/asset-catalogs/funds-list) |
+| `commodities.json` | [/commodities](https://twelvedata.com/docs/asset-catalogs/commodities-list) |
+| `bonds.json` | [/bonds](https://twelvedata.com/docs/asset-catalogs/bonds-list) |
+| `symbol_search.json` | [/symbol_search](https://twelvedata.com/docs/discovery/symbol-search) |
+| `cross_listings.json` | [/cross_listings](https://twelvedata.com/docs/discovery/cross-listings) |
+| `earliest_timestamp.json` | [/earliest_timestamp](https://twelvedata.com/docs/discovery/earliest-timestamp) |
+| `exchanges.json` | [/exchanges](https://twelvedata.com/docs/markets/exchanges) |
+| `exchange_schedule.json` | [/exchange_schedule](https://twelvedata.com/docs/markets/exchange-schedule) |
+| `cryptocurrency_exchanges.json` | [/cryptocurrency_exchanges](https://twelvedata.com/docs/markets/cryptocurrency-exchanges) |
+| `market_state.json` | [/market_state](https://twelvedata.com/docs/markets/market-state) |
+| `countries.json` | [/countries](https://twelvedata.com/docs/supporting-metadata/countries) |
+| `instrument_type.json` | [/instrument_type](https://twelvedata.com/docs/supporting-metadata/instrument-type) |
+| `technical_indicators.json` | [/technical_indicators](https://twelvedata.com/docs/supporting-metadata/technical-indicators-interface) |
+| `logo.json` | [/logo](https://twelvedata.com/docs/fundamentals/logo) |
+| `profile.json` | [/profile](https://twelvedata.com/docs/fundamentals/profile) |
+| `key_executives.json` | [/key_executives](https://twelvedata.com/docs/fundamentals/key-executives) |
+| `dividends.json` | [/dividends](https://twelvedata.com/docs/fundamentals/dividends) |
+| `dividends_calendar.json` | [/dividends_calendar](https://twelvedata.com/docs/fundamentals/dividends-calendar) |
+| `earnings.json` | [/earnings](https://twelvedata.com/docs/fundamentals/earnings) |
+| `splits.json` | [/splits](https://twelvedata.com/docs/fundamentals/splits) |
+| `splits_calendar.json` | [/splits_calendar](https://twelvedata.com/docs/fundamentals/splits-calendar) |
+| `statistics.json` | [/statistics](https://twelvedata.com/docs/fundamentals/statistics) |
+| `earnings_calendar.json` | [/earnings_calendar](https://twelvedata.com/docs/fundamentals/earnings-calendar) |
+| `ipo_calendar.json` | [/ipo_calendar](https://twelvedata.com/docs/fundamentals/ipo-calendar) |
+| `press_releases.json` | [/press_releases](https://twelvedata.com/docs/fundamentals/press-releases) |
+| `income_statement.json` | [/income_statement](https://twelvedata.com/docs/fundamentals/income-statement) |
+| `income_statement_consolidated.json` | [/income_statement/consolidated](https://twelvedata.com/docs/fundamentals/income-statement-consolidated) |
+| `balance_sheet.json` | [/balance_sheet](https://twelvedata.com/docs/fundamentals/balance-sheet) |
+| `balance_sheet_consolidated.json` | [/balance_sheet/consolidated](https://twelvedata.com/docs/fundamentals/balance-sheet-consolidated) |
+| `cash_flow.json` | [/cash_flow](https://twelvedata.com/docs/fundamentals/cash-flow) |
+| `cash_flow_consolidated.json` | [/cash_flow/consolidated](https://twelvedata.com/docs/fundamentals/cash-flow-consolidated) |
+| `market_cap.json` | [/market_cap](https://twelvedata.com/docs/fundamentals/market-cap) |
+| `last_change_endpoint.json` | [/last_change/{endpoint}](https://twelvedata.com/docs/fundamentals/last-changes) |
+| `exchange_rate.json` | [/exchange_rate](https://twelvedata.com/docs/currencies/exchange-rate) |
+| `currency_conversion.json` | [/currency_conversion](https://twelvedata.com/docs/currencies/currency-conversion) |
+| `etfs_list.json` | [/etfs/list](https://twelvedata.com/docs/etfs/etfs-list) |
+| `etfs_world.json` | [/etfs/world](https://twelvedata.com/docs/etfs/etf-all-data) |
+| `etfs_world_summary.json` | [/etfs/world/summary](https://twelvedata.com/docs/etfs/etf-summary) |
+| `etfs_world_performance.json` | [/etfs/world/performance](https://twelvedata.com/docs/etfs/etf-performance) |
+| `etfs_world_risk.json` | [/etfs/world/risk](https://twelvedata.com/docs/etfs/etf-risk) |
+| `etfs_world_composition.json` | [/etfs/world/composition](https://twelvedata.com/docs/etfs/etf-composition) |
+| `etfs_family.json` | [/etfs/family](https://twelvedata.com/docs/etfs/etf-family-list) |
+| `etfs_type.json` | [/etfs/type](https://twelvedata.com/docs/etfs/etf-type-list) |
+| `mutual_funds_list.json` | [/mutual_funds/list](https://twelvedata.com/docs/mutual-funds/mutual-funds-list) |
+| `mutual_funds_world.json` | [/mutual_funds/world](https://twelvedata.com/docs/mutual-funds/mf-all-data) |
+| `mutual_funds_world_summary.json` | [/mutual_funds/world/summary](https://twelvedata.com/docs/mutual-funds/mf-summary) |
+| `mutual_funds_world_performance.json` | [/mutual_funds/world/performance](https://twelvedata.com/docs/mutual-funds/mf-performance) |
+| `mutual_funds_world_risk.json` | [/mutual_funds/world/risk](https://twelvedata.com/docs/mutual-funds/mf-risk) |
+| `mutual_funds_world_ratings.json` | [/mutual_funds/world/ratings](https://twelvedata.com/docs/mutual-funds/mf-ratings) |
+| `mutual_funds_world_composition.json` | [/mutual_funds/world/composition](https://twelvedata.com/docs/mutual-funds/mf-composition) |
+| `mutual_funds_world_purchase_info.json` | [/mutual_funds/world/purchase_info](https://twelvedata.com/docs/mutual-funds/mf-purchase-info) |
+| `mutual_funds_world_sustainability.json` | [/mutual_funds/world/sustainability](https://twelvedata.com/docs/mutual-funds/mf-sustainability) |
+| `mutual_funds_family.json` | [/mutual_funds/family](https://twelvedata.com/docs/mutual-funds/mutual-fund-family-list) |
+| `mutual_funds_type.json` | [/mutual_funds/type](https://twelvedata.com/docs/mutual-funds/mutual-fund-type-list) |
+| `bbands.json` | [/bbands](https://twelvedata.com/docs/overlap-studies/bbands) |
+| `sma.json` | [/sma](https://twelvedata.com/docs/overlap-studies/sma) |
+| `ema.json` | [/ema](https://twelvedata.com/docs/overlap-studies/ema) |
+| `adx.json` | [/adx](https://twelvedata.com/docs/momentum-indicators/adx) |
+| `macd.json` | [/macd](https://twelvedata.com/docs/momentum-indicators/macd) |
+| `rsi.json` | [/rsi](https://twelvedata.com/docs/momentum-indicators/rsi) |
+| `stoch.json` | [/stoch](https://twelvedata.com/docs/momentum-indicators/stoch) |
+| `percent_b.json` | [/percent_b](https://twelvedata.com/docs/momentum-indicators/percent-b) |
+| `atr.json` | [/atr](https://twelvedata.com/docs/volatility-indicators/atr) |
+| `vwap.json` | [/vwap](https://twelvedata.com/docs/overlap-studies/vwap) |
+| `ma.json` | [/ma](https://twelvedata.com/docs/overlap-studies/ma) |
+| `wma.json` | [/wma](https://twelvedata.com/docs/overlap-studies/wma) |
+| `dema.json` | [/dema](https://twelvedata.com/docs/overlap-studies/dema) |
+| `tema.json` | [/tema](https://twelvedata.com/docs/overlap-studies/tema) |
+| `trima.json` | [/trima](https://twelvedata.com/docs/overlap-studies/trima) |
+| `kama.json` | [/kama](https://twelvedata.com/docs/overlap-studies/kama) |
+| `sar.json` | [/sar](https://twelvedata.com/docs/overlap-studies/sar) |
+| `cci.json` | [/cci](https://twelvedata.com/docs/momentum-indicators/cci) |
+| `willr.json` | [/willr](https://twelvedata.com/docs/momentum-indicators/willr) |
+| `roc.json` | [/roc](https://twelvedata.com/docs/momentum-indicators/roc) |
+| `mom.json` | [/mom](https://twelvedata.com/docs/momentum-indicators/mom) |
+| `obv.json` | [/obv](https://twelvedata.com/docs/volume-indicators/obv) |
+| `ad.json` | [/ad](https://twelvedata.com/docs/volume-indicators/ad-indicator) |
+| `natr.json` | [/natr](https://twelvedata.com/docs/volatility-indicators/natr) |
+| `trange.json` | [/trange](https://twelvedata.com/docs/volatility-indicators/trange) |
+| `recommendations.json` | [/recommendations](https://twelvedata.com/docs/analysis/recommendations) |
+| `price_target.json` | [/price_target](https://twelvedata.com/docs/analysis/price-target) |
+| `earnings_estimate.json` | [/earnings_estimate](https://twelvedata.com/docs/analysis/earning-estimate) |
+| `revenue_estimate.json` | [/revenue_estimate](https://twelvedata.com/docs/analysis/revenue-estimate) |
+| `eps_trend.json` | [/eps_trend](https://twelvedata.com/docs/analysis/eps-trend) |
+| `eps_revisions.json` | [/eps_revisions](https://twelvedata.com/docs/analysis/eps-revisions) |
+| `growth_estimates.json` | [/growth_estimates](https://twelvedata.com/docs/analysis/growth-estimates) |
+| `analyst_ratings_light.json` | [/analyst_ratings/light](https://twelvedata.com/docs/analysis/analyst-ratings-light) |
+| `analyst_ratings_us_equities.json` | [/analyst_ratings/us_equities](https://twelvedata.com/docs/analysis/analyst-ratings-us) |
+| `insider_transactions.json` | [/insider_transactions](https://twelvedata.com/docs/regulatory/insider-transactions) |
+| `edgar_filings_archive.json` | [/edgar_filings/archive](https://twelvedata.com/docs/regulatory/edgar-filings-archive) |
+| `institutional_holders.json` | [/institutional_holders](https://twelvedata.com/docs/regulatory/institutional-holders) |
+| `fund_holders.json` | [/fund_holders](https://twelvedata.com/docs/regulatory/fund-holders) |
+| `direct_holders.json` | [/direct_holders](https://twelvedata.com/docs/regulatory/direct-holders) |
+| `tax_info.json` | [/tax_info](https://twelvedata.com/docs/regulatory/tax-info) |
+| `sanctions_source.json` | [/sanctions/{source}](https://twelvedata.com/docs/regulatory/sanctioned-entities) |
+| `api_usage.json` | [/api_usage](https://twelvedata.com/docs/advanced/api-usage) |
+| `batch.json` | [/batch](https://twelvedata.com/docs/advanced/batch-requests) |

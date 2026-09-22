@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "interval": "1min",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "type": "Common Stock",
+    "indicator": {
+      "name": "VWAP - Volume Weighted Average Price",
+      "sd_time_period": 0,
+      "sd": 0
+    }
+  },
+  "values": [
+    {
+      "datetime": "2019-08-09 15:59:00",
+      "vwap_lower": "201.05266",
+      "vwap": "201.05266",
+      "vwap_upper": "201.05266"
+    }
+  ],
+  "status": "ok"
+}

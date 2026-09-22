@@ -1,0 +1,32 @@
+{
+  "etf": {
+    "risk": {
+      "volatility_measures": [
+        {
+          "period": "3_year",
+          "alpha": -0.03,
+          "alpha_category": -0.02,
+          "beta": 1,
+          "beta_category": 0.01,
+          "mean_annual_return": 1.58,
+          "mean_annual_return_category": 0.01,
+          "r_squared": 100,
+          "r_squared_category": 0.95,
+          "std": 18.52,
+          "std_category": 0.19,
+          "sharpe_ratio": 0.95,
+          "sharpe_ratio_category": 0.01,
+          "treynor_ratio": 17.41,
+          "treynor_ratio_category": 0.16
+        }
+      ],
+      "valuation_metrics": {
+        "price_to_earnings": 26.46,
+        "price_to_book": 4.42,
+        "price_to_sales": 2.96,
+        "price_to_cashflow": 17.57
+      }
+    }
+  },
+  "status": "ok"
+}

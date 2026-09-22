@@ -1,0 +1,18 @@
+{
+  "values": [
+    {
+      "symbol": "BSET",
+      "name": "Bassett Furniture Industries Inc",
+      "exchange": "NASDAQ",
+      "mic_code": "XNAS",
+      "datetime": "2023-10-01 12:00:00Z",
+      "last": 17.25,
+      "high": 18,
+      "low": 16.5,
+      "volume": 108297,
+      "change": 3.31,
+      "percent_change": 23.74462
+    }
+  ],
+  "status": "ok"
+}

@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "institutional_holders": [
+    {
+      "entity_name": "Vanguard Group Inc",
+      "date_reported": "2025-09-30",
+      "shares": 1399427162,
+      "value": 388536977757,
+      "percent_held": 0.0947
+    }
+  ]
+}

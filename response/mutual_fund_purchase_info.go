@@ -29,10 +29,10 @@ type MutualFundPurchaseExpenses struct {
 
 // MutualFundPurchaseMinimums represents minimum investment amounts.
 type MutualFundPurchaseMinimums struct {
-	InitialInvestment       null.Int    `json:"initial_investment"`
-	AdditionalInvestment    null.Int    `json:"additional_investment"`
-	InitialIRAInvestment    null.String `json:"initial_ira_investment"`
-	AdditionalIRAInvestment null.String `json:"additional_ira_investment"`
+	InitialInvestment       null.Int `json:"initial_investment"`
+	AdditionalInvestment    null.Int `json:"additional_investment"`
+	InitialIRAInvestment    null.Int `json:"initial_ira_investment"`
+	AdditionalIRAInvestment null.Int `json:"additional_ira_investment"`
 }
 
 // MutualFundPurchasePricing represents pricing information for the mutual fund.

@@ -1,0 +1,22 @@
+{
+  "result": {
+    "count": 6,
+    "list": [
+      {
+        "symbol": "US2Y",
+        "name": "US Treasury Yield 2 Years",
+        "country": "United States",
+        "currency": "USD",
+        "exchange": "NYSE",
+        "mic_code": "XNYS",
+        "type": "Bond",
+        "access": {
+          "global": "Basic",
+          "plan": "Basic",
+          "plan_business": "Basic"
+        }
+      }
+    ]
+  },
+  "status": "ok"
+}

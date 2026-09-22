@@ -1,0 +1,20 @@
+{
+  "earnings": {
+    "2020-04-30": [
+      {
+        "symbol": "BR",
+        "name": "Broadridge Financial Solutions Inc",
+        "currency": "USD",
+        "exchange": "NYSE",
+        "mic_code": "XNYS",
+        "country": "United States",
+        "time": "Time Not Supplied",
+        "eps_estimate": 1.72,
+        "eps_actual": 1.67,
+        "difference": -0.05,
+        "surprise_prc": -2.9
+      }
+    ]
+  },
+  "status": "ok"
+}

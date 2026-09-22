@@ -30,6 +30,7 @@ type RSIIndicator struct {
 
 // RSIData represents individual RSI data points.
 type RSIData struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	RSI      string `json:"rsi"`
 }

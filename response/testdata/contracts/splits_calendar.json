@@ -1,0 +1,12 @@
+[
+  {
+    "date": "1987-06-16",
+    "symbol": "AAPL",
+    "mic_code": "XNGS",
+    "exchange": "NASDAQ",
+    "description": "2-for-1 split",
+    "ratio": 0.5,
+    "from_factor": 2,
+    "to_factor": 1
+  }
+]

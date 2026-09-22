@@ -1,0 +1,24 @@
+{
+  "mutual_fund": {
+    "purchase_info": {
+      "expenses": {
+        "expense_ratio_gross": 0.0022,
+        "expense_ratio_net": 0.001
+      },
+      "minimums": {
+        "initial_investment": 0,
+        "additional_investment": 0,
+        "initial_ira_investment": 0,
+        "additional_ira_investment": 0
+      },
+      "pricing": {
+        "nav": 10.09,
+        "12_month_low": 9.630000114441,
+        "12_month_high": 12.10000038147,
+        "last_month": 11.050000190735
+      },
+      "brokerages": []
+    }
+  },
+  "status": "ok"
+}

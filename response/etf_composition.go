@@ -39,7 +39,7 @@ type ETFAssetAllocation struct {
 	Cash            null.Float `json:"cash"`
 	Stocks          null.Float `json:"stocks"`
 	PreferredStocks null.Float `json:"preferred_stocks"`
-	Convertibles    null.Float `json:"convertibles"`
+	Convertibles    null.Float `json:"convertables"` //nolint:misspell // Matches the provider's wire key.
 	Bonds           null.Float `json:"bonds"`
 	Others          null.Float `json:"others"`
 }

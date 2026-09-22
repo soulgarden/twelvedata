@@ -1,0 +1,16 @@
+{
+  "result": {
+    "count": 1000,
+    "list": [
+      {
+        "symbol": "IVV",
+        "name": "iShares Core S&P 500 ETF",
+        "country": "United States",
+        "mic_code": "XNAS",
+        "fund_family": "iShares",
+        "fund_type": "Large Blend"
+      }
+    ]
+  },
+  "status": "ok"
+}

@@ -31,7 +31,7 @@ func Test_client_GetUsage(t *testing.T) {
 					APIKey: request.APIKey{
 						APIKey: "demo",
 					},
-					Format:    "CSV",
+					Format:    "JSON",
 					Delimiter: ";",
 					TimeZone:  "America/New_York",
 				},
@@ -41,7 +41,7 @@ func Test_client_GetUsage(t *testing.T) {
 					100,
 					100,
 					`{"timestamp":"2025-05-07 11:10:12","current_usage":4003,"plan_limit":20000,"plan_category":"enterprise"}`,
-					"/?apikey=demo&delimiter=%3B&format=CSV&timezone=America%2FNew_York",
+					"/?apikey=demo&delimiter=%3B&format=JSON&timezone=America%2FNew_York",
 				),
 			},
 			wantUsage: response.Usage{
@@ -52,7 +52,7 @@ func Test_client_GetUsage(t *testing.T) {
 			},
 			wantCredits: response.NewCreditsImpl(100, 100),
 			wantErr:     "",
-			expectedURL: "/?apikey=demo&delimiter=%3B&format=CSV&timezone=America%2FNew_York",
+			expectedURL: "/?apikey=demo&delimiter=%3B&format=JSON&timezone=America%2FNew_York",
 		},
 		{
 			name: "wrong api key",

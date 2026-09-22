@@ -31,6 +31,7 @@ type MAIndicator struct {
 
 // MAValue represents a single data point in the Moving Average technical indicator response.
 type MAValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	MA       string `json:"ma"`
 }

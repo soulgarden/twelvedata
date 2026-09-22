@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "market_cap": [
+    {
+      "date": "2025-07-14",
+      "value": 3115906555944
+    },
+    {
+      "date": "2025-07-11",
+      "value": 3153843487457
+    },
+    {
+      "date": "2025-07-10",
+      "value": 3172513237217
+    }
+  ]
+}

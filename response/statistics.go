@@ -29,8 +29,8 @@ type StatisticsValues struct {
 
 // StatisticsValuationsMetrics represents valuation metrics such as P/E ratios and market cap.
 type StatisticsValuationsMetrics struct {
-	MarketCapitalization null.Int   `json:"market_capitalization"`
-	EnterpriseValue      null.Int   `json:"enterprise_value"`
+	MarketCapitalization null.Float `json:"market_capitalization"`
+	EnterpriseValue      null.Float `json:"enterprise_value"`
 	TrailingPE           null.Float `json:"trailing_pe"`
 	ForwardPE            null.Float `json:"forward_pe"`
 	PEGRatio             null.Float `json:"peg_ratio"`
@@ -56,12 +56,12 @@ type StatisticsFinancials struct {
 
 // StatisticsIncomeStatement represents income statement metrics from statistics data.
 type StatisticsIncomeStatement struct {
-	RevenueTTM                 null.Int   `json:"revenue_ttm"`
+	RevenueTTM                 null.Float `json:"revenue_ttm"`
 	RevenuePerShareTTM         null.Float `json:"revenue_per_share_ttm"`
 	QuarterlyRevenueGrowth     null.Float `json:"quarterly_revenue_growth"`
-	GrossProfitTTM             null.Int   `json:"gross_profit_ttm"`
-	EBITDA                     null.Int   `json:"ebitda"`
-	NetIncomeToCommonTTM       null.Int   `json:"net_income_to_common_ttm"`
+	GrossProfitTTM             null.Float `json:"gross_profit_ttm"`
+	EBITDA                     null.Float `json:"ebitda"`
+	NetIncomeToCommonTTM       null.Float `json:"net_income_to_common_ttm"`
 	DilutedEPSTTM              null.Float `json:"diluted_eps_ttm"`
 	QuarterlyEarningsGrowthYoY null.Float `json:"quarterly_earnings_growth_yoy"`
 }
@@ -69,9 +69,9 @@ type StatisticsIncomeStatement struct {
 // StatisticsBalanceSheet represents balance sheet metrics from statistics data.
 type StatisticsBalanceSheet struct {
 	RevenueTTM           null.Int   `json:"revenue_ttm"`
-	TotalCashMRQ         null.Int   `json:"total_cash_mrq"`
+	TotalCashMRQ         null.Float `json:"total_cash_mrq"`
 	TotalCashPerShareMRQ null.Float `json:"total_cash_per_share_mrq"`
-	TotalDebtMRQ         null.Int   `json:"total_debt_mrq"`
+	TotalDebtMRQ         null.Float `json:"total_debt_mrq"`
 	TotalDebtToEquityMRQ null.Float `json:"total_debt_to_equity_mrq"`
 	CurrentRatioMRQ      null.Float `json:"current_ratio_mrq"`
 	BookValuePerShareMRQ null.Float `json:"book_value_per_share_mrq"`
@@ -79,14 +79,14 @@ type StatisticsBalanceSheet struct {
 
 // StatisticsCashFlow represents cash flow metrics from statistics data.
 type StatisticsCashFlow struct {
-	OperatingCashFlowTTM   null.Int `json:"operating_cash_flow_ttm"`
-	LeveredFreeCashFlowTTM null.Int `json:"levered_free_cash_flow_ttm"`
+	OperatingCashFlowTTM   null.Float `json:"operating_cash_flow_ttm"`
+	LeveredFreeCashFlowTTM null.Float `json:"levered_free_cash_flow_ttm"`
 }
 
 // StockStatistics represents stock-specific statistical metrics.
 type StockStatistics struct {
-	SharesOutstanding               null.Int   `json:"shares_outstanding"`
-	FloatShares                     null.Int   `json:"float_shares"`
+	SharesOutstanding               null.Float `json:"shares_outstanding"`
+	FloatShares                     null.Float `json:"float_shares"`
 	Avg10Volume                     null.Int   `json:"avg_10_volume"`
 	Avg90Volume                     null.Int   `json:"avg_90_volume"`
 	SharesShort                     null.Int   `json:"shares_short"`

@@ -168,8 +168,8 @@ func expectedMutualFundPurchaseInfoDetails() response.MutualFundPurchaseInfoDeta
 		Minimums: response.MutualFundPurchaseMinimums{
 			InitialInvestment:       null.IntFrom(0),
 			AdditionalInvestment:    null.IntFrom(0),
-			InitialIRAInvestment:    null.String{},
-			AdditionalIRAInvestment: null.String{},
+			InitialIRAInvestment:    null.Int{},
+			AdditionalIRAInvestment: null.Int{},
 		},
 		Pricing: response.MutualFundPurchasePricing{
 			NAV:             null.FloatFrom(10.09),
@@ -241,7 +241,7 @@ func Test_client_GetMutualFundSummary(t *testing.T) {
 		request.GetMutualFundSummary{
 			APIKey:        request.APIKey{APIKey: ""},
 			Symbol:        "0P0001LCQ3",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundSummary{
 			MutualFund: response.MutualFundSummaryData{
@@ -295,7 +295,7 @@ func Test_client_GetMutualFundPerformance(t *testing.T) {
 		request.GetMutualFundPerformance{
 			APIKey:        request.APIKey{APIKey: ""},
 			Symbol:        "0P0001LCQ3",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundPerformance{
 			MutualFund: response.MutualFundPerformanceData{
@@ -359,7 +359,7 @@ func Test_client_GetMutualFundRisk(t *testing.T) {
 		request.GetMutualFundRisk{
 			APIKey:        request.APIKey{APIKey: ""},
 			Symbol:        "0P0001LCQ3",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundRisk{
 			MutualFund: response.MutualFundRiskData{
@@ -426,7 +426,7 @@ func Test_client_GetMutualFundRatings(t *testing.T) {
 		request.GetMutualFundRatings{
 			APIKey:        request.APIKey{APIKey: ""},
 			Symbol:        "0P0001LCQ3",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundRatings{
 			MutualFund: response.MutualFundRatingsData{
@@ -463,7 +463,7 @@ func Test_client_GetMutualFundComposition(t *testing.T) {
 		request.GetMutualFundComposition{
 			APIKey:        request.APIKey{APIKey: ""},
 			Symbol:        "0P0001LCQ3",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundComposition{
 			MutualFund: response.MutualFundCompositionData{
@@ -536,7 +536,7 @@ func Test_client_GetMutualFundPurchaseInfo(t *testing.T) {
 		request.GetMutualFundPurchaseInfo{
 			APIKey:        request.APIKey{APIKey: ""},
 			Symbol:        "0P0001LCQ3",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundPurchaseInfo{
 			MutualFund: response.MutualFundPurchaseInfoData{
@@ -587,7 +587,7 @@ func Test_client_GetMutualFundSustainability(t *testing.T) {
 		request.GetMutualFundSustainability{
 			APIKey:        request.APIKey{APIKey: ""},
 			Symbol:        "0P0001LCQ3",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundSustainability{
 			MutualFund: response.MutualFundSustainabilityData{
@@ -633,7 +633,7 @@ func Test_client_GetMutualFundFullData(t *testing.T) {
 			ISIN:          "LU1206782309",
 			CUSIP:         "120678230",
 			Country:       "United States",
-			DecimalPlaces: 5,
+			DecimalPlaces: request.Precision(5),
 		},
 		response.MutualFundFullData{
 			MutualFund: response.MutualFundFullDataData{

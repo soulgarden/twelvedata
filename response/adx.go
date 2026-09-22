@@ -29,6 +29,7 @@ type ADXIndicator struct {
 
 // ADXData represents individual Average Directional Index data points.
 type ADXData struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	ADX      string `json:"adx"`
 }

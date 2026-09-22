@@ -18,6 +18,6 @@ type GetQuote struct {
 	Prepost          bool   `schema:"prepost,omitempty"`
 	Eod              bool   `schema:"eod,omitempty"`
 	RollingPeriod    int    `schema:"rolling_period,omitempty"`
-	DecimalPlaces    int    `schema:"dp,omitempty"`
+	DecimalPlaces    *int   `schema:"dp,omitempty"`
 	TimeZone         string `schema:"timezone,omitempty"`
 }

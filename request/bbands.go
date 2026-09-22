@@ -20,13 +20,14 @@ type GetBBands struct {
 	Format             string  `schema:"format,omitempty"`
 	Delimiter          string  `schema:"delimiter,omitempty"`
 	Prepost            bool    `schema:"prepost,omitempty"`
-	DP                 int     `schema:"dp,omitempty"`
+	DP                 *int    `schema:"dp,omitempty"`
 	Order              string  `schema:"order,omitempty"`
 	IncludeOHLC        bool    `schema:"include_ohlc,omitempty"`
-	Timezone           string  `schema:"timezone,omitempty"`
-	Date               string  `schema:"date,omitempty"`
-	StartDate          string  `schema:"start_date,omitempty"`
-	EndDate            string  `schema:"end_date,omitempty"`
-	PreviousClose      bool    `schema:"previous_close,omitempty"`
-	Adjust             string  `schema:"adjust,omitempty"`
+	// Timezone applies only to intraday intervals; daily, weekly, and monthly bars use exchange time.
+	Timezone      string `schema:"timezone,omitempty"`
+	Date          string `schema:"date,omitempty"`
+	StartDate     string `schema:"start_date,omitempty"`
+	EndDate       string `schema:"end_date,omitempty"`
+	PreviousClose bool   `schema:"previous_close,omitempty"`
+	Adjust        string `schema:"adjust,omitempty"`
 }

@@ -27,6 +27,7 @@ type OBVIndicator struct {
 
 // OBVValue represents individual On Balance Volume data points.
 type OBVValue struct {
+	OHLCV
 	Datetime string      `json:"datetime"`
 	OBV      FloatString `json:"obv"`
 }

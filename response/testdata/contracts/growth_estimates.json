@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "growth_estimates": {
+    "current_quarter": 0.016,
+    "next_quarter": 0.01,
+    "current_year": 0.087,
+    "next_year": 0.055999998,
+    "next_5_years_pa": 0.094799995,
+    "past_5_years_pa": 0.23867
+  },
+  "status": "ok"
+}

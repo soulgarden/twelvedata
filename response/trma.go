@@ -30,6 +30,7 @@ type TRMAIndicator struct {
 
 // TRMAValue represents a single data point in the Triangular Moving Average technical indicator response.
 type TRMAValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
-	TRMA     string `json:"trma"`
+	TRMA     string `json:"trima"`
 }

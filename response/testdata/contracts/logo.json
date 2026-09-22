@@ -1,0 +1,9 @@
+{
+  "meta": {
+    "symbol": "BTC/USD",
+    "exchange": "Coinbase Pro"
+  },
+  "url": "https://api.twelvedata.com/logo/apple.com",
+  "logo_base": "https://logo.twelvedata.com/crypto/btc.png",
+  "logo_quote": "https://logo.twelvedata.com/crypto/usd.png"
+}

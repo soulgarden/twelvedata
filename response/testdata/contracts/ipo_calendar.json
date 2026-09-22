@@ -1,0 +1,15 @@
+{
+  "2025-07-16": [
+    {
+      "symbol": "DWACU",
+      "name": "Digital World Acquisition Corp.",
+      "exchange": "NASDAQ",
+      "mic_code": "XNAS",
+      "price_range_low": 10,
+      "price_range_high": 10,
+      "offer_price": 0,
+      "currency": "USD",
+      "shares": 0
+    }
+  ]
+}

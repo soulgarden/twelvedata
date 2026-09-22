@@ -1,0 +1,19 @@
+{
+  "result": {
+    "Singapore": [
+      "Property - Indirect Asia",
+      "Sector Equity Water",
+      "SGD Bond",
+      "Singapore Equity",
+      "Taiwan Large-Cap Equity"
+    ],
+    "United States": [
+      "Asia-Pacific ex-Japan Equity",
+      "EUR Flexible Allocation - Global",
+      "Euro Short Bond PP",
+      "Large Blend",
+      "Other Allocation"
+    ]
+  },
+  "status": "ok"
+}

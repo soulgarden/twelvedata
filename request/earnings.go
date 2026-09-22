@@ -15,7 +15,7 @@ type GetEarnings struct {
 	OutputSize    int    `schema:"outputsize,omitempty"`
 	Format        string `schema:"format,omitempty"`
 	Delimiter     string `schema:"delimiter,omitempty"`
-	DecimalPlaces int    `schema:"dp,omitempty"`
+	DecimalPlaces *int   `schema:"dp,omitempty"`
 	StartDate     string `schema:"start_date,omitempty"`
 	EndDate       string `schema:"end_date,omitempty"`
 }

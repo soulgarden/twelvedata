@@ -19,6 +19,7 @@ type GetTimeSeriesCross struct {
 	StartDate     string `schema:"start_date,omitempty"`
 	EndDate       string `schema:"end_date,omitempty"`
 	Adjust        bool   `schema:"adjust,omitempty"`
-	DecimalPlaces int    `schema:"dp,omitempty"`
-	TimeZone      string `schema:"timezone,omitempty"`
+	DecimalPlaces *int   `schema:"dp,omitempty"`
+	// TimeZone applies only to intraday intervals; daily, weekly, and monthly bars use exchange time.
+	TimeZone string `schema:"timezone,omitempty"`
 }

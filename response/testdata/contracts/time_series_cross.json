@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "base_instrument": "JPY/USD",
+    "base_currency": "",
+    "base_exchange": "PHYSICAL CURRENCY",
+    "interval": "1min",
+    "quote_instrument": "BTC/USD",
+    "quote_currency": "",
+    "quote_exchange": "Coinbase Pro"
+  },
+  "values": [
+    {
+      "datetime": "2025-02-28 14:30:00",
+      "open": "0.0000081115665",
+      "high": "0.0000081273069",
+      "low": "0.0000081088287",
+      "close": "0.0000081268066"
+    }
+  ]
+}

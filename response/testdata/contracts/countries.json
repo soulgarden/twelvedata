@@ -1,0 +1,13 @@
+{
+  "data": [
+    {
+      "iso2": "US",
+      "iso3": "USA",
+      "numeric": "840",
+      "name": "United States",
+      "official_name": "United States of America",
+      "capital": "Washington D.C.",
+      "currency": "USD"
+    }
+  ]
+}

@@ -9,4 +9,5 @@ type GetEarningsEstimate struct {
 	Cusip    string `schema:"cusip,omitempty"`
 	Exchange string `schema:"exchange,omitempty"`
 	Country  string `schema:"country,omitempty"`
+	MicCode  string `schema:"mic_code,omitempty"`
 }

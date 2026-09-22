@@ -16,12 +16,13 @@ type GetTimeSeries struct {
 	Format         string `schema:"format,omitempty"`
 	Delimiter      string `schema:"delimiter,omitempty"`
 	PrePost        bool   `schema:"prepost,omitempty"`
-	DecimalPlaces  int    `schema:"dp,omitempty"`
+	DecimalPlaces  *int   `schema:"dp,omitempty"`
 	Order          string `schema:"order,omitempty"`
-	TimeZone       string `schema:"timezone,omitempty"`
-	Date           string `schema:"date,omitempty"`
-	StartDate      string `schema:"start_date,omitempty"`
-	EndDate        string `schema:"end_date,omitempty"`
-	PreviousClose  bool   `schema:"previous_close,omitempty"`
-	Adjust         string `schema:"adjust,omitempty"`
+	// TimeZone applies only to intraday intervals; daily, weekly, and monthly bars use exchange time.
+	TimeZone      string `schema:"timezone,omitempty"`
+	Date          string `schema:"date,omitempty"`
+	StartDate     string `schema:"start_date,omitempty"`
+	EndDate       string `schema:"end_date,omitempty"`
+	PreviousClose bool   `schema:"previous_close,omitempty"`
+	Adjust        string `schema:"adjust,omitempty"`
 }

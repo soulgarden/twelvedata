@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York",
+    "period": "Quarterly"
+  },
+  "balance_sheet": [
+    {
+      "fiscal_date": "2021-09-30",
+      "year": 2022,
+      "assets": {
+        "current_assets": {
+          "cash": 17305000000,
+          "cash_equivalents": 17635000000,
+          "cash_and_cash_equivalents": 34940000000,
+          "other_short_term_investments": 27699000000,
+          "accounts_receivable": 26278000000,
+          "other_receivables": 25228000000,
+          "inventory": 6580000000,
+          "prepaid_assets": 0,
+          "restricted_cash": 0,
+          "assets_held_for_sale": 0,
+          "hedging_assets": 0,
+          "other_current_assets": 14111000000,
+          "total_current_assets": 134836000000
+        },
+        "non_current_assets": {
+          "properties": 0,
+          "land_and_improvements": 20041000000,
+          "machinery_furniture_equipment": 78659000000,
+          "construction_in_progress": 0,
+          "leases": 11023000000,
+          "accumulated_depreciation": -70283000000,
+          "goodwill": 0,
+          "investment_properties": 0,
+          "financial_assets": 0,
+          "intangible_assets": 0,
+          "investments_and_advances": 127877000000,
+          "other_non_current_assets": 48849000000,
+          "total_non_current_assets": 216166000000
+        },
+        "total_assets": 351002000000
+      },
+      "liabilities": {
+        "current_liabilities": {
+          "accounts_payable": 54763000000,
+          "accrued_expenses": 0,
+          "short_term_debt": 15613000000,
+          "deferred_revenue": 7612000000,
+          "tax_payable": 0,
+          "pensions": 0,
+          "other_current_liabilities": 47493000000,
+          "total_current_liabilities": 125481000000
+        },
+        "non_current_liabilities": {
+          "long_term_provisions": 0,
+          "long_term_debt": 109106000000,
+          "provision_for_risks_and_charges": 24689000000,
+          "deferred_liabilities": 0,
+          "derivative_product_liabilities": 0,
+          "other_non_current_liabilities": 28636000000,
+          "total_non_current_liabilities": 162431000000
+        },
+        "total_liabilities": 287912000000
+      },
+      "shareholders_equity": {
+        "common_stock": 57365000000,
+        "retained_earnings": 5562000000,
+        "other_shareholders_equity": 163000000,
+        "total_shareholders_equity": 63090000000,
+        "additional_paid_in_capital": 0,
+        "treasury_stock": 0,
+        "minority_interest": 0
+      }
+    }
+  ]
+}

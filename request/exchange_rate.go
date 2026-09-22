@@ -7,6 +7,6 @@ type GetExchangeRate struct {
 	Date          string `schema:"date,omitempty"`
 	Format        string `schema:"format,omitempty"`
 	Delimiter     string `schema:"delimiter,omitempty"`
-	DecimalPlaces int    `schema:"dp,omitempty"`
+	DecimalPlaces *int   `schema:"dp,omitempty"`
 	TimeZone      string `schema:"timezone,omitempty"`
 }

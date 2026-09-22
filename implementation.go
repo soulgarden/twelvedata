@@ -53,11 +53,11 @@ type client struct {
 	getIPOCalendar                 *Endpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error]
 	getPressReleases               *Endpoint[request.GetPressReleases, response.PressReleases, response.Credits, error]
 	getIncomeStatement             *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
-	getIncomeStatementConsolidated *Endpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error]
+	getIncomeStatementConsolidated *Endpoint[request.GetIncomeStatement, response.ConsolidatedIncomeStatements, response.Credits, error]
 	getBalanceSheet                *Endpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error]
-	getBalanceSheetConsolidated    *Endpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error]
+	getBalanceSheetConsolidated    *Endpoint[request.GetBalanceSheet, response.ConsolidatedBalanceSheets, response.Credits, error]
 	getCashFlow                    *Endpoint[request.GetCashFlow, response.CashFlows, response.Credits, error]
-	getCashFlowConsolidated        *Endpoint[request.GetCashFlow, response.CashFlows, response.Credits, error]
+	getCashFlowConsolidated        *Endpoint[request.GetCashFlow, response.ConsolidatedCashFlows, response.Credits, error]
 	getMarketCap                   *Endpoint[request.GetMarketCap, response.MarketCap, response.Credits, error]
 	getLastChange                  *Endpoint[request.GetLastChange, response.LastChange, response.Credits, error]
 
@@ -259,7 +259,7 @@ func (cli client) GetIncomeStatement(req request.GetIncomeStatement) (response.I
 	return cli.getIncomeStatement.Call(req)
 }
 
-func (cli client) GetIncomeStatementConsolidated(req request.GetIncomeStatement) (response.IncomeStatements, response.Credits, error) {
+func (cli client) GetIncomeStatementConsolidated(req request.GetIncomeStatement) (response.ConsolidatedIncomeStatements, response.Credits, error) {
 	return cli.getIncomeStatementConsolidated.Call(req)
 }
 
@@ -267,7 +267,7 @@ func (cli client) GetBalanceSheet(req request.GetBalanceSheet) (response.Balance
 	return cli.getBalanceSheet.Call(req)
 }
 
-func (cli client) GetBalanceSheetConsolidated(req request.GetBalanceSheet) (response.BalanceSheets, response.Credits, error) {
+func (cli client) GetBalanceSheetConsolidated(req request.GetBalanceSheet) (response.ConsolidatedBalanceSheets, response.Credits, error) {
 	return cli.getBalanceSheetConsolidated.Call(req)
 }
 
@@ -275,7 +275,7 @@ func (cli client) GetCashFlow(req request.GetCashFlow) (response.CashFlows, resp
 	return cli.getCashFlow.Call(req)
 }
 
-func (cli client) GetCashFlowConsolidated(req request.GetCashFlow) (response.CashFlows, response.Credits, error) {
+func (cli client) GetCashFlowConsolidated(req request.GetCashFlow) (response.ConsolidatedCashFlows, response.Credits, error) {
 	return cli.getCashFlowConsolidated.Call(req)
 }
 
@@ -590,11 +590,11 @@ func NewClient(httpCli *HTTPCli, cfg *Conf) Client {
 		getIPOCalendar:                 NewEndpoint[request.GetIPOCalendar, response.IPOCalendar, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IPOCalendarURL),
 		getPressReleases:               NewEndpoint[request.GetPressReleases, response.PressReleases, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.PressReleasesURL),
 		getIncomeStatement:             NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementURL),
-		getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.IncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementConsolidatedURL),
+		getIncomeStatementConsolidated: NewEndpoint[request.GetIncomeStatement, response.ConsolidatedIncomeStatements, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.IncomeStatementConsolidatedURL),
 		getBalanceSheet:                NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetURL),
-		getBalanceSheetConsolidated:    NewEndpoint[request.GetBalanceSheet, response.BalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetConsolidatedURL),
+		getBalanceSheetConsolidated:    NewEndpoint[request.GetBalanceSheet, response.ConsolidatedBalanceSheets, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.BalanceSheetConsolidatedURL),
 		getCashFlow:                    NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowURL),
-		getCashFlowConsolidated:        NewEndpoint[request.GetCashFlow, response.CashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowConsolidatedURL),
+		getCashFlowConsolidated:        NewEndpoint[request.GetCashFlow, response.ConsolidatedCashFlows, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.CashFlowConsolidatedURL),
 		getMarketCap:                   NewEndpoint[request.GetMarketCap, response.MarketCap, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.MarketCapURL),
 		getLastChange:                  NewEndpoint[request.GetLastChange, response.LastChange, response.Credits, error](httpCli, cfg.BaseURL+cfg.Fundamentals.LastChangeURL),
 

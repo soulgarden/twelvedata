@@ -23,6 +23,6 @@ type SplitEvent struct {
 	Date        string     `json:"date"`
 	Description string     `json:"description"`
 	Ratio       null.Float `json:"ratio"`
-	FromFactor  null.Int   `json:"from_factor"`
-	ToFactor    null.Int   `json:"to_factor"`
+	FromFactor  null.Float `json:"from_factor"`
+	ToFactor    null.Float `json:"to_factor"`
 }

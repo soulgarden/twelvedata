@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "ratings": [
+    {
+      "date": "2022-08-19",
+      "firm": "Keybanc",
+      "rating_change": "Maintains",
+      "rating_current": "Overweight",
+      "rating_prior": "Overweight"
+    }
+  ],
+  "status": "ok"
+}

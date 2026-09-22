@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "revenue_estimate": [
+    {
+      "date": "2022-09-30",
+      "period": "current_quarter",
+      "number_of_analysts": 24,
+      "avg_estimate": 88631500000,
+      "low_estimate": 85144300000,
+      "high_estimate": 92794900000,
+      "year_ago_sales": 83360000000,
+      "sales_growth": 0.06
+    }
+  ],
+  "status": "ok"
+}

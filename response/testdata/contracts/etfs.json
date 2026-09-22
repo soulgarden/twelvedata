@@ -1,0 +1,23 @@
+{
+  "count": 100,
+  "data": [
+    {
+      "symbol": "SPY",
+      "name": "SPDR S&P 500 ETF Trust",
+      "currency": "USD",
+      "exchange": "NYSE",
+      "mic_code": "ARCX",
+      "country": "United States",
+      "figi_code": "BBG000BDTF76",
+      "cfi_code": "CECILU",
+      "isin": "US78462F1030",
+      "cusip": "037833100",
+      "access": {
+        "global": "Basic",
+        "plan": "Basic",
+        "plan_business": "Basic"
+      }
+    }
+  ],
+  "status": "ok"
+}

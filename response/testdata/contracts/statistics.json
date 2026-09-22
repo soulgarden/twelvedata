@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "statistics": {
+    "valuations_metrics": {
+      "market_capitalization": 2546807865344,
+      "enterprise_value": 2620597731328,
+      "trailing_pe": 30.162493,
+      "forward_pe": 26.982489,
+      "peg_ratio": 1.4,
+      "price_to_sales_ttm": 7.336227,
+      "price_to_book_mrq": 39.68831,
+      "enterprise_to_revenue": 7.549,
+      "enterprise_to_ebitda": 23.623
+    },
+    "financials": {
+      "fiscal_year_ends": "2020-09-26",
+      "most_recent_quarter": "2021-06-26",
+      "gross_margin": 46.57807,
+      "profit_margin": 0.25004,
+      "operating_margin": 0.28788,
+      "return_on_assets_ttm": 0.19302,
+      "return_on_equity_ttm": 1.27125,
+      "income_statement": {
+        "revenue_ttm": 347155005440,
+        "revenue_per_share_ttm": 20.61,
+        "quarterly_revenue_growth": 0.364,
+        "gross_profit_ttm": 104956000000,
+        "ebitda": 110934999040,
+        "net_income_to_common_ttm": 86801997824,
+        "diluted_eps_ttm": 5.108,
+        "quarterly_earnings_growth_yoy": 0.932
+      },
+      "balance_sheet": {
+        "total_cash_mrq": 61696000000,
+        "total_cash_per_share_mrq": 3.732,
+        "total_debt_mrq": 135491002368,
+        "total_debt_to_equity_mrq": 210.782,
+        "current_ratio_mrq": 1.062,
+        "book_value_per_share_mrq": 3.882
+      },
+      "cash_flow": {
+        "operating_cash_flow_ttm": 104414003200,
+        "levered_free_cash_flow_ttm": 80625876992
+      }
+    },
+    "stock_statistics": {
+      "shares_outstanding": 16530199552,
+      "float_shares": 16513305231,
+      "avg_10_volume": 72804757,
+      "avg_90_volume": 77013078,
+      "shares_short": 93105968,
+      "short_ratio": 1.19,
+      "short_percent_of_shares_outstanding": 0.0056,
+      "percent_held_by_insiders": 0.00071000005,
+      "percent_held_by_institutions": 0.58474
+    },
+    "stock_price_summary": {
+      "fifty_two_week_low": 103.1,
+      "fifty_two_week_high": 157.26,
+      "fifty_two_week_change": 0.375625,
+      "beta": 1.201965,
+      "day_50_ma": 148.96686,
+      "day_200_ma": 134.42506
+    },
+    "dividends_and_splits": {
+      "forward_annual_dividend_rate": 0.88,
+      "forward_annual_dividend_yield": 0.0057,
+      "trailing_annual_dividend_rate": 0.835,
+      "trailing_annual_dividend_yield": 0.0053832764,
+      "5_year_average_dividend_yield": 1.27,
+      "payout_ratio": 0.16309999,
+      "dividend_frequency": "Quarterly",
+      "dividend_date": "2021-08-12",
+      "ex_dividend_date": "2021-08-06",
+      "last_split_factor": "4-for-1 split",
+      "last_split_date": "2020-08-31"
+    }
+  }
+}

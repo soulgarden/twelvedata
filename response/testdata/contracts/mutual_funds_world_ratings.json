@@ -1,0 +1,10 @@
+{
+  "mutual_fund": {
+    "ratings": {
+      "performance_rating": 2,
+      "risk_rating": 4,
+      "return_rating": 0
+    }
+  },
+  "status": "ok"
+}

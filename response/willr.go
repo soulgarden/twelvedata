@@ -29,6 +29,7 @@ type WillRIndicator struct {
 
 // WillRValue represents individual Williams %R data points.
 type WillRValue struct {
+	OHLCV
 	Datetime  string     `json:"datetime"`
-	WilliamsR null.Float `json:"williams_r"`
+	WilliamsR null.Float `json:"willr"`
 }

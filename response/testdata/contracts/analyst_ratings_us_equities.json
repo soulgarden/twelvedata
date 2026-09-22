@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "ratings": [
+    {
+      "date": "2022-08-19",
+      "firm": "Keybanc",
+      "analyst_name": "Brandon Nispel",
+      "rating_change": "Maintains",
+      "rating_current": "Overweight",
+      "rating_prior": "Overweight",
+      "time": "08:29:48",
+      "action_price_target": "Raises",
+      "price_target_current": 185.14,
+      "price_target_prior": 177.01
+    }
+  ],
+  "status": "ok"
+}

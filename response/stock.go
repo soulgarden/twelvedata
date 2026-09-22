@@ -27,6 +27,7 @@ type Stock struct {
 
 // StockAccess represents access level information for stock data.
 type StockAccess struct {
-	Global string `json:"global"`
-	Plan   string `json:"plan"`
+	Global       string `json:"global"`
+	Plan         string `json:"plan"`
+	PlanBusiness string `json:"plan_business"`
 }

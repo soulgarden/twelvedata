@@ -9,5 +9,6 @@ type GetRevenueEstimate struct {
 	Cusip         string `schema:"cusip,omitempty"`
 	Exchange      string `schema:"exchange,omitempty"`
 	Country       string `schema:"country,omitempty"`
-	DecimalPlaces int    `schema:"dp,omitempty"`
+	DecimalPlaces *int   `schema:"dp,omitempty"`
+	MicCode       string `schema:"mic_code,omitempty"`
 }

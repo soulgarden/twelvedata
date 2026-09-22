@@ -32,6 +32,7 @@ type Fund struct {
 
 // FundAccess represents access level information for fund data.
 type FundAccess struct {
-	Global string `json:"global"`
-	Plan   string `json:"plan"`
+	Global       string `json:"global"`
+	Plan         string `json:"plan"`
+	PlanBusiness string `json:"plan_business"`
 }

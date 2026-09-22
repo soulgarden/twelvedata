@@ -35,7 +35,7 @@ type Quote struct {
 	ExtendedChange        string             `json:"extended_change"`
 	ExtendedPercentChange string             `json:"extended_percent_change"`
 	ExtendedPrice         string             `json:"extended_price"`
-	ExtendedTimestamp     null.String        `json:"extended_timestamp"`
+	ExtendedTimestamp     null.Int           `json:"extended_timestamp"`
 }
 
 // QuoteFiftyTwoWeek represents 52-week high/low data for a quote.

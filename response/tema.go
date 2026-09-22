@@ -30,6 +30,7 @@ type TEMAIndicator struct {
 
 // TEMAValue represents a single data point in the Triple Exponential Moving Average technical indicator response.
 type TEMAValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	TEMA     string `json:"tema"`
 }

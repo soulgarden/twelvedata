@@ -1,0 +1,21 @@
+{
+  "etf": {
+    "summary": {
+      "symbol": "IVV",
+      "name": "iShares Core S&P 500 ETF",
+      "fund_family": "iShares",
+      "fund_type": "Large Blend",
+      "currency": "USD",
+      "share_class_inception_date": "2000-11-13",
+      "ytd_return": -0.0537,
+      "expense_ratio_net": -0.004,
+      "yield": 0.0133,
+      "nav": 413.24,
+      "last_price": 413.24,
+      "turnover_rate": 0.04,
+      "net_assets": 753409982464,
+      "overview": "The investment seeks to track the performance of the Standard & Poor's 500..."
+    }
+  },
+  "status": "ok"
+}

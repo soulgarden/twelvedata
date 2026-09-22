@@ -23,15 +23,16 @@ type PercentBMeta struct {
 
 // PercentBIndicator contains %B indicator configuration.
 type PercentBIndicator struct {
-	Name       string   `json:"name"`
-	SeriesType string   `json:"series_type"`
-	TimePeriod null.Int `json:"time_period"`
-	SD         null.Int `json:"sd"`
-	MAType     string   `json:"ma_type"`
+	Name       string     `json:"name"`
+	SeriesType string     `json:"series_type"`
+	TimePeriod null.Int   `json:"time_period"`
+	SD         null.Float `json:"sd"`
+	MAType     string     `json:"ma_type"`
 }
 
 // PercentBData represents individual %B data points.
 type PercentBData struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	PercentB string `json:"percent_b"`
 }

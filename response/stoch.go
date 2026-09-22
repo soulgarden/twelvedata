@@ -33,6 +33,7 @@ type StochIndicator struct {
 
 // StochData represents individual Stochastic data points.
 type StochData struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	SlowK    string `json:"slow_k"`
 	SlowD    string `json:"slow_d"`

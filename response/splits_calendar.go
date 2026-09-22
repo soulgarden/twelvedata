@@ -13,6 +13,6 @@ type SplitsCalendarItem struct {
 	Exchange    string     `json:"exchange"`
 	Description string     `json:"description"`
 	Ratio       null.Float `json:"ratio"`
-	FromFactor  null.Int   `json:"from_factor"`
-	ToFactor    null.Int   `json:"to_factor"`
+	FromFactor  null.Float `json:"from_factor"`
+	ToFactor    null.Float `json:"to_factor"`
 }
