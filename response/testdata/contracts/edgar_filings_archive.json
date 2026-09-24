@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "values": [
+    {
+      "cik": 1711463,
+      "filed_at": 1726617600,
+      "files": [
+        {
+          "name": "primary_doc.html",
+          "size": 2980,
+          "type": "144",
+          "url": "https://www.sec.gov/Archives/edgar/data/1711463/000197185724000581/primary_doc.xml"
+        }
+      ],
+      "filing_url": "https://www.sec.gov/Archives/edgar/data/1711463/0001971857-24-000581-index.htm",
+      "form_type": "144",
+      "ticker": [
+        "AAPL"
+      ]
+    }
+  ]
+}

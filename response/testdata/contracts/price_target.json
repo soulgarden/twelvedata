@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "price_target": {
+    "high": 220,
+    "median": 185,
+    "low": 136,
+    "average": 184.01,
+    "current": 169.5672,
+    "currency": "USD"
+  },
+  "status": "ok"
+}

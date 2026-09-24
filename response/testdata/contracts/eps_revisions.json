@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "eps_revision": [
+    {
+      "date": "2022-09-30",
+      "period": "current_quarter",
+      "up_last_week": 1,
+      "up_last_month": 5,
+      "down_last_week": 0,
+      "down_last_month": 0
+    }
+  ],
+  "status": "ok"
+}

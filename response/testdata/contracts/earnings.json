@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "earnings": [
+    {
+      "date": "2020-04-30",
+      "time": "After Hours",
+      "eps_estimate": 2.09,
+      "eps_actual": 2.55,
+      "difference": 0.46,
+      "surprise_prc": 22.01
+    }
+  ],
+  "status": "ok"
+}

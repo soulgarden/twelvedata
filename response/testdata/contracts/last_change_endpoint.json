@@ -1,0 +1,13 @@
+{
+  "pagination": {
+    "current_page": 1,
+    "per_page": 30
+  },
+  "data": [
+    {
+      "symbol": "AAPL",
+      "mic_code": "XNAS",
+      "last_change": "2023-10-14 12:22:48"
+    }
+  ]
+}

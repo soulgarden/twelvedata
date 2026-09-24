@@ -85,7 +85,7 @@ const (
 	// Statistics represents the API credit cost for company statistics requests.
 	Statistics = 50
 	// PressReleases represents the API credit cost for press releases requests.
-	PressReleases = 50
+	PressReleases = 1
 	// IncomeStatement represents the API credit cost for income statement requests.
 	IncomeStatement = 100
 	// IncomeStatementConsolidated represents the API credit cost for consolidated income statement requests.
@@ -107,7 +107,7 @@ const (
 	// MarketCapitalization represents the API credit cost for market capitalization requests.
 	MarketCapitalization = 5
 	// LastChanges represents the API credit cost for last changes requests.
-	LastChanges = 50
+	LastChanges = 1
 
 	// ExchangeRate represents the API credit cost for exchange rate requests.
 	// Currencies.
@@ -119,115 +119,115 @@ const (
 	// ETFs.
 	ETFFullData = 800
 	// ETFSummary represents the API credit cost for ETF summary requests.
-	ETFSummary = 50
+	ETFSummary = 200
 	// ETFPerformance represents the API credit cost for ETF performance requests.
 	ETFPerformance = 200
 	// ETFRisk represents the API credit cost for ETF risk data requests.
-	ETFRisk = 50
+	ETFRisk = 200
 	// ETFComposition represents the API credit cost for ETF composition requests.
-	ETFComposition = 100
+	ETFComposition = 200
 	// ETFsFamilies represents the API credit cost for ETF families requests.
-	ETFsFamilies = 10
+	ETFsFamilies = 1
 	// ETFsTypes represents the API credit cost for ETF types requests.
-	ETFsTypes = 10
+	ETFsTypes = 1
 
 	// MFsDirectory represents the API credit cost for mutual funds directory requests.
 	// Mutual Funds.
-	MFsDirectory = 50
+	MFsDirectory = 1
 	// MFFullData represents the API credit cost for mutual fund full data requests.
 	MFFullData = 1000
 	// MFSummary represents the API credit cost for mutual fund summary requests.
-	MFSummary = 50
+	MFSummary = 200
 	// MFPerformance represents the API credit cost for mutual fund performance requests.
 	MFPerformance = 200
 	// MFRisk represents the API credit cost for mutual fund risk data requests.
-	MFRisk = 50
+	MFRisk = 200
 	// MFRatings represents the API credit cost for mutual fund ratings requests.
-	MFRatings = 50
+	MFRatings = 200
 	// MFComposition represents the API credit cost for mutual fund composition requests.
 	MFComposition = 200
 	// MFPurchaseInfo represents the API credit cost for mutual fund purchase info requests.
-	MFPurchaseInfo = 50
+	MFPurchaseInfo = 200
 	// MFSustainability represents the API credit cost for mutual fund sustainability requests.
-	MFSustainability = 50
+	MFSustainability = 200
 	// MFsFamilies represents the API credit cost for mutual fund families requests.
-	MFsFamilies = 10
+	MFsFamilies = 1
 	// MFsTypes represents the API credit cost for mutual fund types requests.
-	MFsTypes = 10
+	MFsTypes = 1
 
 	// IndividualIndicators represents the API credit cost for individual technical indicator requests.
 	// Technical Indicators.
-	IndividualIndicators = 10
+	IndividualIndicators = 1
 	// BBands represents the API credit cost for Bollinger Bands technical indicator requests.
-	BBands = 10
+	BBands = 1
 	// SMA represents the API credit cost for Simple Moving Average technical indicator requests.
-	SMA = 10
+	SMA = 1
 	// EMA represents the API credit cost for Exponential Moving Average technical indicator requests.
-	EMA = 10
+	EMA = 1
 	// ADX represents the API credit cost for Average Directional Index technical indicator requests.
-	ADX = 10
+	ADX = 1
 	// MACD represents the API credit cost for Moving Average Convergence Divergence technical indicator requests.
-	MACD = 10
+	MACD = 1
 	// RSI represents the API credit cost for Relative Strength Index technical indicator requests.
-	RSI = 10
+	RSI = 1
 	// Stoch represents the API credit cost for Stochastic Oscillator technical indicator requests.
-	Stoch = 10
+	Stoch = 1
 	// PercentB represents the API credit cost for %B technical indicator requests.
-	PercentB = 10
+	PercentB = 1
 	// ATR represents the API credit cost for Average True Range technical indicator requests.
-	ATR = 10
+	ATR = 1
 	// VWAP represents the API credit cost for Volume Weighted Average Price technical indicator requests.
-	VWAP = 10
+	VWAP = 1
 	// MA represents the API credit cost for Moving Average technical indicator requests.
-	MA = 10
+	MA = 1
 	// WMA represents the API credit cost for Weighted Moving Average technical indicator requests.
-	WMA = 10
+	WMA = 1
 	// DEMA represents the API credit cost for Double Exponential Moving Average technical indicator requests.
-	DEMA = 10
+	DEMA = 1
 	// TEMA represents the API credit cost for Triple Exponential Moving Average technical indicator requests.
-	TEMA = 10
+	TEMA = 1
 	// TRMA represents the API credit cost for Triangular Moving Average technical indicator requests.
-	TRMA = 10
+	TRMA = 1
 	// KAMA represents the API credit cost for Kaufman Adaptive Moving Average technical indicator requests.
-	KAMA = 10
+	KAMA = 1
 	// SAR represents the API credit cost for Parabolic SAR technical indicator requests.
-	SAR = 10
+	SAR = 1
 	// CCI represents the API credit cost for Commodity Channel Index technical indicator requests.
-	CCI = 10
+	CCI = 1
 	// WillR represents the API credit cost for Williams %R technical indicator requests.
-	WillR = 10
+	WillR = 1
 	// ROC represents the API credit cost for Rate of Change technical indicator requests.
-	ROC = 10
+	ROC = 1
 	// MOM represents the API credit cost for Momentum technical indicator requests.
-	MOM = 10
+	MOM = 1
 	// OBV represents the API credit cost for On Balance Volume technical indicator requests.
-	OBV = 10
+	OBV = 1
 	// AD represents the API credit cost for Accumulation/Distribution technical indicator requests.
-	AD = 10
+	AD = 1
 	// NATR represents the API credit cost for Normalized Average True Range technical indicator requests.
-	NATR = 10
+	NATR = 1
 	// TR represents the API credit cost for True Range technical indicator requests.
-	TR = 10
+	TR = 1
 	// CustomIndicators represents the API credit cost for custom technical indicators requests.
 	CustomIndicators = 20
 
 	// EarningsEstimate represents the API credit cost for earnings estimate requests.
 	// Analysis.
-	EarningsEstimate = 100
+	EarningsEstimate = 20
 	// RevenueEstimate represents the API credit cost for revenue estimate requests.
-	RevenueEstimate = 100
+	RevenueEstimate = 20
 	// EPSTrend represents the API credit cost for EPS trend requests.
-	EPSTrend = 100
+	EPSTrend = 20
 	// EPSRevisions represents the API credit cost for EPS revisions requests.
-	EPSRevisions = 100
+	EPSRevisions = 20
 	// GrowthEstimates represents the API credit cost for growth estimates requests.
-	GrowthEstimates = 100
+	GrowthEstimates = 20
 	// Recommendations represents the API credit cost for analyst recommendations requests.
 	Recommendations = 100
 	// PriceTarget represents the API credit cost for price target requests.
-	PriceTarget = 100
+	PriceTarget = 75
 	// AnalystRatingsSnapshot represents the API credit cost for analyst ratings snapshot requests.
-	AnalystRatingsSnapshot = 200
+	AnalystRatingsSnapshot = 75
 	// AnalystRatingsUSEquities represents the API credit cost for US equities analyst ratings requests.
 	AnalystRatingsUSEquities = 200
 

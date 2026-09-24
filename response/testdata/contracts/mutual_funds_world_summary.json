@@ -1,0 +1,27 @@
+{
+  "mutual_fund": {
+    "summary": {
+      "symbol": "0P0001LCQ3",
+      "name": "JNL Small Cap Index Fund (I)",
+      "fund_family": "Jackson National",
+      "fund_type": "Small Blend",
+      "currency": "USD",
+      "share_class_inception_date": "2021-04-26",
+      "ytd_return": -0.02986,
+      "expense_ratio_net": 0.001,
+      "yield": 0,
+      "nav": 10.09,
+      "min_investment": 0,
+      "turnover_rate": 0.32,
+      "net_assets": 2400762112,
+      "overview": "The fund invests, normally, at least 80% of its assets in the stocks...",
+      "people": [
+        {
+          "name": "John Doe",
+          "tenure_since": "2018-01-01"
+        }
+      ]
+    }
+  },
+  "status": "ok"
+}

@@ -1,0 +1,52 @@
+{
+  "etf": {
+    "composition": {
+      "major_market_sectors": [
+        {
+          "sector": "Technology",
+          "weight": 0.2424
+        }
+      ],
+      "country_allocation": [
+        {
+          "country": "United Kingdom",
+          "allocation": 0.9855
+        }
+      ],
+      "asset_allocation": {
+        "cash": 0.0004,
+        "stocks": 0.9996,
+        "preferred_stocks": 0,
+        "convertables": 0,
+        "bonds": 0,
+        "others": 0
+      },
+      "top_holdings": [
+        {
+          "symbol": "AAPL",
+          "name": "Apple Inc",
+          "exchange": "NASDAQ",
+          "mic_code": "XNAS",
+          "weight": 0.0592
+        }
+      ],
+      "bond_breakdown": {
+        "average_maturity": {
+          "fund": 6.65,
+          "category": 7.81
+        },
+        "average_duration": {
+          "fund": 5.72,
+          "category": 5.64
+        },
+        "credit_quality": [
+          {
+            "grade": "AAA",
+            "weight": 0
+          }
+        ]
+      }
+    }
+  },
+  "status": "ok"
+}

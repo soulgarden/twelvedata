@@ -1,7 +1,10 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // ForexPairs represents the response structure for forex pairs data.
 type ForexPairs struct {
+	Count  null.Int     `json:"count"`
 	Data   []*ForexPair `json:"data"`
 	Status string       `json:"status"`
 }

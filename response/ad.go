@@ -28,6 +28,7 @@ type ADIndicator struct {
 
 // ADValue represents individual Accumulation/Distribution data points.
 type ADValue struct {
+	OHLCV
 	Datetime string     `json:"datetime"`
 	AD       null.Float `json:"ad"`
 }

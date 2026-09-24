@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "symbol": "AA",
+      "instrument_name": "Alcoa Corp",
+      "exchange": "NYSE",
+      "mic_code": "XNYS",
+      "exchange_timezone": "America/New_York",
+      "instrument_type": "Common Stock",
+      "country": "United States",
+      "currency": "USD",
+      "access": {
+        "global": "Basic",
+        "plan": "Basic",
+        "plan_business": "Basic"
+      }
+    }
+  ],
+  "status": "ok"
+}

@@ -15,4 +15,8 @@ type GetETFs struct {
 	Delimiter       string `schema:"delimiter,omitempty"`
 	ShowPlan        bool   `schema:"show_plan,omitempty"`
 	IncludeDelisted bool   `schema:"include_delisted,omitempty"`
+	// OutputSize limits the catalog page. Omit it to request all available records.
+	OutputSize int `schema:"outputsize,omitempty"`
+	// Page selects a result page; the provider defaults to 1.
+	Page int `schema:"page,omitempty"`
 }

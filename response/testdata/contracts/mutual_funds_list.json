@@ -1,0 +1,20 @@
+{
+  "result": {
+    "count": 1000,
+    "list": [
+      {
+        "symbol": "0P0001LCQ3",
+        "name": "JNL Small Cap Index Fund (I)",
+        "country": "United States",
+        "fund_family": "Jackson National",
+        "fund_type": "Small Blend",
+        "performance_rating": 2,
+        "risk_rating": 4,
+        "currency": "USD",
+        "exchange": "OTC",
+        "mic_code": "OTCM"
+      }
+    ]
+  },
+  "status": "ok"
+}

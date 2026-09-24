@@ -1,0 +1,37 @@
+{
+  "mutual_fund": {
+    "performance": {
+      "trailing_returns": [
+        {
+          "period": "ytd",
+          "share_class_return": -0.02986,
+          "category_return": 0.2019,
+          "rank_in_category": 76
+        }
+      ],
+      "annual_total_returns": [
+        {
+          "year": 2024,
+          "share_class_return": 0.08546,
+          "category_return": 0.1119
+        }
+      ],
+      "quarterly_total_returns": [
+        {
+          "year": 2024,
+          "q1": 0.02358,
+          "q2": -0.03071,
+          "q3": 0.10099,
+          "q4": -0.00629
+        }
+      ],
+      "load_adjusted_return": [
+        {
+          "period": "1_year",
+          "return": 0.06139
+        }
+      ]
+    }
+  },
+  "status": "ok"
+}

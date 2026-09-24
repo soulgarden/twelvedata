@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNGS",
+    "type": "Common Stock"
+  },
+  "trends": {
+    "current_month": {
+      "strong_buy": 13,
+      "buy": 20,
+      "hold": 8,
+      "sell": 0,
+      "strong_sell": 0
+    },
+    "previous_month": {
+      "strong_buy": 13,
+      "buy": 20,
+      "hold": 8,
+      "sell": 0,
+      "strong_sell": 0
+    },
+    "2_months_ago": {
+      "strong_buy": 13,
+      "buy": 20,
+      "hold": 8,
+      "sell": 0,
+      "strong_sell": 0
+    },
+    "3_months_ago": {
+      "strong_buy": 13,
+      "buy": 20,
+      "hold": 8,
+      "sell": 0,
+      "strong_sell": 0
+    }
+  },
+  "rating": 8.2,
+  "status": "ok"
+}

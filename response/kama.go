@@ -30,6 +30,7 @@ type KAMAIndicator struct {
 
 // KAMAValue represents a single data point in the Kaufman Adaptive Moving Average technical indicator response.
 type KAMAValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	KAMA     string `json:"kama"`
 }

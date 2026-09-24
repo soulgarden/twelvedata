@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "fund_holders": [
+    {
+      "entity_name": "VANGUARD INDEX FUNDS-Vanguard Total Stock Market Index Fund",
+      "date_reported": "2025-09-30",
+      "shares": 467135722,
+      "value": 129695568698,
+      "percent_held": 0.031600002
+    }
+  ]
+}

@@ -30,6 +30,7 @@ type SMAIndicator struct {
 
 // SMAData represents individual Simple Moving Average data points.
 type SMAData struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	SMA      string `json:"sma"`
 }

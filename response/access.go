@@ -5,6 +5,7 @@ package response
 
 // Access represents access level information for API resources.
 type Access struct {
-	Global string `json:"global"`
-	Plan   string `json:"plan"`
+	Global       string `json:"global"`
+	Plan         string `json:"plan"`
+	PlanBusiness string `json:"plan_business"`
 }

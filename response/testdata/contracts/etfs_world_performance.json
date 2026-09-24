@@ -1,0 +1,21 @@
+{
+  "etf": {
+    "performance": {
+      "trailing_returns": [
+        {
+          "period": "ytd",
+          "share_class_return": -0.0751,
+          "category_return": 0.1484
+        }
+      ],
+      "annual_total_returns": [
+        {
+          "year": 2021,
+          "share_class_return": 0.2866,
+          "category_return": 0
+        }
+      ]
+    }
+  },
+  "status": "ok"
+}

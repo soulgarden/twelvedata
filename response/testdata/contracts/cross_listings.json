@@ -1,0 +1,31 @@
+{
+  "result": {
+    "count": 4,
+    "list": [
+      {
+        "exchange": "NASDAQ",
+        "mic_code": "XNGS",
+        "name": "NVIDIA Corporation",
+        "symbol": "NVDA"
+      },
+      {
+        "exchange": "VSE",
+        "mic_code": "XWBO",
+        "name": "NVIDIA Corporation",
+        "symbol": "NVDA"
+      },
+      {
+        "exchange": "BVS",
+        "mic_code": "XSGO",
+        "name": "NVIDIA Corporation",
+        "symbol": "NVDACL"
+      },
+      {
+        "exchange": "BVS",
+        "mic_code": "XSGO",
+        "name": "NVIDIA Corporation",
+        "symbol": "NVDA"
+      }
+    ]
+  }
+}

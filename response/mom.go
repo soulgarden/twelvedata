@@ -30,6 +30,7 @@ type MOMIndicator struct {
 
 // MOMValue represents individual Momentum data points.
 type MOMValue struct {
+	OHLCV
 	Datetime string     `json:"datetime"`
 	MOM      null.Float `json:"mom"`
 }

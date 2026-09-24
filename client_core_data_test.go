@@ -228,7 +228,7 @@ func Test_client_GetQuote(t *testing.T) {
 				ExtendedChange:        "0.09",
 				ExtendedPercentChange: "0.05",
 				ExtendedPrice:         "125.22",
-				ExtendedTimestamp:     null.StringFrom("1649845281"),
+				ExtendedTimestamp:     null.IntFrom(1649845281),
 			},
 			want1:       response.NewCreditsImpl(100, 100),
 			wantErr:     "",

@@ -10,4 +10,5 @@ type GetAnalystRatingsUSEquities struct {
 	Exchange     string `schema:"exchange,omitempty"`
 	RatingChange string `schema:"rating_change,omitempty"`
 	OutputSize   int    `schema:"outputsize,omitempty"`
+	MicCode      string `schema:"mic_code,omitempty"`
 }

@@ -21,7 +21,7 @@ func Test_client_GetExchangeRate(t *testing.T) {
 		Date:          "2006-01-02",
 		Format:        "JSON",
 		Delimiter:     ";",
-		DecimalPlaces: 5,
+		DecimalPlaces: request.Precision(5),
 		TimeZone:      "UTC",
 	}
 	exchangeRateURL := "/?date=2006-01-02&delimiter=%3B&dp=5&format=JSON&symbol=EUR%2FUSD&timezone=UTC"
@@ -117,7 +117,7 @@ func Test_client_GetCurrencyConversion(t *testing.T) {
 		Date:          "2006-01-02",
 		Format:        "JSON",
 		Delimiter:     ";",
-		DecimalPlaces: 5,
+		DecimalPlaces: request.Precision(5),
 		TimeZone:      "UTC",
 	}
 	currencyConversionURL := "/?amount=100&date=2006-01-02&delimiter=%3B&dp=5&format=JSON&symbol=EUR%2FUSD&timezone=UTC"

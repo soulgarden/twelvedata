@@ -30,6 +30,7 @@ type EMAIndicator struct {
 
 // EMAData represents individual Exponential Moving Average data points.
 type EMAData struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	EMA      string `json:"ema"`
 }

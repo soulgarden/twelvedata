@@ -29,6 +29,7 @@ type CCIIndicator struct {
 
 // CCIValue represents a single data point in the Commodity Channel Index technical indicator response.
 type CCIValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	CCI      string `json:"cci"`
 }

@@ -28,6 +28,7 @@ type Bond struct {
 
 // BondAccess represents access level information for bond data.
 type BondAccess struct {
-	Global string `json:"global"`
-	Plan   string `json:"plan"`
+	Global       string `json:"global"`
+	Plan         string `json:"plan"`
+	PlanBusiness string `json:"plan_business"`
 }

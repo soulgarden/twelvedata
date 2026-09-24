@@ -13,5 +13,5 @@ type GetEOD struct {
 	InstrumentType string `schema:"type,omitempty"`
 	Date           string `schema:"date,omitempty"`
 	PrePost        bool   `schema:"prepost,omitempty"`
-	DecimalPlaces  int    `schema:"dp,omitempty"`
+	DecimalPlaces  *int   `schema:"dp,omitempty"`
 }

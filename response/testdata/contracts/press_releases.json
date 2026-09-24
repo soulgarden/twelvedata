@@ -1,0 +1,20 @@
+{
+  "press_releases": [
+    {
+      "id": "20251201SF35699",
+      "datetime": "2021-11-12T11:21:00+01:00",
+      "title": "NVIDIA and Synopsys Announce Strategic Partnership to Revolutionize Engineering and Design",
+      "body": "<b>Key Highlights</b><ul><li>Multi-year collaboration spans NVIDIA CUDA accelerated computing, agentic and physical AI, and Omniverse digital twins to achieve simulation speed and scale previously unattainable through traditional CPU computing – opening new market opportunities across engineering.</li><li>To further adoption of GPU-accelerated engineering solutions, the companies will collaborate in engineering and marketing activities.</li><li>NVIDIA invested $2 billion in Synopsys common stock.</li></ul>...",
+      "style": "/* Style Definitions */ ...",
+      "language": [
+        "en",
+        "en-US"
+      ]
+    }
+  ],
+  "status": "ok",
+  "pagination": {
+    "current_page": 1,
+    "per_page": 10
+  }
+}

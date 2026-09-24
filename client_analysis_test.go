@@ -182,7 +182,7 @@ func Test_client_GetRevenueEstimate(t *testing.T) {
 					Cusip:         "594918104",
 					Exchange:      "NASDAQ",
 					Country:       "US",
-					DecimalPlaces: 2,
+					DecimalPlaces: request.Precision(2),
 				},
 				url: mockServerWithURL(
 					t,
@@ -247,7 +247,7 @@ func Test_client_GetRevenueEstimate(t *testing.T) {
 					Cusip:         "594918104",
 					Exchange:      "NASDAQ",
 					Country:       "US",
-					DecimalPlaces: 2,
+					DecimalPlaces: request.Precision(2),
 				},
 				url: mockServerWithURL(
 					t,

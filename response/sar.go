@@ -30,6 +30,7 @@ type SARIndicator struct {
 
 // SARValue represents a single data point in the Parabolic SAR technical indicator response.
 type SARValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	SAR      string `json:"sar"`
 }

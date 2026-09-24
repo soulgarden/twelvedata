@@ -1,0 +1,21 @@
+{
+  "count": 100,
+  "data": [
+    {
+      "symbol": "BTC/USD",
+      "available_exchanges": [
+        "ABCC",
+        "Allcoin",
+        "BTC-Alpha",
+        "BTCTurk",
+        "Bibox",
+        "n.exchange",
+        "p2pb2b",
+        "xBTCe"
+      ],
+      "currency_base": "Bitcoin",
+      "currency_quote": "US Dollar"
+    }
+  ],
+  "status": "ok"
+}

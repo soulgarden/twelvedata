@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "symbol": "SKYQ",
+    "name": "Sky Quarry Inc.",
+    "exchange": "NASDAQ",
+    "mic_code": "XNCM",
+    "country": "United States"
+  },
+  "data": {
+    "tax_indicator": "us_1446f"
+  },
+  "status": "ok"
+}

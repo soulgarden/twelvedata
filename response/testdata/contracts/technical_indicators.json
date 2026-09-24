@@ -1,0 +1,41 @@
+{
+  "data": {
+    "macd": {
+      "enable": true,
+      "full_name": "Moving Average Convergence Divergence",
+      "description": "Moving Average Convergence Divergence(MACD) is ...",
+      "type": "Momentum Indicators",
+      "overlay": false,
+      "output_values": {
+        "parameter_name": {
+          "default_color": "#FF0000",
+          "display": "line",
+          "min_range": 0,
+          "max_range": 5
+        }
+      },
+      "parameters": {
+        "parameter_name": {
+          "default": 12,
+          "max_range": 1,
+          "min_range": 1,
+          "range": [
+            "open",
+            "high",
+            "low",
+            "close"
+          ],
+          "type": "int"
+        }
+      },
+      "tinting": {
+        "display": "fill",
+        "color": "#FF0000",
+        "transparency": 0.5,
+        "lower_bound": "0",
+        "upper_bound": "macd"
+      }
+    }
+  },
+  "status": "ok"
+}

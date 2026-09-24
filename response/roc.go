@@ -30,6 +30,7 @@ type ROCIndicator struct {
 
 // ROCValue represents individual Rate of Change data points.
 type ROCValue struct {
+	OHLCV
 	Datetime string     `json:"datetime"`
 	ROC      null.Float `json:"roc"`
 }

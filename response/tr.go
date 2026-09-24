@@ -28,6 +28,7 @@ type TRIndicator struct {
 
 // TRValue represents individual True Range data points.
 type TRValue struct {
+	OHLCV
 	Datetime string     `json:"datetime"`
-	TR       null.Float `json:"tr"`
+	TR       null.Float `json:"trange"`
 }

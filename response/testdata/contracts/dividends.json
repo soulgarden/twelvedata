@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "dividends": [
+    {
+      "ex_date": "2021-08-06",
+      "amount": 0.22
+    }
+  ]
+}

@@ -1,9 +1,12 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // ETFs represents the response structure for ETFs catalog data.
 type ETFs struct {
-	Data   []*ETF `json:"data"`
-	Status string `json:"status"`
+	Count  null.Int `json:"count"`
+	Data   []*ETF   `json:"data"`
+	Status string   `json:"status"`
 }
 
 // ETF represents a single ETF instrument with its details and access information.
@@ -23,6 +26,7 @@ type ETF struct {
 
 // ETFAccess represents access information for ETF data.
 type ETFAccess struct {
-	Global string `json:"global"`
-	Plan   string `json:"plan"`
+	Global       string `json:"global"`
+	Plan         string `json:"plan"`
+	PlanBusiness string `json:"plan_business"`
 }

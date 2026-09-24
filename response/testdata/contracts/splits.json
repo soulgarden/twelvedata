@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "splits": [
+    {
+      "date": "2020-08-31",
+      "description": "4-for-1 split",
+      "ratio": 0.25,
+      "from_factor": 4,
+      "to_factor": 1
+    }
+  ]
+}

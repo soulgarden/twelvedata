@@ -14,5 +14,5 @@ type GetPrice struct {
 	Format         string `schema:"format,omitempty"`
 	Delimiter      string `schema:"delimiter,omitempty"`
 	PrePost        bool   `schema:"prepost,omitempty"`
-	DecimalPlaces  int    `schema:"dp,omitempty"`
+	DecimalPlaces  *int   `schema:"dp,omitempty"`
 }

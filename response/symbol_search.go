@@ -21,6 +21,7 @@ type SymbolSearchResult struct {
 
 // SymbolSearchResultAccess represents access level information for symbol search results.
 type SymbolSearchResultAccess struct {
-	Global string `json:"global"`
-	Plan   string `json:"plan"`
+	Global       string `json:"global"`
+	Plan         string `json:"plan"`
+	PlanBusiness string `json:"plan_business"`
 }

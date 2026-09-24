@@ -1,7 +1,10 @@
 package response
 
+import "github.com/guregu/null/v6"
+
 // Commodities represents the response structure for commodities data.
 type Commodities struct {
+	Count  null.Int     `json:"count"`
 	Data   []*Commodity `json:"data"`
 	Status string       `json:"status"`
 }

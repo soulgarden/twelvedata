@@ -15,4 +15,8 @@ type GetMutualFundsDirectory struct {
 	RiskRating        int    `schema:"risk_rating,omitempty"`
 	Page              int    `schema:"page,omitempty"`
 	OutputSize        int    `schema:"outputsize,omitempty"`
+	Delimiter         string `schema:"delimiter,omitempty"`
+	DecimalPlaces     *int   `schema:"dp,omitempty"`
+	// Format supports JSON (the default). CSV is rejected by Endpoint.Call.
+	Format string `schema:"format,omitempty"`
 }

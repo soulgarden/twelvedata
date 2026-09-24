@@ -1,0 +1,26 @@
+{
+  "result": {
+    "count": 84799,
+    "list": [
+      {
+        "symbol": "DIVI",
+        "name": "AdvisorShares Athena High Dividend ETF",
+        "country": "United States",
+        "currency": "USD",
+        "exchange": "NYSE",
+        "mic_code": "ARCX",
+        "type": "ETF",
+        "figi_code": "BBG00161BCW4",
+        "cfi_code": "CECILU",
+        "isin": "GB00B65TLW28",
+        "cusip": "35473P108",
+        "access": {
+          "global": "Basic",
+          "plan": "Basic",
+          "plan_business": "Basic"
+        }
+      }
+    ]
+  },
+  "status": "ok"
+}

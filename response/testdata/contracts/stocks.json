@@ -1,0 +1,24 @@
+{
+  "count": 100,
+  "data": [
+    {
+      "symbol": "AAPL",
+      "name": "Apple Inc",
+      "currency": "USD",
+      "exchange": "NASDAQ",
+      "mic_code": "XNGS",
+      "country": "United States",
+      "type": "Common Stock",
+      "figi_code": "BBG000B9Y5X2",
+      "cfi_code": "ESVUFR",
+      "isin": "US0378331005",
+      "cusip": "037833100",
+      "access": {
+        "global": "Basic",
+        "plan": "Basic",
+        "plan_business": "Basic"
+      }
+    }
+  ],
+  "status": "ok"
+}

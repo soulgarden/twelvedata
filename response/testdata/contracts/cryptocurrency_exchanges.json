@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "name": "Binance"
+    },
+    {
+      "name": "Coinbase Pro"
+    },
+    {
+      "name": "Kraken"
+    },
+    {
+      "name": "OKX"
+    }
+  ],
+  "status": "ok"
+}

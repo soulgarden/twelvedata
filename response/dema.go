@@ -30,6 +30,7 @@ type DEMAIndicator struct {
 
 // DEMAValue represents a single data point in the Double Exponential Moving Average technical indicator response.
 type DEMAValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	DEMA     string `json:"dema"`
 }

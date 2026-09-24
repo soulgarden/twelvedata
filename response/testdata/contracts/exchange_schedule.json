@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "title": "NASDAQ/NGS (Global Select Market)",
+      "name": "NASDAQ",
+      "code": "XNYS",
+      "country": "United States",
+      "time_zone": "America/New_York",
+      "sessions": [
+        {
+          "open_time": "04:00:00",
+          "close_time": "09:30:00",
+          "session_name": "Pre market",
+          "session_type": "pre"
+        }
+      ]
+    }
+  ]
+}

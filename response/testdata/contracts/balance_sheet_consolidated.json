@@ -1,0 +1,180 @@
+{
+  "balance_sheet": [
+    {
+      "fiscal_date": "2023-09-30",
+      "assets": {
+        "total_assets": 352583000000,
+        "current_assets": {
+          "total_current_assets": 143566000000,
+          "cash_cash_equivalents_and_short_term_investments": 61555000000,
+          "cash_and_cash_equivalents": 29965000000,
+          "cash_equivalents": 1606000000,
+          "cash_financial": 28359000000,
+          "other_short_term_investments": 31590000000,
+          "restricted_cash": 31590000000,
+          "receivables": {
+            "total_receivables": 60985000000,
+            "accounts_receivable": 29508000000,
+            "gross_accounts_receivable": 29508000000,
+            "allowance_for_doubtful_accounts_receivable": 29508000000,
+            "receivables_adjustments_allowances": 29508000000,
+            "other_receivables": 31477000000,
+            "due_from_related_parties_current": 31477000000,
+            "taxes_receivable": 31477000000,
+            "accrued_interest_receivable": 31477000000,
+            "notes_receivable": 31477000000,
+            "loans_receivable": 31477000000
+          },
+          "inventory": {
+            "total_inventory": 6331000000,
+            "inventories_adjustments_allowances": 6331000000,
+            "other_inventories": 6331000000,
+            "finished_goods": 6331000000,
+            "work_in_process": 6331000000,
+            "raw_materials": 6331000000
+          },
+          "prepaid_assets": 14695000000,
+          "current_deferred_assets": 14695000000,
+          "current_deferred_taxes_assets": 14695000000,
+          "assets_held_for_sale_current": 14695000000,
+          "hedging_assets_current": 14695000000,
+          "other_current_assets": 14695000000
+        },
+        "non_current_assets": {
+          "total_non_current_assets": 209017000000,
+          "financial_assets": 209017000000,
+          "investments_and_advances": 100544000000,
+          "other_investments": 100544000000,
+          "investment_in_financial_assets": 100544000000,
+          "held_to_maturity_securities": 100544000000,
+          "available_for_sale_securities": 100544000000,
+          "financial_assets_designated_as_fair_value_through_profit_or_loss_total": 100544000000,
+          "trading_securities": 100544000000,
+          "long_term_equity_investment": 100544000000,
+          "investments_in_joint_ventures_at_cost": 100544000000,
+          "investments_in_other_ventures_under_equity_method": 100544000000,
+          "investments_in_associates_at_cost": 100544000000,
+          "investments_in_subsidiaries_at_cost": 100544000000,
+          "investment_properties": 100544000000,
+          "goodwill_and_other_intangible_assets": {
+            "goodwill": 100544000000,
+            "other_intangible_assets": 100544000000,
+            "total_goodwill_and_intangible_assets": 100544000000
+          },
+          "net_ppe": 54376000000,
+          "gross_ppe": 125260000000,
+          "accumulated_depreciation": -70884000000,
+          "leases": 12839000000,
+          "construction_in_progress": 12839000000,
+          "other_properties": 10661000000,
+          "machinery_furniture_equipment": 78314000000,
+          "buildings_and_improvements": 12839000000,
+          "land_and_improvements": 23446000000,
+          "properties": 0,
+          "non_current_accounts_receivable": 12839000000,
+          "non_current_note_receivables": 12839000000,
+          "due_from_related_parties_non_current": 12839000000,
+          "non_current_prepaid_assets": 12839000000,
+          "non_current_deferred_assets": 17852000000,
+          "non_current_deferred_taxes_assets": 17852000000,
+          "defined_pension_benefit": 12839000000,
+          "other_non_current_assets": 36245000000
+        },
+        "liabilities": {
+          "total_liabilities_net_minority_interest": 290437000000,
+          "current_liabilities": {
+            "total_current_liabilities": 145308000000,
+            "current_debt_and_capital_lease_obligation": 17382000000,
+            "current_debt": 15807000000,
+            "current_capital_lease_obligation": 1575000000,
+            "other_current_borrowings": 9822000000,
+            "line_of_credit": 9822000000,
+            "commercial_paper": 5985000000,
+            "current_notes_payable": 9822000000,
+            "current_provisions": 9822000000,
+            "payables_and_accrued_expenses": {
+              "total_payables_and_accrued_expenses": 71430000000,
+              "accounts_payable": 62611000000,
+              "current_accrued_expenses": 9822000000,
+              "interest_payable": 9822000000,
+              "payables": 71430000000,
+              "other_payable": 9822000000,
+              "due_to_related_parties_current": 9822000000,
+              "dividends_payable": 9822000000,
+              "total_tax_payable": 8819000000,
+              "income_tax_payable": 8819000000
+            },
+            "pension_and_other_post_retirement_benefit_plans_current": 8061000000,
+            "employee_benefits": 8061000000,
+            "current_deferred_liabilities": 8061000000,
+            "current_deferred_revenue": 8061000000,
+            "current_deferred_taxes_liabilities": 8061000000,
+            "other_current_liabilities": 48435000000,
+            "liabilities_held_for_sale_non_current": 48435000000
+          },
+          "non_current_liabilities": {
+            "total_non_current_liabilities_net_minority_interest": 145129000000,
+            "long_term_debt_and_capital_lease_obligation": {
+              "total_long_term_debt_and_capital_lease_obligation": 106548000000,
+              "long_term_debt": 95281000000,
+              "long_term_capital_lease_obligation": 11267000000
+            },
+            "long_term_provisions": 15457000000,
+            "non_current_pension_and_other_postretirement_benefit_plans": 15457000000,
+            "non_current_accrued_expenses": 15457000000,
+            "due_to_related_parties_non_current": 15457000000,
+            "trade_and_other_payables_non_current": 15457000000,
+            "non_current_deferred_liabilities": 15457000000,
+            "non_current_deferred_revenue": 15457000000,
+            "non_current_deferred_taxes_liabilities": 15457000000,
+            "other_non_current_liabilities": 23124000000,
+            "preferred_securities_outside_stock_equity": 15457000000,
+            "derivative_product_liabilities": 15457000000,
+            "capital_lease_obligations": 12842000000,
+            "restricted_common_stock": 12842000000
+          },
+          "equity": {
+            "total_equity_gross_minority_interest": 62146000000,
+            "stockholders_equity": 62146000000,
+            "common_stock_equity": 62146000000,
+            "preferred_stock_equity": 62146000000,
+            "other_equity_interest": 62146000000,
+            "minority_interest": 62146000000,
+            "total_capitalization": 157427000000,
+            "net_tangible_assets": 62146000000,
+            "tangible_book_value": 62146000000,
+            "invested_capital": 173234000000,
+            "working_capital": -1742000000,
+            "capital_stock": {
+              "common_stock": 73812000000,
+              "preferred_stock": 73812000000,
+              "total_partnership_capital": 73812000000,
+              "general_partnership_capital": 73812000000,
+              "limited_partnership_capital": 73812000000,
+              "capital_stock": 73812000000,
+              "other_capital_stock": 73812000000,
+              "additional_paid_in_capital": 73812000000,
+              "retained_earnings": -214000000,
+              "treasury_stock": 73812000000,
+              "treasury_shares_number": 0,
+              "ordinary_shares_number": 15550061000,
+              "preferred_shares_number": 73812000000,
+              "share_issued": 15550061000
+            },
+            "equity_adjustments": {
+              "gains_losses_not_affecting_retained_earnings": -11452000000,
+              "other_equity_adjustments": -11452000000,
+              "fixed_assets_revaluation_reserve": 11452000000,
+              "foreign_currency_translation_adjustments": 11452000000,
+              "minimum_pension_liabilities": 11452000000,
+              "unrealized_gain_loss": 11452000000
+            },
+            "net_debt": 81123000000,
+            "total_debt": 123930000000
+          }
+        }
+      }
+    }
+  ],
+  "status": "ok"
+}

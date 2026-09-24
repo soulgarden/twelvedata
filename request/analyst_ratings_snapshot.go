@@ -11,4 +11,5 @@ type GetAnalystRatingsSnapshot struct {
 	Country      string `schema:"country,omitempty"`
 	RatingChange string `schema:"rating_change,omitempty"`
 	OutputSize   int    `schema:"outputsize,omitempty"`
+	MicCode      string `schema:"mic_code,omitempty"`
 }

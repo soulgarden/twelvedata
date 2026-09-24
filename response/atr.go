@@ -29,6 +29,7 @@ type ATRIndicator struct {
 
 // ATRValue represents a single data point in the Average True Range technical indicator response.
 type ATRValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	ATR      string `json:"atr"`
 }

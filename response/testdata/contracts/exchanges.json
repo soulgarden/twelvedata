@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "title": "Argentinian Stock Exchange",
+      "name": "BCBA",
+      "code": "XBUE",
+      "country": "Argentina",
+      "timezone": "America/Argentina/Buenos_Aires",
+      "access": {
+        "global": "Pro",
+        "plan": "Pro",
+        "plan_business": "Basic"
+      }
+    }
+  ],
+  "status": "ok"
+}

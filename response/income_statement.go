@@ -38,6 +38,7 @@ type IncomeStatement struct {
 	EPSDiluted                    null.Float                          `json:"eps_diluted"`
 	BasicSharesOutstanding        null.Int                            `json:"basic_shares_outstanding"`
 	DilutedSharesOutstanding      null.Int                            `json:"diluted_shares_outstanding"`
+	EBIT                          null.Int                            `json:"ebit"`
 	EBITDA                        null.Int                            `json:"ebitda"`
 	NetIncomeContinuousOperations null.Int                            `json:"net_income_continuous_operations"`
 	MinorityInterests             null.Int                            `json:"minority_interests"`

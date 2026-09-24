@@ -1,0 +1,46 @@
+{
+  "mutual_fund": {
+    "composition": {
+      "major_market_sectors": [
+        {
+          "sector": "Industrials",
+          "weight": 0.1742
+        }
+      ],
+      "asset_allocation": {
+        "cash": 0.0043,
+        "stocks": 0.9956,
+        "preferred_stocks": 0,
+        "convertables": 0,
+        "bonds": 0,
+        "others": 0
+      },
+      "top_holdings": [
+        {
+          "symbol": "BBWI",
+          "name": "Bath & Body Works Inc",
+          "exchange": "NASDAQ",
+          "mic_code": "XNAS",
+          "weight": 0.00624
+        }
+      ],
+      "bond_breakdown": {
+        "average_maturity": {
+          "fund": 0,
+          "category": 1.97
+        },
+        "average_duration": {
+          "fund": 0,
+          "category": 1.64
+        },
+        "credit_quality": [
+          {
+            "grade": "U.S. Government",
+            "weight": 0
+          }
+        ]
+      }
+    }
+  },
+  "status": "ok"
+}

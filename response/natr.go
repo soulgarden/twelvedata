@@ -29,6 +29,7 @@ type NATRIndicator struct {
 
 // NATRValue represents individual Normalized Average True Range data points.
 type NATRValue struct {
+	OHLCV
 	Datetime string     `json:"datetime"`
 	NATR     null.Float `json:"natr"`
 }

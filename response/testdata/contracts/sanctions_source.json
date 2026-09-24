@@ -1,0 +1,23 @@
+{
+  "sanctions": [
+    {
+      "symbol": "LOKESHMACH",
+      "name": "Lokesh Machines Ltd.",
+      "mic_code": "NSE",
+      "country": "India",
+      "sanction": {
+        "source": "ofac",
+        "program": "RUSSIA-EO14024",
+        "notes": "Block",
+        "lists": [
+          {
+            "name": "SDN List",
+            "published_at": "2024-10-30"
+          }
+        ]
+      }
+    }
+  ],
+  "count": 143,
+  "status": "ok"
+}

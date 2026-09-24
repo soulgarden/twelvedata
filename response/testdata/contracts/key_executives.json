@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York"
+  },
+  "key_executives": [
+    {
+      "name": "Mr. Timothy D. Cook",
+      "title": "CEO & Director",
+      "age": 59,
+      "year_born": 1961,
+      "pay": 14769259
+    }
+  ]
+}

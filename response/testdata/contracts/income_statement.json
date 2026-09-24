@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "exchange_timezone": "America/New_York",
+    "period": "Quarterly"
+  },
+  "income_statement": [
+    {
+      "fiscal_date": "2021-12-31",
+      "quarter": 1,
+      "year": 2022,
+      "sales": 123945000000,
+      "cost_of_goods": 69702000000,
+      "gross_profit": 54243000000,
+      "operating_expense": {
+        "research_and_development": 6306000000,
+        "selling_general_and_administrative": 6449000000,
+        "other_operating_expenses": 0
+      },
+      "operating_income": 41488000000,
+      "non_operating_interest": {
+        "income": 650000000,
+        "expense": 694000000
+      },
+      "other_income_expense": -203000000,
+      "pretax_income": 41241000000,
+      "income_tax": 6611000000,
+      "net_income": 34630000000,
+      "eps_basic": 2.11,
+      "eps_diluted": 2.1,
+      "basic_shares_outstanding": 16391724000,
+      "diluted_shares_outstanding": 16391724000,
+      "ebit": 41488000000,
+      "ebitda": 44632000000,
+      "net_income_continuous_operations": 0,
+      "minority_interests": 0,
+      "preferred_stock_dividends": 0
+    }
+  ]
+}

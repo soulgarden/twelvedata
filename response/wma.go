@@ -30,6 +30,7 @@ type WMAIndicator struct {
 
 // WMAValue represents a single data point in the Weighted Moving Average technical indicator response.
 type WMAValue struct {
+	OHLCV
 	Datetime string `json:"datetime"`
 	WMA      string `json:"wma"`
 }

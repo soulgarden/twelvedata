@@ -32,6 +32,7 @@ type MACDIndicator struct {
 
 // MACDData represents individual MACD data points.
 type MACDData struct {
+	OHLCV
 	Datetime   string `json:"datetime"`
 	MACD       string `json:"macd"`
 	MACDSignal string `json:"macd_signal"`

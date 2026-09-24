@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "symbol": "AAPL",
+    "interval": "1min",
+    "currency": "USD",
+    "exchange_timezone": "America/New_York",
+    "exchange": "NASDAQ",
+    "mic_code": "XNAS",
+    "type": "Common Stock",
+    "indicator": {
+      "name": "CCI - Commodity Channel Index",
+      "time_period": 20
+    }
+  },
+  "values": [
+    {
+      "datetime": "2019-08-09 15:59:00",
+      "cci": "-122.30794",
+      "open": "148.73500",
+      "high": "148.86000",
+      "low": "148.73000",
+      "close": "148.85001",
+      "volume": "624277"
+    }
+  ],
+  "status": "ok"
+}

@@ -153,7 +153,8 @@ func validateMethodBody(method string, body []byte) error {
 	return nil
 }
 
-// Call executes the endpoint request and returns the response, credits, and any errors.
+// Call executes a JSON endpoint request and returns the response, credits, and any errors.
+// Non-JSON formats are rejected before sending a request or consuming API credits.
 func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Request) (resp Response, creds response.Credits, err Error) {
 	httpResp := fasthttp.AcquireResponse()
 
@@ -167,6 +168,9 @@ func (endpoint Endpoint[Request, Response, Credits, ErrorResponse]) Call(req Req
 	values, innerErr := buildQueryParams(req)
 	if innerErr != nil {
 		return resp, creds, NewError[Error](fmt.Errorf("build query params: %w", innerErr), nil)
+	}
+	if format := values.Get("format"); format != "" && !strings.EqualFold(format, "JSON") {
+		return resp, creds, NewError[Error](fmt.Errorf("unsupported response format %q: only JSON is supported", format), nil)
 	}
 
 	var uri *url.URL

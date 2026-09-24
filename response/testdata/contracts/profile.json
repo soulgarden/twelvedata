@@ -1,0 +1,20 @@
+{
+  "symbol": "AAPL",
+  "name": "Apple Inc",
+  "exchange": "NASDAQ",
+  "mic_code": "XNAS",
+  "sector": "Technology",
+  "industry": "Consumer Electronics",
+  "employees": 147000,
+  "website": "http://www.apple.com",
+  "description": "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and...",
+  "type": "Common Stock",
+  "CEO": "Mr. Timothy D. Cook",
+  "address": "One Apple Park Way",
+  "address2": "Cupertino, CA 95014",
+  "city": "Cupertino",
+  "zip": "95014",
+  "state": "CA",
+  "country": "US",
+  "phone": "408-996-1010"
+}
