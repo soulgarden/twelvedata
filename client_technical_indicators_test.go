@@ -11,6 +11,8 @@ import (
 	"github.com/soulgarden/twelvedata/response"
 )
 
+const expectedStandardDeviations = "2.5"
+
 func buildExpectedURL(path string, params url.Values) string {
 	if len(params) == 0 {
 		return path
@@ -121,7 +123,7 @@ func Test_client_GetBBands(t *testing.T) {
 						"/bbands",
 						technicalIndicatorParams(url.Values{
 							"ma_type":     []string{"SMA"},
-							"sd":          []string{"2.500000"},
+							"sd":          []string{expectedStandardDeviations},
 							"series_type": []string{"close"},
 							"time_period": []string{"20"},
 						}),
@@ -1264,8 +1266,8 @@ func Test_client_GetSAR(t *testing.T) {
 					buildExpectedURL(
 						"/sar",
 						technicalIndicatorParams(url.Values{
-							"acceleration": []string{"0.020000"},
-							"maximum":      []string{"0.200000"},
+							"acceleration": []string{"0.02"},
+							"maximum":      []string{"0.2"},
 						}),
 					),
 				),
@@ -1605,7 +1607,7 @@ func Test_client_GetVWAP(t *testing.T) {
 					buildExpectedURL(
 						"/vwap",
 						technicalIndicatorParams(url.Values{
-							"sd":             []string{"2.500000"},
+							"sd":             []string{expectedStandardDeviations},
 							"sd_time_period": []string{"14"},
 						}),
 					),
@@ -2074,7 +2076,7 @@ func Test_client_GetPercentB(t *testing.T) {
 						"/percent_b",
 						technicalIndicatorParams(url.Values{
 							"ma_type":     []string{"SMA"},
-							"sd":          []string{"2.500000"},
+							"sd":          []string{expectedStandardDeviations},
 							"series_type": []string{"close"},
 							"time_period": []string{"20"},
 						}),

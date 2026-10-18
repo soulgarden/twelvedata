@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/schema"
@@ -12,7 +14,15 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-var encoder = schema.NewEncoder()
+var encoder = newQueryEncoder()
+
+func newQueryEncoder() *schema.Encoder {
+	queryEncoder := schema.NewEncoder()
+	queryEncoder.RegisterEncoder(float64(0), func(value reflect.Value) string {
+		return strconv.FormatFloat(value.Float(), 'f', -1, 64)
+	})
+	return queryEncoder
+}
 
 // RequestMethoder allows a request to override the HTTP method.
 type RequestMethoder interface {

@@ -18,8 +18,9 @@ type GetTimeSeriesCross struct {
 	PrePost       bool   `schema:"prepost,omitempty"`
 	StartDate     string `schema:"start_date,omitempty"`
 	EndDate       string `schema:"end_date,omitempty"`
-	Adjust        bool   `schema:"adjust,omitempty"`
-	DecimalPlaces *int   `schema:"dp,omitempty"`
+	// Adjust controls split adjustment; nil preserves the provider's default (true).
+	Adjust        *bool `schema:"adjust,omitempty"`
+	DecimalPlaces *int  `schema:"dp,omitempty"`
 	// TimeZone applies only to intraday intervals; daily, weekly, and monthly bars use exchange time.
 	TimeZone string `schema:"timezone,omitempty"`
 }
