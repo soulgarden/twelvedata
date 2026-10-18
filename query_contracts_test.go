@@ -131,6 +131,62 @@ func TestDecimalPrecisionQuery(t *testing.T) {
 	}
 }
 
+func TestAdjustQueryParameters(t *testing.T) {
+	for _, req := range []any{new(request.GetDividends), new(request.GetTimeSeriesCross)} {
+		t.Run(reflect.TypeOf(req).Elem().Name(), func(t *testing.T) {
+			initial, err := buildQueryParams(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if initial.Has("adjust") {
+				t.Errorf("unset adjustment sent: %s", initial.Encode())
+			}
+			for _, value := range []bool{true, false} {
+				want := strconv.FormatBool(value)
+				setQueryParameter(t, req, "adjust", want)
+				got, err := buildQueryParams(req)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if got.Get("adjust") != want {
+					t.Errorf("adjust %s: query = %s", want, got.Encode())
+				}
+			}
+		})
+	}
+}
+
+func TestFloatQueryParameters(t *testing.T) {
+	tests := []struct {
+		request any
+		key     string
+	}{
+		{new(request.GetBBands), "sd"},
+		{new(request.GetPercentB), "sd"},
+		{new(request.GetVWAP), "sd"},
+		{new(request.GetSAR), "acceleration"},
+		{new(request.GetSAR), "maximum"},
+	}
+	for _, tt := range tests {
+		t.Run(reflect.TypeOf(tt.request).Elem().Name()+"/"+tt.key, func(t *testing.T) {
+			for _, value := range []string{"2", "1.23456789", "0.0000001", "0.12345678901234568", "0"} {
+				setQueryParameter(t, tt.request, tt.key, value)
+				got, err := buildQueryParams(tt.request)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if value == "0" {
+					if got.Has(tt.key) {
+						t.Errorf("zero %s sent: %s", tt.key, got.Encode())
+					}
+				} else if got.Get(tt.key) != value {
+					t.Errorf("%s %s: query = %s", tt.key, value, got.Encode())
+				}
+			}
+		})
+	}
+}
+
 func setQueryParameter(t *testing.T, req any, key, value string) {
 	t.Helper()
 	object := reflect.ValueOf(req).Elem()
@@ -152,6 +208,18 @@ func setQueryParameter(t *testing.T, req any, key, value string) {
 				t.Fatal(err)
 			}
 			field.SetInt(int64(number))
+		case reflect.Bool:
+			boolean, err := strconv.ParseBool(value)
+			if err != nil {
+				t.Fatal(err)
+			}
+			field.SetBool(boolean)
+		case reflect.Float64:
+			number, err := strconv.ParseFloat(value, 64)
+			if err != nil {
+				t.Fatal(err)
+			}
+			field.SetFloat(number)
 		default:
 			t.Fatalf("unsupported query type %s", field.Type())
 		}

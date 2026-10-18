@@ -501,7 +501,7 @@ func Test_client_GetDividends(t *testing.T) {
 					Range:     "1y",
 					StartDate: "2024-01-01",
 					EndDate:   "2024-01-31",
-					Adjust:    true,
+					Adjust:    request.Bool(true),
 				},
 				url: mockServerWithURL(
 					t,
@@ -562,7 +562,7 @@ func Test_client_GetDividends(t *testing.T) {
 					Range:     "1y",
 					StartDate: "2024-01-01",
 					EndDate:   "2024-01-31",
-					Adjust:    true,
+					Adjust:    request.Bool(true),
 				},
 				url: mockServerWithURL(
 					t,

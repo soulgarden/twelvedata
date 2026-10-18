@@ -13,5 +13,6 @@ type GetDividends struct {
 	Range     string `schema:"range,omitempty"`
 	StartDate string `schema:"start_date,omitempty"`
 	EndDate   string `schema:"end_date,omitempty"`
-	Adjust    bool   `schema:"adjust,omitempty"`
+	// Adjust controls split adjustment; nil preserves the provider's default (true).
+	Adjust *bool `schema:"adjust,omitempty"`
 }
